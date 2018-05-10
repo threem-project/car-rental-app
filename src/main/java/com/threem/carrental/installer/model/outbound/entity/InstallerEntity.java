@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @Table(name = "installation_status")
+@Builder
 public class InstallerEntity
 {
 

@@ -2,10 +2,7 @@ package com.threem.carrental.app.model.outbound.entity;
 
 import com.threem.carrental.app.model.outbound.entity.enumTypes.EmployeeRoleEnum;
 import com.threem.carrental.app.model.outbound.entity.enumTypes.EmployeeStatusEnum;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -19,6 +16,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class EmployeeEntity {
 
     @Id

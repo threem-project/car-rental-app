@@ -11,27 +11,13 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter (AccessLevel.PRIVATE)
+@Builder
 public class InstallerView {
+
+    @JsonProperty(value = "id")
+    private Long id;
 
     @JsonProperty(value = "name")
     private String name;
-
-    @JsonProperty(value = "domain")
-    private String domain;
-
-    @JsonProperty(value = "address")
-    private String address;
-
-    @JsonProperty(value = "owner_first_name")
-    private String firstName;
-
-    @JsonProperty(value = "owner_last_name")
-    private String lastName;
-
-    @JsonProperty(value = "owner_email")
-    private String email;
-
-    @JsonProperty(value = "password")
-    private String password;
 
 }

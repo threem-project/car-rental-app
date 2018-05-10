@@ -18,8 +18,8 @@ public class InstallCreateCommand {
 
     @NotBlank
     @NotNull
-    @JsonProperty(value = "name")
-    private String name;
+    @JsonProperty(value = "company_name")
+    private String companyName;
 
     @NotBlank
     @NotNull
@@ -50,4 +50,9 @@ public class InstallCreateCommand {
     @NotNull
     @JsonProperty(value = "password")
     private String password;
+
+    @NotBlank
+    @NotNull
+    @JsonProperty(value = "phone")
+    private String phone;
 }
