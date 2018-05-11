@@ -27,33 +27,39 @@ public class CarEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     @Column(name = "label")
+    @Enumerated(EnumType.STRING)
     private CarLabelEnum label;
 
     @Column(name = "model")
+    @Enumerated(EnumType.STRING)
     private CarModelEnum model;
 
     @Column(name = "body_type")
+    @Enumerated(EnumType.STRING)
     private CarBodyTypeEnum bodyType;
 
     @Column(name = "year")
     private String year;
 
     @Column(name = "colour")
+    @Enumerated(EnumType.STRING)
     private CarColourEnum colour;
 
     @Column(name = "mileage")
     private Integer mileage;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private CarStatusEnum status;
 
     @Column(name = "daily_rade")
     private BigDecimal dailyRade;
 
     @Column(name = "engine_type")
+    @Enumerated(EnumType.STRING)
     private CarEngineTypeEnum engineType;
 
     @Column(name = "engine_capacity")

@@ -25,7 +25,7 @@ public class BranchEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
@@ -50,6 +50,7 @@ public class BranchEntity {
     private List<CarEntity> cars;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private BranchStatusEnum status;
 
     public BranchEntity(BranchStatusEnum status) {

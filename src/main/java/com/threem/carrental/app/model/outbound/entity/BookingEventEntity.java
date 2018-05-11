@@ -29,7 +29,7 @@ public class BookingEventEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private String id;
+    private Long id;
 
     @Column(name="date")
     @Temporal(TemporalType.DATE)
@@ -45,9 +45,11 @@ public class BookingEventEntity {
     private Integer mileage;
 
     @Column(name = "payment_status")
+    @Enumerated(EnumType.STRING)
     private PaymentStatusEnum paymentStatus;
 
     @Column(name = "booking_status")
+    @Enumerated(EnumType.STRING)
     private BookingStatusEnum bookingStatus;
 
     @Column(name = "comments")

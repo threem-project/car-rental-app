@@ -29,7 +29,7 @@ public class BookingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     @Column(name="creation_date")
     @Temporal(TemporalType.DATE)
@@ -47,9 +47,11 @@ public class BookingEntity {
     private BigDecimal price;
 
     @Column(name = "payment_status")
+    @Enumerated(EnumType.STRING)
     private PaymentStatusEnum paymentStatus;
 
     @Column(name = "booking_status")
+    @Enumerated(EnumType.STRING)
     private BookingStatusEnum bookingStatus;
 
     @Column(name = "comments")
