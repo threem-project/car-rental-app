@@ -18,6 +18,7 @@ public class MainOfficeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "name")
@@ -29,11 +30,21 @@ public class MainOfficeEntity {
     @Column(name = "address")
     private String address;
 
-    @OneToOne
-    @JoinColumn(name = "employee_id")
-    private EmployeeEntity employee;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn (name = "owner")
+    private EmployeeEntity ownerEmployee;
 
     @Column(name = "phone")
     private String phone;
 
+    @Column(name = "email")
+    private String email;
+
+    public MainOfficeEntity(String name, String domain, String address, String phone, String email) {
+        this.name = name;
+        this.domain = domain;
+        this.address = address;
+        this.phone = phone;
+        this.email = email;
+    }
 }
