@@ -32,7 +32,7 @@ public class MainOfficeEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn (name = "owner")
-    private EmployeeEntity owner;
+    private EmployeeEntity ownerEmployee;
 
     @Column(name = "phone")
     private String phone;
