@@ -29,7 +29,7 @@ public class EmployeeController {
     //2. tworzymy metodę createEmployee, która przyjmie jako parametr EmployeeDto
     //3. tworzymy mapper i metodę do mapowania EmployeeDto na EmployeeEntity
     //4. tworzymy w service metodę createEmployee, która przyjmuje EmployeeDto
-    //5.
+    //5. wyciągam BranchEntity na podstawie BranchId
 
     @PostMapping
     public ResponseEntity<?> createEmployee(@Validated @RequestBody EmployeeDto employeeDto) {
