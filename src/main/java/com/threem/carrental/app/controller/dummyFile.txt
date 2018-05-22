@@ -1,3 +1,0 @@
-Just a dummy file to avoid this annoying behaviour of IntelliJ with grouping packages name....
-
-Might be removed as soon as some other files will be placed here
