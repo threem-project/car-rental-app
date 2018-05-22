@@ -1,9 +1,6 @@
 package com.threem.carrental.app.model.outbound.entity;
 import com.threem.carrental.app.model.outbound.entity.enumTypes.BranchStatusEnum;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -20,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @Setter
 @Getter
+@Builder
 public class BranchEntity {
 
     @Id
@@ -43,10 +41,10 @@ public class BranchEntity {
         )
     private List<BookingEntity> bookings;
 
-    @OneToMany(mappedBy = "branch_id",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "branch",fetch = FetchType.LAZY)
     private List<EmployeeEntity> employees;
 
-    @OneToMany(mappedBy = "branch_id",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "branch",fetch = FetchType.LAZY)
     private List<CarEntity> cars;
 
     @Column(name = "status")

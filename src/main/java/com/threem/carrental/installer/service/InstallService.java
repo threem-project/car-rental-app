@@ -54,7 +54,7 @@ public class InstallService {
                 .firstName(command.getFirstName())
                 .lastName(command.getLastName())
                 .role(EmployeeRoleEnum.OWNER)
-                .branch(Integer.MAX_VALUE)
+                .branch(null)
                 .status(EmployeeStatusEnum.ACTIVE)
                 .password(passwordEncoder.encode(command.getPassword()))
                 .build();
@@ -63,7 +63,7 @@ public class InstallService {
                 .name(command.getCompanyName())
                 .domain(command.getDomain())
                 .address(command.getAddress())
-                .employee(employee)
+                .ownerEmployee(employee)
                 .phone(command.getPhone())
                 .build();
 
