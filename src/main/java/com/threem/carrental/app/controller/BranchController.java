@@ -29,8 +29,14 @@ public class BranchController {
     //2.Create AddressBranchDto class
     //3.Create method in BranchController createBranch(BranchDto fromBranchDto);
     //4.Create BranchMapper class
-    //5.Create AddressBranchMapper
-    //6.Create method for mapping AddressBranchDto object to AddressBranchEntity in AddressBranchMapper
-    //7.Veryfication that object can be saved to DB o is invalid
-    //8.Create method createBranch(BranchDto fromBranchDto) in BranchService;
+    //5.Create AddressBranchMapper class
+    //6.Create method for mapping AddressBranchDto object to AddressBranchEntity object in AddressBranchMapper
+    //7.Create method createBranch(BranchDto fromBranchDto) in BranchService;
+    //8.Verification that AddressBranch object can be saved to DB or is invalid in method;
+    //9.Save to DB branchEntity object and cascading must be saved AddressBranch object
+    //10.Create method findBranchById in BranchService
+    //11.Create method for mapping Entities objects to Dto object
+    // (think about mapping in BranchMapper and addressBranchMapper or only in BranchMapper)
+    //12.Verification in Controller that object was valid saved and found
+    //13.Tests to service,mapper(unit),controller(integration)
 }
