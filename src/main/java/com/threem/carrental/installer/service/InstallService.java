@@ -1,9 +1,9 @@
 package com.threem.carrental.installer.service;
 
-import com.threem.carrental.app.model.outbound.entity.EmployeeEntity;
-import com.threem.carrental.app.model.outbound.entity.MainOfficeEntity;
-import com.threem.carrental.app.model.outbound.entity.enumTypes.EmployeeRoleEnum;
-import com.threem.carrental.app.model.outbound.entity.enumTypes.EmployeeStatusEnum;
+import com.threem.carrental.app.model.entity.EmployeeEntity;
+import com.threem.carrental.app.model.entity.MainOfficeEntity;
+import com.threem.carrental.app.model.entity.enumTypes.EmployeeRoleEnum;
+import com.threem.carrental.app.model.entity.enumTypes.EmployeeStatusEnum;
 import com.threem.carrental.app.repository.EmployeeRepository;
 import com.threem.carrental.app.repository.MainOfficeRepository;
 import com.threem.carrental.app.utilities.PasswordEncoder;

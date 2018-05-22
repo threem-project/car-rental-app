@@ -1,6 +1,6 @@
 package com.threem.carrental.app.repository;
 
-import com.threem.carrental.app.model.outbound.entity.MainOfficeEntity;
+import com.threem.carrental.app.model.entity.MainOfficeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
