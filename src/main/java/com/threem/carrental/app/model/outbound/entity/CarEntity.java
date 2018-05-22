@@ -1,10 +1,7 @@
 package com.threem.carrental.app.model.outbound.entity;
 
 import com.threem.carrental.app.model.outbound.entity.enumTypes.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -22,6 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class CarEntity {
 
     @Id
@@ -65,26 +63,32 @@ public class CarEntity {
     @Column(name = "engine_capacity")
     private Integer engineCapacity;
 
+    @Column(name = "segment")
+    private CarSegmentTypeEnum segment;
+
+    @Column(name = "transmission")
+    @Enumerated(EnumType.STRING)
+    private CarTransmissionTypeEnum transmission;
+
+    @Column(name = "seats")
+    private String seats;
+
+    @Column(name = "doors")
+    private String doors;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "branch_id")
     private BranchEntity branch;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "car_id")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "car")
     private List<BookingEntity> bookings;
 
-    public CarEntity(CarLabelEnum label, CarModelEnum model, CarBodyTypeEnum bodyType, String year,
-                     CarColourEnum colour, Integer mileage, CarStatusEnum status, BigDecimal dailyRade,
-                     CarEngineTypeEnum engineType, Integer engineCapacity)
-    {
-        this.label = label;
-        this.model = model;
-        this.bodyType = bodyType;
-        this.year = year;
-        this.colour = colour;
-        this.mileage = mileage;
-        this.status = status;
-        this.dailyRade = dailyRade;
-        this.engineType = engineType;
-        this.engineCapacity = engineCapacity;
-    }
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "car_equipment",
+            joinColumns ={@JoinColumn(name = "car_id")},
+            inverseJoinColumns = {@JoinColumn(name = "equipment_id")}
+    )
+    private List<EquipmentEntity> equipments;
+
 }

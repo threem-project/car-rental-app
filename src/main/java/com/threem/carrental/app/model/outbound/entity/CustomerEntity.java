@@ -1,9 +1,8 @@
 package com.threem.carrental.app.model.outbound.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.threem.carrental.app.model.outbound.entity.enumTypes.CustomerAccountStatusEnum;
+import com.threem.carrental.app.model.outbound.entity.enumTypes.CustomerStatusEnum;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -20,6 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @Setter
 @Getter
+@Builder
 public class CustomerEntity {
 
     @Id
@@ -42,18 +42,31 @@ public class CustomerEntity {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "pesel")
+    private String pesel;
+
+    @Column(name = "document_id")
+    private String documentId;
+
+    @Column(name = "driver_license")
+    private String driverLicense;
+
+    @Column(name = "passport_id")
+    private String passportId;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private CustomerStatusEnum status;
+
+    @Column(name = "account_status")
+    @Enumerated(EnumType.STRING)
+    private CustomerAccountStatusEnum accountStatus;
+
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private AddressCustomerEntity address;
 
-    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "customer_id")
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "customer")
     private List<BookingEntity> bookings;
 
-    public CustomerEntity(String firstName, String lastName, String phone, String email, String password) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phone = phone;
-        this.email = email;
-        this.password = password;
-    }
 }

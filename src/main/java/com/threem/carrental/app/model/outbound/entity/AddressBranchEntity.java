@@ -1,9 +1,6 @@
 package com.threem.carrental.app.model.outbound.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -18,6 +15,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Setter
 @Getter
+@Builder
 public class AddressBranchEntity {
 
     @Id
@@ -34,7 +32,7 @@ public class AddressBranchEntity {
     @Column(name = "building")
     private String building;
 
-    @Column(name = "zip-code")
+    @Column(name = "zip_code")
     private String zipCode;
 
     @Column(name = "country")
@@ -43,12 +41,4 @@ public class AddressBranchEntity {
     @Column(name = "phone")
     private String phone;
 
-    public AddressBranchEntity(String city, String street, String building, String zipCode, String country, String phone) {
-        this.city = city;
-        this.street = street;
-        this.building = building;
-        this.zipCode = zipCode;
-        this.country = country;
-        this.phone = phone;
-    }
 }

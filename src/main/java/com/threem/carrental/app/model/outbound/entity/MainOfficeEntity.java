@@ -40,11 +40,4 @@ public class MainOfficeEntity {
     @Column(name = "email")
     private String email;
 
-    public MainOfficeEntity(String name, String domain, String address, String phone, String email) {
-        this.name = name;
-        this.domain = domain;
-        this.address = address;
-        this.phone = phone;
-        this.email = email;
-    }
 }

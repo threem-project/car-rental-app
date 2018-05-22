@@ -8,10 +8,7 @@ import com.threem.carrental.app.model.outbound.entity.enumTypes.BookingStatusEnu
  */
 
 import com.threem.carrental.app.model.outbound.entity.enumTypes.PaymentStatusEnum;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -24,6 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class BookingEntity {
 
     @Id
@@ -61,6 +59,9 @@ public class BookingEntity {
     @Temporal(TemporalType.DATE)
     private Date dateReturn;
 
+    @Column(name = "booking_id")
+    private String bookingId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private CustomerEntity customer;
@@ -81,17 +82,4 @@ public class BookingEntity {
     )
     private List<BranchEntity> branches;
 
-    public BookingEntity(Date creationDate, Date dateFrom, Date dateTo,
-                         BigDecimal price, PaymentStatusEnum paymentStatus,
-                         BookingStatusEnum bookingStatus, String comments, Date dateReturn)
-    {
-        this.creationDate = creationDate;
-        this.dateFrom = dateFrom;
-        this.dateTo = dateTo;
-        this.price = price;
-        this.paymentStatus = paymentStatus;
-        this.bookingStatus = bookingStatus;
-        this.comments = comments;
-        this.dateReturn = dateReturn;
-    }
 }

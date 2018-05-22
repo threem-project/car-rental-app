@@ -49,15 +49,8 @@ public class EmployeeEntity {
     @JoinColumn(name = "branch_id")
     private BranchEntity branch;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "employee_id")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "employee")
     private List<BookingEntity> bookings;
 
-    public EmployeeEntity(String firstName, String lastName, EmployeeRoleEnum role, EmployeeStatusEnum status, String password, String email) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.role = role;
-        this.status = status;
-        this.password = password;
-        this.email = email;
-    }
+
 }
