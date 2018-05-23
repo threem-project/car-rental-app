@@ -16,7 +16,6 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @Builder
 @Getter
-@Setter(AccessLevel.PRIVATE)
 public class EmployeeDto {
 
     @NotBlank
@@ -39,4 +38,8 @@ public class EmployeeDto {
     private String email;
 
     private Long branchId;
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
