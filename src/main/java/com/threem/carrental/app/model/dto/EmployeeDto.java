@@ -18,6 +18,8 @@ import javax.validation.constraints.Size;
 @Getter
 public class EmployeeDto {
 
+    private Long employeeId;
+
     @NotBlank
     @Size(min = 3, max = 100)
     private String firstName;

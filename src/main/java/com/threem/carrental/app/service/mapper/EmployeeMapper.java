@@ -14,6 +14,7 @@ public class EmployeeMapper {
     //todo refactor this part code as soon as branchMappre is available
     public EmployeeEntity ToEmployeeEntity(EmployeeDto fromEmployeeDto) {
         EmployeeEntity employeeEntity = new EmployeeEntity().builder()
+                .id(fromEmployeeDto.getEmployeeId())
                 .firstName(fromEmployeeDto.getFirstName())
                 .lastName(fromEmployeeDto.getLastName())
                 .role(fromEmployeeDto.getRole())
@@ -27,6 +28,7 @@ public class EmployeeMapper {
 
     public EmployeeDto ToEmployeeDto(EmployeeEntity employeeEntity) {
         EmployeeDto employeeDto = new EmployeeDto().builder()
+                .employeeId(employeeEntity.getId())
                 .firstName(employeeEntity.getFirstName())
                 .lastName(employeeEntity.getLastName())
                 .role(employeeEntity.getRole())
