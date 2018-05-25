@@ -3,8 +3,6 @@ package com.threem.carrental.app.model.dto;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
@@ -18,6 +16,8 @@ import javax.validation.constraints.Size;
 @Setter(AccessLevel.PRIVATE)
 @Getter
 public class AddressBranchDto {
+
+    private Long id;
 
     @NotBlank(message = "The city can't be blank or empty")
     @Size(min = 3,max = 200,message = "The size of city name must be larger then 3 and smaller then 200")

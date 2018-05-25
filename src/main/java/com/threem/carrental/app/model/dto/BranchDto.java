@@ -1,5 +1,6 @@
 package com.threem.carrental.app.model.dto;
 
+import com.threem.carrental.app.model.entity.enumTypes.BranchStatusEnum;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
@@ -17,7 +18,11 @@ import javax.validation.constraints.NotNull;
 @Getter
 public class BranchDto {
 
+    private Long id;
+
     @NotNull(message = "Address can't be empty")
     private AddressBranchDto address;
+
+    private BranchStatusEnum branchStatus;
 
 }
