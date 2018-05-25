@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 public class BranchDto {
 
-    @NotNull
+    @NotNull(message = "Address can't be empty")
     private AddressBranchDto address;
 
 }
