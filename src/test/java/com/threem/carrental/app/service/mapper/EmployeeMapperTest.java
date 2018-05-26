@@ -8,8 +8,6 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 /**
  * @author marek_j on 2018-05-24
  */
@@ -35,7 +33,7 @@ public class EmployeeMapperTest {
                 .branchId(Long.valueOf(1))
                 .build();
 
-        EmployeeEntity employeeEntity = mapper.ToEmployeeEntity(employeeDto);   //when
+        EmployeeEntity employeeEntity = mapper.toEmployeeEntity(employeeDto);   //when
 
         Assertions.assertThat(employeeEntity)   //then
                 .hasFieldOrPropertyWithValue("id",employeeDto.getEmployeeId())
@@ -63,7 +61,7 @@ public class EmployeeMapperTest {
                 .bookings(null)
                 .build();
 
-        EmployeeDto employeeDto = mapper.ToEmployeeDto(employeeEntity); //when
+        EmployeeDto employeeDto = mapper.toEmployeeDto(employeeEntity); //when
 
         Assertions.assertThat(employeeDto)  //then
                 .hasFieldOrPropertyWithValue("employeeId",employeeEntity.getId())

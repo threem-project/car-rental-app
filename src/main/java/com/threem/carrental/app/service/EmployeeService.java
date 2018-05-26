@@ -32,7 +32,7 @@ public class EmployeeService {
 
     public Optional<EmployeeDto> createEmployee(EmployeeDto employeeDto) {
         Optional<EmployeeDto> resultEmployeeDto = Optional.empty();
-        EmployeeEntity employeeEntity = employeeMapper.ToEmployeeEntity(employeeDto);
+        EmployeeEntity employeeEntity = employeeMapper.toEmployeeEntity(employeeDto);
         String encodedPassword = passwordEncoder.encode(employeeEntity.getPassword());
         employeeEntity.setPassword(encodedPassword);
 
@@ -47,7 +47,7 @@ public class EmployeeService {
 
         Optional<EmployeeEntity> employeeEntityFromDb = employeeRepository.findById(employeeEntity.getId());
         if (employeeEntityFromDb.isPresent()) {
-            resultEmployeeDto = Optional.of(employeeMapper.ToEmployeeDto(employeeEntityFromDb.get()));
+            resultEmployeeDto = Optional.of(employeeMapper.toEmployeeDto(employeeEntityFromDb.get()));
             resultEmployeeDto.get().setPassword(null);
         }
         return resultEmployeeDto;
