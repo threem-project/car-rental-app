@@ -2,11 +2,12 @@ package com.threem.carrental.app.model.dto;
 
 import com.threem.carrental.app.model.entity.enumTypes.EmployeeRoleEnum;
 import com.threem.carrental.app.model.entity.enumTypes.EmployeeStatusEnum;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
@@ -40,6 +41,8 @@ public class EmployeeDto {
     private String email;
 
     private Long branchId;
+
+//    private BookingsDto bookings; //todo refactor this as soon as Bookings Dto/Entities are implemented
 
     public void setPassword(String password) {
         this.password = password;

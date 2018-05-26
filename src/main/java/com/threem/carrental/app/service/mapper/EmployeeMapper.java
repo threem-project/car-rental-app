@@ -1,6 +1,7 @@
 package com.threem.carrental.app.service.mapper;
 
 import com.threem.carrental.app.model.dto.EmployeeDto;
+import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.EmployeeEntity;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,7 @@ import java.util.Optional;
 @Service
 public class EmployeeMapper {
     //todo refactor this part code as soon as branchMappre is available
-    public EmployeeEntity ToEmployeeEntity(EmployeeDto fromEmployeeDto) {
+    public EmployeeEntity toEmployeeEntity(EmployeeDto fromEmployeeDto) {
         EmployeeEntity employeeEntity = new EmployeeEntity().builder()
                 .id(fromEmployeeDto.getEmployeeId())
                 .firstName(fromEmployeeDto.getFirstName())
@@ -21,12 +22,13 @@ public class EmployeeMapper {
                 .status(fromEmployeeDto.getStatus())
                 .email(fromEmployeeDto.getEmail())
                 .password(fromEmployeeDto.getPassword())
-//                .branch(null)
+//                .branch() //todo ustawić tutaj dummyBrnach
+//                .bookings() //todo ustawić tutaj bookings
                 .build();
         return employeeEntity;
     }
 
-    public EmployeeDto ToEmployeeDto(EmployeeEntity employeeEntity) {
+    public EmployeeDto toEmployeeDto(EmployeeEntity employeeEntity) {
         EmployeeDto employeeDto = new EmployeeDto().builder()
                 .employeeId(employeeEntity.getId())
                 .firstName(employeeEntity.getFirstName())
