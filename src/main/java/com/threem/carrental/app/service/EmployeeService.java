@@ -52,11 +52,11 @@ public class EmployeeService {
         return resultEmployeeDto;
     }
 
-    private Optional<EmployeeDto> createOrUpdateEmployee(EmployeeDto givenEmployeeDto, EmployeeEntity employeeEntity) {
+    private Optional<EmployeeDto> createOrUpdateEmployee(EmployeeDto employeeDto, EmployeeEntity employeeEntity) {
         Optional<EmployeeDto> resultEmployeeDto = Optional.empty();
 
         if (employeeEntity.getPassword()!=null) {
-            employeeEntity.setPassword(givenEmployeeDto.getPassword());
+            employeeEntity.setPassword(employeeDto.getPassword());
             employeeEntity = entityWithEncodedPassword(employeeEntity);
         }
 

@@ -24,13 +24,15 @@ public class EmployeeMapper {
                 .role(fromEmployeeEntity.getRole())
                 .branch(fromEmployeeEntity.getBranch())
                 .build();
+        System.out.println();
         return employeeEntity;
     }
 
     public EmployeeEntity toEmployeeEntity(EmployeeDto fromEmployeeDto) {
-        BranchEntity branchEntity = new BranchEntity().builder()
-                .id(fromEmployeeDto.getEmployeeId())
-                .build();
+        BranchEntity branchEntity = new BranchEntity();
+        if (fromEmployeeDto.getBranchId()!=null) {
+            branchEntity.setId(fromEmployeeDto.getBranchId());
+        }
 
         EmployeeEntity employeeEntity = new EmployeeEntity().builder()
                 .id(fromEmployeeDto.getEmployeeId())
