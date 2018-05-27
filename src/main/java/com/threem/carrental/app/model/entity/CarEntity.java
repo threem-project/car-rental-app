@@ -2,8 +2,10 @@ package com.threem.carrental.app.model.entity;
 
 import com.threem.carrental.app.model.entity.enumTypes.*;
 import lombok.*;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
+import javax.validation.Constraint;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -27,7 +29,7 @@ public class CarEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "vin")
+    @Column(name = "vin", unique = true)
     private String vin;
 
     @Column(name = "make")

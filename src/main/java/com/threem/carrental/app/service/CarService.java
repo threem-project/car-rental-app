@@ -1,9 +1,12 @@
 package com.threem.carrental.app.service;
 
 import com.threem.carrental.app.model.dto.CarDto;
+import com.threem.carrental.app.model.dto.EmployeeDto;
 import com.threem.carrental.app.model.entity.CarEntity;
+import com.threem.carrental.app.model.entity.EmployeeEntity;
 import com.threem.carrental.app.repository.CarRepository;
 import com.threem.carrental.app.service.mapper.CarMapper;
+import org.hibernate.NonUniqueObjectException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -28,17 +31,14 @@ public class CarService {
         Optional<CarDto> resultCarDto = Optional.empty();
         CarEntity carEntity = carMapper.toCarEntity(carDto);
 
-        // checks? VIN
-
         carRepository.save(carEntity);
+        // TODO catch ConstraintViolationException and handle in GeneralControllerAdvisor
 
-        // Retrieve car back from DB and return (as confirmation that it was saved)
-
-        return null;
-    }
-
-    public Optional<CarDto> findCarById(Integer carId) {
-        // TODO
-        return null;
+        Optional<CarEntity> carEntityFromDb = carRepository.findById(carEntity.getId());
+        if (carEntityFromDb.isPresent()) {
+            CarDto mappedCarDto = carMapper.toCarDto(carEntityFromDb.get());
+            resultCarDto = Optional.of(mappedCarDto);
+        }
+        return resultCarDto;
     }
 }

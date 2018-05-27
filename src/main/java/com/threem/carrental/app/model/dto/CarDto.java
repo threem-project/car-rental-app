@@ -34,23 +34,23 @@ public class CarDto {
     private String vin;
 
     @NotBlank
-    @Size(min = 3, max = 100)
+    @Size(min = 3, max = 100, message = "Make must be between 3 and 100 characters long.")
     private String make;
 
     @NotBlank
-    @Size(min = 3, max = 100)
+    @Size(min = 3, max = 100, message = "Model must be between 3 and 100 characters long.")
     private String model;
 
     @NotBlank
-    @Size(min = 3, max = 100)
+    @Size(min = 3, max = 100, message = "Body type must be between 3 and 100 characters long.")
     private CarBodyTypeEnum bodyType;
 
     @NotBlank
-    @Size(min = 3, max = 100)
+    @Size(min = 3, max = 100, message = "Production year must be between 3 and 100 characters long.")
     private String year;
 
     @NotBlank
-    @Size(min = 3, max = 100)
+    @Size(min = 3, max = 100, message = "Colour must be between 3 and 100 characters long.")
     private CarColourEnum colour;
 
     @NotBlank
@@ -61,22 +61,22 @@ public class CarDto {
     private CarStatusEnum status;
 
     @NotBlank
-    @Digits(integer = 6, fraction = 2)
+    @Digits(integer = 6, fraction = 2, message = "Format is: XXXX.XX")
     private BigDecimal dailyRate;
 
     @NotBlank
-    @Size(min = 3, max = 45)
+    @Size(min = 3, max = 45, message = "Engine type must be between 3 and 45 characters long.")
     private CarEngineTypeEnum engineType;
 
     @NotBlank
     private Integer engineCapacity;
 
     @NotBlank
-    @Size(min = 3, max = 45)
+    @Size(min = 3, max = 45, message = "Engine type must be between 3 and 45 characters long.")
     private CarSegmentTypeEnum segment;
 
     @NotBlank
-    @Size(min = 3, max = 45)
+    @Size(min = 3, max = 45, message = "Engine type must be between 3 and 45 characters long.")
     private CarTransmissionTypeEnum transmission;
 
     @NotBlank
@@ -89,6 +89,6 @@ public class CarDto {
 
     private List<EquipmentEntity> equipment;
 
-    private java.lang.String photoUrl;
+    private String photoUrl;
 
 }
