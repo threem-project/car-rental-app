@@ -21,28 +21,26 @@ public class EmployeeDto {
 
     private Long employeeId;
 
-    @NotBlank
-    @Size(min = 3, max = 100)
+    @NotBlank(message = "fistname can't be blank")
+    @Size(min = 3, max = 100, message = "firstName should have from 3 to 100 characters")
     private String firstName;
 
-    @NotBlank
-    @Size(min = 3, max = 100)
+    @NotBlank(message = "lastname can't be blank")
+    @Size(min = 3, max = 100, message = "lastName should have from 3 to 100 characters")
     private String lastName;
 
     private EmployeeRoleEnum role;
     private EmployeeStatusEnum status;
 
-    @NotBlank
-    @Size(min = 8, max = 16)
+    @NotBlank(message = "password can't be blank")
+    @Size(min = 8, max = 16, message = "lastName should have from 3 to 16 characters")
     private String password;
 
-    @NotBlank
-    @Size(min = 3, max = 300)
+    @NotBlank(message = "email can't be blank")
+    @Size(min = 10, max = 300, message = "email should have from 10 to 300 characters")
     private String email;
 
     private Long branchId;
-
-//    private BookingsDto bookings; //todo refactor this as soon as Bookings Dto/Entities are implemented
 
     public void setPassword(String password) {
         this.password = password;

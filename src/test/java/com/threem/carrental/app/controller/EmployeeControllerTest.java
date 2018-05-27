@@ -48,7 +48,7 @@ public class EmployeeControllerTest {
                 .email("email@testdomain.com")
                 .status(EmployeeStatusEnum.NEW)
                 .role(EmployeeRoleEnum.REGULAR_EMPLOYEE)
-                .branchId(Long.valueOf(1))
+                .branchId(null)
                 .build();
 
         //@formatter:off
@@ -66,7 +66,37 @@ public class EmployeeControllerTest {
                 .log().all()
                 .assertThat()
                 .statusCode(HttpStatus.CREATED.value());
+        //@formatter:on
+    }
 
+    @Test
+    public void shouldCreateNewEmployeeWhenReceiveEmployeeDtoWithWrongName() {
+        EmployeeDto employeeDto = new EmployeeDto().builder()   //given
+                .employeeId(null)
+                .firstName(null)
+                .lastName("Kowalski")
+                .password("testPassword")
+                .email("email@testdomain.com")
+                .status(EmployeeStatusEnum.NEW)
+                .role(EmployeeRoleEnum.REGULAR_EMPLOYEE)
+                .branchId(null)
+                .build();
+
+        //@formatter:off
+        RequestSpecification given = given()
+                .port(port)
+                .body(employeeDto)
+                .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+                .log().all();
+
+        Response when = given
+                .when()
+                .post("employee");
+
+        when.then()
+                .log().all()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
         //@formatter:on
     }
 

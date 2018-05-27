@@ -5,5 +5,5 @@ package com.threem.carrental.app.model.entity.enumTypes;
  */
 
 public enum EmployeeRoleEnum {
-    OWNER;
+    OWNER,REGULAR_EMPLOYEE;
 }

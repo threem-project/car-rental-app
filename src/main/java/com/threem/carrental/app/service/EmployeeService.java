@@ -1,5 +1,6 @@
 package com.threem.carrental.app.service;
 
+import com.threem.carrental.app.errorHandler.customExceptions.IncorrectBranchException;
 import com.threem.carrental.app.model.dto.EmployeeDto;
 import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.EmployeeEntity;
@@ -29,17 +30,23 @@ public class EmployeeService {
         this.passwordEncoder = passwordEncoder;
     }
 
-
     public Optional<EmployeeDto> createEmployee(EmployeeDto employeeDto) {
         Optional<EmployeeDto> resultEmployeeDto = Optional.empty();
         EmployeeEntity employeeEntity = employeeMapper.toEmployeeEntity(employeeDto);
         String encodedPassword = passwordEncoder.encode(employeeEntity.getPassword());
         employeeEntity.setPassword(encodedPassword);
 
-        if (employeeDto.getBranchId()!=null) {
-            Optional<BranchEntity> branchEntity = branchRepository.findById(employeeDto.getBranchId());
-            if (branchEntity.isPresent()) {
-                employeeEntity.setBranch(branchEntity.get());
+        if (employeeEntity.getBranch()!=null) {
+            Long employeeBranchId = employeeEntity.getBranch().getId();
+            if (employeeBranchId!=null) {
+                Optional<BranchEntity> branchEntity = branchRepository.findById(employeeBranchId);
+                if (branchEntity.isPresent()) {
+                    employeeEntity.setBranch(branchEntity.get());
+                } else {
+                    throw new IncorrectBranchException("Given branch ID is incorrect");
+                }
+            } else {
+                employeeEntity.setBranch(null);
             }
         }
 
@@ -47,10 +54,10 @@ public class EmployeeService {
 
         Optional<EmployeeEntity> employeeEntityFromDb = employeeRepository.findById(employeeEntity.getId());
         if (employeeEntityFromDb.isPresent()) {
-            resultEmployeeDto = Optional.of(employeeMapper.toEmployeeDto(employeeEntityFromDb.get()));
+            EmployeeDto mappedEmployeeDto = employeeMapper.toEmployeeDto(employeeEntityFromDb.get());
+            resultEmployeeDto = Optional.of(mappedEmployeeDto);
             resultEmployeeDto.get().setPassword(null);
         }
         return resultEmployeeDto;
     }
-
 }
