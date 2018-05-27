@@ -76,7 +76,7 @@ public class CarEntity {
     @Column(name = "doors")
     private Integer doors;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "branch_id")
     private BranchEntity branch;
 
