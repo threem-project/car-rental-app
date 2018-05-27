@@ -1,19 +1,24 @@
 package com.threem.carrental.app.model.dto;
 
-import com.threem.carrental.app.model.entity.BookingEntity;
 import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.EquipmentEntity;
 import com.threem.carrental.app.model.entity.enumTypes.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.List;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Getter
 public class CarDto {
-
 
     private Long carId;
 
@@ -45,7 +50,7 @@ public class CarDto {
     private CarStatusEnum status;
 
     @NotBlank
-    @Digits(integer=6, fraction=2)
+    @Digits(integer = 6, fraction = 2)
     private BigDecimal dailyRate;
 
     @NotBlank
@@ -71,16 +76,6 @@ public class CarDto {
 
     private BranchEntity branch;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "car")
-    private List<BookingEntity> bookings;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "car_equipment",
-            joinColumns ={@JoinColumn(name = "car_id")},
-            inverseJoinColumns = {@JoinColumn(name = "equipment_id")}
-    )
-    private List<EquipmentEntity> equipments;
-
+    private List<EquipmentEntity> equipment;
 
 }
