@@ -46,7 +46,7 @@ public class GeneralControllerAdvisor {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ErrorResponse handle(IncorrectBranchException e, ServletWebRequest request) {
-        return ErrorResponse.of(HttpStatus.UNPROCESSABLE_ENTITY, "Invalid JSON format", request.getRequest().getRequestURI());
+        return ErrorResponse.of(HttpStatus.UNPROCESSABLE_ENTITY, "Wrong branch ID", request.getRequest().getRequestURI());
     }
 
 
