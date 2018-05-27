@@ -8,10 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.Constraint;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -28,9 +26,10 @@ public class CarDto {
 
     private Long carId;
 
+    // TODO fix regex or write validator for vin nr https://pl.wikipedia.org/wiki/Vehicle_Identification_Number
     @NotBlank
     @Size(min = 17, max = 17, message = "VIN must have 17 characters")
-    @Pattern(regexp = "/^(?<wmi>[A-HJ-NPR-Z\\d]{3})(?<vds>[A-HJ-NPR-Z\\d]{5})(?<check>[\\dX])(?<vis>(?<year>[A-HJ-NPR-Z\\d])(?<plant>[A-HJ-NPR-Z\\d])(?<seq>[A-HJ-NPR-Z\\d]{6}))$/")
+//    @Pattern(regexp = "/^([A-HJ-NPR-Z\\d]{3})([A-HJ-NPR-Z\\d]{5})([\\dX])(([A-HJ-NPR-Z\\d])([A-HJ-NPR-Z\\d])([A-HJ-NPR-Z\\d]{6}))$/i")
     private String vin;
 
     @NotBlank
@@ -41,48 +40,36 @@ public class CarDto {
     @Size(min = 3, max = 100, message = "Model must be between 3 and 100 characters long.")
     private String model;
 
-    @NotBlank
-    @Size(min = 3, max = 100, message = "Body type must be between 3 and 100 characters long.")
     private CarBodyTypeEnum bodyType;
 
     @NotBlank
     @Size(min = 3, max = 100, message = "Production year must be between 3 and 100 characters long.")
     private String year;
 
-    @NotBlank
-    @Size(min = 3, max = 100, message = "Colour must be between 3 and 100 characters long.")
     private CarColourEnum colour;
 
-    @NotBlank
+    @NotNull
     private Integer mileage;
 
-    @NotBlank
-    @Size(min = 3, max = 100)
     private CarStatusEnum status;
 
-    @NotBlank
+    @NotNull
     @Digits(integer = 6, fraction = 2, message = "Format is: XXXX.XX")
     private BigDecimal dailyRate;
 
-    @NotBlank
-    @Size(min = 3, max = 45, message = "Engine type must be between 3 and 45 characters long.")
     private CarEngineTypeEnum engineType;
 
-    @NotBlank
+    @NotNull
     private Integer engineCapacity;
 
-    @NotBlank
-    @Size(min = 3, max = 45, message = "Engine type must be between 3 and 45 characters long.")
     private CarSegmentTypeEnum segment;
 
-    @NotBlank
-    @Size(min = 3, max = 45, message = "Engine type must be between 3 and 45 characters long.")
     private CarTransmissionTypeEnum transmission;
 
-    @NotBlank
+    @NotNull
     private Integer seats;
 
-    @NotBlank
+    @NotNull
     private Integer doors;
 
     private BranchEntity branch;
