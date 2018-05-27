@@ -15,7 +15,7 @@ public class CarMapper {
     public CarEntity toCarEntity(CarDto fromCarDto) {
         CarEntity carEntity = new CarEntity().builder()
                 .id(fromCarDto.getCarId())
-                .label(fromCarDto.getLabel())
+                .make(fromCarDto.getMake())
                 .model(fromCarDto.getModel())
                 .bodyType(fromCarDto.getBodyType())
                 .year(fromCarDto.getYear())
@@ -39,7 +39,7 @@ public class CarMapper {
     public CarDto toCarDto(CarEntity carEntity) {
         CarDto carDto = new CarDto().builder()
                 .carId(carEntity.getId())
-                .label(carEntity.getLabel())
+                .make(carEntity.getMake())
                 .model(carEntity.getModel())
                 .bodyType(carEntity.getBodyType())
                 .year(carEntity.getYear())

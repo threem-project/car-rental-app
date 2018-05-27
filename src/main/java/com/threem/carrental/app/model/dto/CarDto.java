@@ -29,11 +29,11 @@ public class CarDto {
 
     @NotBlank
     @Size(min = 3, max = 100)
-    private CarLabelEnum label;
+    private String make;
 
     @NotBlank
     @Size(min = 3, max = 100)
-    private CarModelEnum model;
+    private String model;
 
     @NotBlank
     @Size(min = 3, max = 100)
@@ -83,6 +83,6 @@ public class CarDto {
 
     private List<EquipmentEntity> equipment;
 
-    private String photoUrl;
+    private java.lang.String photoUrl;
 
 }

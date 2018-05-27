@@ -27,13 +27,11 @@ public class CarEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "label")
-    @Enumerated(EnumType.STRING)
-    private CarLabelEnum label;
+    @Column(name = "make")
+    private String make;
 
     @Column(name = "model")
-    @Enumerated(EnumType.STRING)
-    private CarModelEnum model;
+    private String model;
 
     @Column(name = "body_type")
     @Enumerated(EnumType.STRING)
