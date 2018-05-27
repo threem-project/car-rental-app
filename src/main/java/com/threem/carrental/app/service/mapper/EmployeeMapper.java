@@ -14,6 +14,10 @@ import java.util.Optional;
 public class EmployeeMapper {
     //todo refactor this part code as soon as branchMappre is available
     public EmployeeEntity toEmployeeEntity(EmployeeDto fromEmployeeDto) {
+        BranchEntity branchEntity = new BranchEntity().builder()
+                .id(fromEmployeeDto.getEmployeeId())
+                .build();
+
         EmployeeEntity employeeEntity = new EmployeeEntity().builder()
                 .id(fromEmployeeDto.getEmployeeId())
                 .firstName(fromEmployeeDto.getFirstName())
@@ -22,13 +26,17 @@ public class EmployeeMapper {
                 .status(fromEmployeeDto.getStatus())
                 .email(fromEmployeeDto.getEmail())
                 .password(fromEmployeeDto.getPassword())
-//                .branch() //todo ustawić tutaj dummyBrnach
-//                .bookings() //todo ustawić tutaj bookings
+                .branch(branchEntity)
                 .build();
         return employeeEntity;
     }
 
     public EmployeeDto toEmployeeDto(EmployeeEntity employeeEntity) {
+        Long branchId = null;
+        if (employeeEntity.getBranch()!=null) {
+            branchId = employeeEntity.getBranch().getId();
+        }
+
         EmployeeDto employeeDto = new EmployeeDto().builder()
                 .employeeId(employeeEntity.getId())
                 .firstName(employeeEntity.getFirstName())
@@ -37,7 +45,7 @@ public class EmployeeMapper {
                 .status(employeeEntity.getStatus())
                 .email(employeeEntity.getEmail())
                 .password(employeeEntity.getPassword())
-//                .branchId(employeeEntity.getBranch())
+                .branchId(branchId)
                 .build();
         return employeeDto;
     }

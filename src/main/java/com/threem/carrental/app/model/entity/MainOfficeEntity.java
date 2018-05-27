@@ -30,10 +30,6 @@ public class MainOfficeEntity {
     @Column(name = "address")
     private String address;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn (name = "owner")
-    private EmployeeEntity ownerEmployee;
-
     @Column(name = "phone")
     private String phone;
 
