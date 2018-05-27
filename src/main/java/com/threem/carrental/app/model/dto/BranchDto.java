@@ -19,7 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Setter(AccessLevel.PRIVATE)
+@Setter
 @Getter
 public class BranchDto {
 
@@ -30,10 +30,6 @@ public class BranchDto {
 
     private MainOfficeEntity mainOffice;
 
-    private List<EmployeeEntity> employees;
-
-    private List<CarEntity> cars;
-
-    private BranchStatusEnum branchStatus;
+    private BranchStatusEnum status;
 
 }

@@ -26,14 +26,20 @@ public class BranchMapper {
                 .id(fromBranchDto.getMainOffice().getId())
                 .build();
 
-
         return BranchEntity.builder()
                 .id(fromBranchDto.getId())
                 .address(addressBranchEntity)
                 .mainOffice(mainOfficeEntity)
-                .employees(fromBranchDto.getEmployees())
-                //.cars()
-                .status(fromBranchDto.getBranchStatus())
+                .status(fromBranchDto.getStatus())
+                .build();
+    }
+
+    public BranchDto toBranchDto(BranchEntity fromBranchEntity) {
+        return BranchDto.builder()
+                .id(fromBranchEntity.getId())
+                .address(null)
+                .mainOffice(null)
+                .status(fromBranchEntity.getStatus())
                 .build();
     }
 }
