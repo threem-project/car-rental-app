@@ -4,6 +4,7 @@ import com.threem.carrental.app.model.dto.BranchDto;
 import com.threem.carrental.app.model.entity.AddressBranchEntity;
 import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.MainOfficeEntity;
+import com.threem.carrental.app.repository.MainOfficeRepository;
 import com.threem.carrental.app.service.mapper.AddressBranchMapper;
 import com.threem.carrental.app.service.mapper.BranchMapper;
 import com.threem.carrental.app.repository.BranchRepository;
@@ -11,6 +12,7 @@ import com.threem.carrental.app.service.mapper.MainOfficeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -25,22 +27,25 @@ public class BranchService {
     private final BranchMapper branchMapper;
     private final AddressBranchMapper addressBranchMapper;
     private final MainOfficeMapper mainOfficeMapper;
+    private final MainOfficeRepository mainOfficeRepository;
 
     @Autowired
-    public BranchService(BranchRepository branchRepository, BranchMapper branchMapper, AddressBranchMapper addressBranchMapper, MainOfficeMapper mainOfficeMapper) {
+    public BranchService(BranchRepository branchRepository, BranchMapper branchMapper, AddressBranchMapper addressBranchMapper, MainOfficeMapper mainOfficeMapper, MainOfficeRepository mainOfficeRepository) {
         this.branchRepository = branchRepository;
         this.branchMapper = branchMapper;
         this.addressBranchMapper = addressBranchMapper;
         this.mainOfficeMapper = mainOfficeMapper;
+        this.mainOfficeRepository = mainOfficeRepository;
     }
 
     public Optional<BranchDto> createBranch(BranchDto branchDto) {
         Optional<BranchDto> resultBranchDto = Optional.empty();
         BranchEntity branchEntity = branchMapper.toBranchEntity(branchDto);
         AddressBranchEntity addressBranchEntity = addressBranchMapper.toAddressBranchEntity(branchDto.getAddress());
-        MainOfficeEntity mainOfficeEntity = mainOfficeMapper.toMainOfficeEntity(branchDto.getMainOffice());
         branchEntity.setAddress(addressBranchEntity);
-        branchEntity.setMainOffice(mainOfficeEntity);
+
+        List<MainOfficeEntity> mainOfficeEntity = mainOfficeRepository.findAll();
+        branchEntity.setMainOffice(mainOfficeEntity.get(0));
 
         branchRepository.save(branchEntity);
 
@@ -56,6 +61,4 @@ public class BranchService {
         }
         return resultBranchDto;
     }
-
-
 }
