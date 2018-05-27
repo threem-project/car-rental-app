@@ -80,9 +80,6 @@ public class CarEntity {
     @JoinColumn(name = "branch_id")
     private BranchEntity branch;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "car")
-    private List<BookingEntity> bookings;
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "car_equipment",
