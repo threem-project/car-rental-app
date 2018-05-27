@@ -1,9 +1,10 @@
 package com.threem.carrental.app.service.mapper;
 
-import com.threem.carrental.app.model.dto.AddressBranchDto;
 import com.threem.carrental.app.model.dto.BranchDto;
+import com.threem.carrental.app.model.entity.AddressBranchEntity;
 import com.threem.carrental.app.model.entity.BranchEntity;
 import org.springframework.stereotype.Service;
+
 
 /**
  * @author misza_lemko on 22.05.2018
@@ -13,15 +14,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class BranchMapper {
 
-    private final AddressBranchMapper addressBranchMapper;
+    public BranchEntity toBranchEntity(BranchDto fromBranchDto) {
+        AddressBranchEntity addressBranchEntity = AddressBranchEntity.builder()
+                .id(fromBranchDto.getAddress().getId())
+                .build();
 
-    public BranchMapper(AddressBranchMapper addressBranchMapper) {
-        this.addressBranchMapper = addressBranchMapper;
-    }
-
-    public BranchEntity toBranchEntity(BranchDto fromBranchDto, AddressBranchDto fromAddressBranchDto) {
         return BranchEntity.builder()
-                .address(addressBranchMapper.toAddressBranchEntity(fromAddressBranchDto))
+                .id(fromBranchDto.getId())
+                .address(addressBranchEntity)
+                .mainOffice(fromBranchDto.getMainOffice())
+                //.bookings()
+                .employees(fromBranchDto.getEmployees())
+                //.cars()
+                .status(fromBranchDto.getBranchStatus())
                 .build();
     }
 }
