@@ -31,6 +31,7 @@ public class EmployeeService {
 
 
     public Optional<EmployeeDto> createEmployee(EmployeeDto employeeDto) {
+        //check if employeeExists in DB
         Optional<EmployeeDto> resultEmployeeDto = Optional.empty();
         EmployeeEntity employeeEntity = employeeMapper.toEmployeeEntity(employeeDto);
         String encodedPassword = passwordEncoder.encode(employeeEntity.getPassword());

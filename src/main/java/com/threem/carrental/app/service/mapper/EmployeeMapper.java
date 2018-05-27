@@ -14,6 +14,10 @@ import java.util.Optional;
 public class EmployeeMapper {
     //todo refactor this part code as soon as branchMappre is available
     public EmployeeEntity toEmployeeEntity(EmployeeDto fromEmployeeDto) {
+        BranchEntity branchEntity = new BranchEntity().builder()
+                .id(fromEmployeeDto.getEmployeeId())
+                .build();
+
         EmployeeEntity employeeEntity = new EmployeeEntity().builder()
                 .id(fromEmployeeDto.getEmployeeId())
                 .firstName(fromEmployeeDto.getFirstName())
@@ -22,7 +26,7 @@ public class EmployeeMapper {
                 .status(fromEmployeeDto.getStatus())
                 .email(fromEmployeeDto.getEmail())
                 .password(fromEmployeeDto.getPassword())
-//                .branch() //todo ustawić tutaj dummyBrnach
+                .branch(branchEntity)
 //                .bookings() //todo ustawić tutaj bookings
                 .build();
         return employeeEntity;
@@ -37,7 +41,8 @@ public class EmployeeMapper {
                 .status(employeeEntity.getStatus())
                 .email(employeeEntity.getEmail())
                 .password(employeeEntity.getPassword())
-//                .branchId(employeeEntity.getBranch())
+                .branchId(employeeEntity.getBranch().getId())
+//                .bookings()
                 .build();
         return employeeDto;
     }
