@@ -33,20 +33,6 @@ public class BranchEntity {
     @JoinColumn(name = "main_office_id")
     private MainOfficeEntity mainOffice;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "booking_branch",
-            joinColumns ={@JoinColumn(name = "branch_id")},
-            inverseJoinColumns = {@JoinColumn(name = "booking_id")}
-        )
-    private List<BookingEntity> bookings;
-
-    @OneToMany(mappedBy = "branch",fetch = FetchType.LAZY)
-    private List<EmployeeEntity> employees;
-
-    @OneToMany(mappedBy = "branch",fetch = FetchType.LAZY)
-    private List<CarEntity> cars;
-
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private BranchStatusEnum status;
