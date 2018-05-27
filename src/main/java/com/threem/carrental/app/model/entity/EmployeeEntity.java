@@ -45,7 +45,7 @@ public class EmployeeEntity {
     @Column(name = "email")
     private String email;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "branch_id")
     private BranchEntity branch;
 }
