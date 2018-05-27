@@ -37,6 +37,11 @@ public class EmployeeController {
 
     @PutMapping
     public ResponseEntity<EmployeeDto> editEmployee(@Validated @RequestBody EmployeeDto employeeDto) {
-        throw new NotYetImplementedException("this is not yet implemented....");
+        Optional<EmployeeDto> employeeDtoFromService = employeeService.updateEmployee(employeeDto);
+        if (employeeDtoFromService.isPresent()) {
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(employeeDtoFromService.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 }
