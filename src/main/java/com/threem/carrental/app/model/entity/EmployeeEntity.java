@@ -48,9 +48,4 @@ public class EmployeeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "branch_id")
     private BranchEntity branch;
-
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "employee")
-    private List<BookingEntity> bookings;
-
-
 }

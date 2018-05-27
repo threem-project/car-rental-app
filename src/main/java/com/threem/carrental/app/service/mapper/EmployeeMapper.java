@@ -27,12 +27,16 @@ public class EmployeeMapper {
                 .email(fromEmployeeDto.getEmail())
                 .password(fromEmployeeDto.getPassword())
                 .branch(branchEntity)
-//                .bookings() //todo ustawić tutaj bookings
                 .build();
         return employeeEntity;
     }
 
     public EmployeeDto toEmployeeDto(EmployeeEntity employeeEntity) {
+        Long branchId = null;
+        if (employeeEntity.getBranch()!=null) {
+            branchId = employeeEntity.getBranch().getId();
+        }
+
         EmployeeDto employeeDto = new EmployeeDto().builder()
                 .employeeId(employeeEntity.getId())
                 .firstName(employeeEntity.getFirstName())
@@ -41,8 +45,7 @@ public class EmployeeMapper {
                 .status(employeeEntity.getStatus())
                 .email(employeeEntity.getEmail())
                 .password(employeeEntity.getPassword())
-                .branchId(employeeEntity.getBranch().getId())
-//                .bookings()
+                .branchId(branchId)
                 .build();
         return employeeDto;
     }

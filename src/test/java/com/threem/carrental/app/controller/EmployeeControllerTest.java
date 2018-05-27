@@ -48,7 +48,7 @@ public class EmployeeControllerTest {
                 .email("email@testdomain.com")
                 .status(EmployeeStatusEnum.NEW)
                 .role(EmployeeRoleEnum.REGULAR_EMPLOYEE)
-                .branchId(Long.valueOf(1))
+                .branchId(null)
                 .build();
 
         //@formatter:off
@@ -66,7 +66,6 @@ public class EmployeeControllerTest {
                 .log().all()
                 .assertThat()
                 .statusCode(HttpStatus.CREATED.value());
-
         //@formatter:on
     }
 
