@@ -53,8 +53,8 @@ public class CarEntity {
     @Enumerated(EnumType.STRING)
     private CarStatusEnum status;
 
-    @Column(name = "daily_rade")
-    private BigDecimal dailyRade;
+    @Column(name = "daily_rate")
+    private BigDecimal dailyRate;
 
     @Column(name = "engine_type")
     @Enumerated(EnumType.STRING)
@@ -71,10 +71,10 @@ public class CarEntity {
     private CarTransmissionTypeEnum transmission;
 
     @Column(name = "seats")
-    private String seats;
+    private Integer seats;
 
     @Column(name = "doors")
-    private String doors;
+    private Integer doors;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "branch_id")
