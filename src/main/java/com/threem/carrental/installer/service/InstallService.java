@@ -63,7 +63,6 @@ public class InstallService {
                 .name(command.getCompanyName())
                 .domain(command.getDomain())
                 .address(command.getAddress())
-                .ownerEmployee(employee)
                 .phone(command.getPhone())
                 .build();
 
