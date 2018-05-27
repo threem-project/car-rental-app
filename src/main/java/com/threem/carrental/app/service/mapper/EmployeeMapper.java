@@ -24,7 +24,6 @@ public class EmployeeMapper {
                 .role(fromEmployeeEntity.getRole())
                 .branch(fromEmployeeEntity.getBranch())
                 .build();
-        System.out.println();
         return employeeEntity;
     }
 
