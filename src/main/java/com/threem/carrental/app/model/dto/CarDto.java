@@ -14,6 +14,11 @@ import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * @author Marika Grzebieniowska on 27.05.2018
+ * @project car-rental-app
+ */
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -77,5 +82,7 @@ public class CarDto {
     private BranchEntity branch;
 
     private List<EquipmentEntity> equipment;
+
+    private String photoUrl;
 
 }

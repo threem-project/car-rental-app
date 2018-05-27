@@ -86,6 +86,6 @@ public class CarEntity {
             joinColumns ={@JoinColumn(name = "car_id")},
             inverseJoinColumns = {@JoinColumn(name = "equipment_id")}
     )
-    private List<EquipmentEntity> equipments;
+    private List<EquipmentEntity> equipment;
 
 }
