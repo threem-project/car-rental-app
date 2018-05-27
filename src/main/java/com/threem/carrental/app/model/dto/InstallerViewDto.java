@@ -1,4 +1,4 @@
-package com.threem.carrental.installer.model.outbound.view;
+package com.threem.carrental.app.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -12,7 +12,7 @@ import lombok.*;
 @Getter
 @Setter (AccessLevel.PRIVATE)
 @Builder
-public class InstallerView {
+public class InstallerViewDto {
 
     @JsonProperty(value = "id")
     private Long id;

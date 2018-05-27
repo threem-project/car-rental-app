@@ -1,8 +1,8 @@
-package com.threem.carrental.installer.controller;
+package com.threem.carrental.app.controller;
 
-import com.threem.carrental.installer.model.inbound.command.InstallCreateCommand;
-import com.threem.carrental.installer.model.outbound.view.InstallerView;
-import com.threem.carrental.installer.service.InstallService;
+import com.threem.carrental.app.model.dto.InstallDto;
+import com.threem.carrental.app.model.dto.InstallerViewDto;
+import com.threem.carrental.app.service.InstallService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -29,10 +29,10 @@ public class InstallController {
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<InstallerView> setupDbConnectionAndProperties(@RequestBody @Validated InstallCreateCommand installCreateCommand) {
-        InstallerView installerView = installService.createMainOffice(installCreateCommand);
-        if (installerView!=null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(installerView);
+    public ResponseEntity<InstallerViewDto> setupDbConnectionAndProperties(@RequestBody @Validated InstallDto installDto) {
+        InstallerViewDto installerViewDto = installService.createMainOffice(installDto);
+        if (installerViewDto !=null) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(installerViewDto);
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }

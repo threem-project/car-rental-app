@@ -1,4 +1,4 @@
-package com.threem.carrental.installer.model.inbound.command;
+package com.threem.carrental.app.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @Setter(AccessLevel.PRIVATE)
 @AllArgsConstructor
 @ToString
-public class InstallCreateCommand {
+public class InstallDto {
 
     @NotBlank
     @NotNull

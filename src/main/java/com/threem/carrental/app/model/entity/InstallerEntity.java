@@ -1,5 +1,6 @@
-package com.threem.carrental.installer.model.outbound.entity;
+package com.threem.carrental.app.model.entity;
 
+import com.threem.carrental.app.model.entity.enumTypes.InstallationStatusEnum;
 import lombok.*;
 
 import javax.persistence.*;
