@@ -74,12 +74,8 @@ public class BookingEntity {
     @JoinColumn(name = "employee_id")
     private EmployeeEntity employee;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "booking_branch",
-            joinColumns ={@JoinColumn(name = "booking_id")},
-            inverseJoinColumns = {@JoinColumn(name = "branch_id")}
-    )
-    private List<BranchEntity> branches;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "branch_id")
+    private BranchEntity branch;
 
 }
