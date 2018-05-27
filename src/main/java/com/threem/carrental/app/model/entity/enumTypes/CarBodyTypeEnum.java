@@ -6,4 +6,6 @@ package com.threem.carrental.app.model.entity.enumTypes;
  */
 
 public enum CarBodyTypeEnum {
+
+    SEDAN, CONVERTIBLE, COUPE, PICKUP, HATCHBACK, ESTATE, CROSSOVER_4x4, MINIVAN, SUV
 }
