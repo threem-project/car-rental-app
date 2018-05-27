@@ -30,7 +30,7 @@ public class CarMapper {
                 .transmission(fromCarDto.getTransmission())
                 .seats(fromCarDto.getSeats())
                 .doors(fromCarDto.getDoors())
-//                 .branch() TODO dummy branch
+//                 .branch() TODO dummy branch?
 //                 .equipment() TODO dummy branch
 //                .photoUrl(fromCarDto.getPhotoUrl()) TODO figure this out
                 .build();

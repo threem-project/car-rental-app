@@ -67,6 +67,7 @@ public class CarEntity {
     private Integer engineCapacity;
 
     @Column(name = "segment")
+    @Enumerated(EnumType.STRING)
     private CarSegmentTypeEnum segment;
 
     @Column(name = "transmission")
