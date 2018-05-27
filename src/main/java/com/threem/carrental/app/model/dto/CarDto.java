@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.List;
@@ -26,6 +27,11 @@ import java.util.List;
 public class CarDto {
 
     private Long carId;
+
+    @NotBlank
+    @Size(min = 17, max = 17, message = "VIN must have 17 characters")
+    @Pattern(regexp = "/^(?<wmi>[A-HJ-NPR-Z\\d]{3})(?<vds>[A-HJ-NPR-Z\\d]{5})(?<check>[\\dX])(?<vis>(?<year>[A-HJ-NPR-Z\\d])(?<plant>[A-HJ-NPR-Z\\d])(?<seq>[A-HJ-NPR-Z\\d]{6}))$/")
+    private String vin;
 
     @NotBlank
     @Size(min = 3, max = 100)

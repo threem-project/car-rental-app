@@ -27,6 +27,9 @@ public class CarEntity {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "vin")
+    private String vin;
+
     @Column(name = "make")
     private String make;
 
@@ -81,7 +84,7 @@ public class CarEntity {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "car_equipment",
-            joinColumns ={@JoinColumn(name = "car_id")},
+            joinColumns = {@JoinColumn(name = "car_id")},
             inverseJoinColumns = {@JoinColumn(name = "equipment_id")}
     )
     private List<EquipmentEntity> equipment;
