@@ -71,17 +71,14 @@ public class CarEntity {
     private CarTransmissionTypeEnum transmission;
 
     @Column(name = "seats")
-    private String seats;
+    private Integer seats;
 
     @Column(name = "doors")
-    private String doors;
+    private Integer doors;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "branch_id")
     private BranchEntity branch;
-
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "car")
-    private List<BookingEntity> bookings;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
