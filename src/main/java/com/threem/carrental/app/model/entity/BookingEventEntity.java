@@ -53,6 +53,9 @@ public class BookingEventEntity {
     @Column(name = "comments")
     private String comments;
 
+    @Column(name = "branch_id")
+    private Integer branchId;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "booking_id")
     private BookingEntity booking;
