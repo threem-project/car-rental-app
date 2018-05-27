@@ -1,5 +1,7 @@
 package com.threem.carrental.app.service;
 
+import com.threem.carrental.app.errorHandler.customExceptions.EmployeeAlreadyExistException;
+import com.threem.carrental.app.errorHandler.customExceptions.EmployeeDoesNotExistException;
 import com.threem.carrental.app.errorHandler.customExceptions.IncorrectBranchException;
 import com.threem.carrental.app.model.dto.EmployeeDto;
 import com.threem.carrental.app.model.entity.BranchEntity;
@@ -33,8 +35,52 @@ public class EmployeeService {
     public Optional<EmployeeDto> createEmployee(EmployeeDto employeeDto) {
         Optional<EmployeeDto> resultEmployeeDto = Optional.empty();
         EmployeeEntity employeeEntity = employeeMapper.toEmployeeEntity(employeeDto);
+
+        if (employeeExist(employeeEntity)) {
+            throw new EmployeeAlreadyExistException("Given Employee ID is already in DB");
+        }
+
         String encodedPassword = passwordEncoder.encode(employeeEntity.getPassword());
         employeeEntity.setPassword(encodedPassword);
+        employeeEntity = setBranchForEmployee(employeeEntity);
+
+        employeeRepository.save(employeeEntity);
+
+        Optional<EmployeeEntity> employeeEntityFromDb = employeeRepository.findById(employeeEntity.getId());
+        if (employeeEntityFromDb.isPresent()) {
+            EmployeeDto mappedEmployeeDto = employeeMapper.toEmployeeDto(employeeEntityFromDb.get());
+            resultEmployeeDto = Optional.of(mappedEmployeeDto);
+            resultEmployeeDto.get().setPassword(null);
+        }
+        return resultEmployeeDto;
+    }
+
+    public Optional<EmployeeDto> updateEmployee(EmployeeDto employeeDto) {
+        Optional<EmployeeDto> resultEmployeeDto = Optional.empty();
+        EmployeeEntity employeeEntity = employeeMapper.toEmployeeEntity(employeeDto);
+
+        if (!employeeExist(employeeEntity)) {
+            throw new EmployeeDoesNotExistException("Can't find employee with the given ID");
+        }
+
+
+        return resultEmployeeDto;
+    }
+
+    private Boolean employeeExist(EmployeeEntity givenEmployeeEntity) {
+        Boolean result = false;
+        if (givenEmployeeEntity.getId() != null) {
+            Long employeeId = givenEmployeeEntity.getId();
+            Optional<EmployeeEntity> employeeEntity = employeeRepository.findById(employeeId);
+            if (employeeEntity.isPresent()) {
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    private EmployeeEntity setBranchForEmployee(EmployeeEntity givenEmployee) {
+        EmployeeEntity employeeEntity = employeeMapper.toEmployeeEntity(givenEmployee);
 
         if (employeeEntity.getBranch()!=null) {
             Long employeeBranchId = employeeEntity.getBranch().getId();
@@ -49,15 +95,6 @@ public class EmployeeService {
                 employeeEntity.setBranch(null);
             }
         }
-
-        employeeRepository.save(employeeEntity);
-
-        Optional<EmployeeEntity> employeeEntityFromDb = employeeRepository.findById(employeeEntity.getId());
-        if (employeeEntityFromDb.isPresent()) {
-            EmployeeDto mappedEmployeeDto = employeeMapper.toEmployeeDto(employeeEntityFromDb.get());
-            resultEmployeeDto = Optional.of(mappedEmployeeDto);
-            resultEmployeeDto.get().setPassword(null);
-        }
-        return resultEmployeeDto;
+        return employeeEntity;
     }
 }

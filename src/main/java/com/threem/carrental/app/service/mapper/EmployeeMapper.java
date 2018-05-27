@@ -12,7 +12,21 @@ import java.util.Optional;
  */
 @Service
 public class EmployeeMapper {
-    //todo refactor this part code as soon as branchMappre is available
+
+    public EmployeeEntity toEmployeeEntity(EmployeeEntity fromEmployeeEntity) {
+        EmployeeEntity employeeEntity = new EmployeeEntity().builder()
+                .id(fromEmployeeEntity.getId())
+                .firstName(fromEmployeeEntity.getFirstName())
+                .lastName(fromEmployeeEntity.getLastName())
+                .email(fromEmployeeEntity.getEmail())
+                .password(fromEmployeeEntity.getPassword())
+                .status(fromEmployeeEntity.getStatus())
+                .role(fromEmployeeEntity.getRole())
+                .branch(fromEmployeeEntity.getBranch())
+                .build();
+        return employeeEntity;
+    }
+
     public EmployeeEntity toEmployeeEntity(EmployeeDto fromEmployeeDto) {
         BranchEntity branchEntity = new BranchEntity().builder()
                 .id(fromEmployeeDto.getEmployeeId())
@@ -31,20 +45,20 @@ public class EmployeeMapper {
         return employeeEntity;
     }
 
-    public EmployeeDto toEmployeeDto(EmployeeEntity employeeEntity) {
+    public EmployeeDto toEmployeeDto(EmployeeEntity fromEmployeeEntity) {
         Long branchId = null;
-        if (employeeEntity.getBranch()!=null) {
-            branchId = employeeEntity.getBranch().getId();
+        if (fromEmployeeEntity.getBranch()!=null) {
+            branchId = fromEmployeeEntity.getBranch().getId();
         }
 
         EmployeeDto employeeDto = new EmployeeDto().builder()
-                .employeeId(employeeEntity.getId())
-                .firstName(employeeEntity.getFirstName())
-                .lastName(employeeEntity.getLastName())
-                .role(employeeEntity.getRole())
-                .status(employeeEntity.getStatus())
-                .email(employeeEntity.getEmail())
-                .password(employeeEntity.getPassword())
+                .employeeId(fromEmployeeEntity.getId())
+                .firstName(fromEmployeeEntity.getFirstName())
+                .lastName(fromEmployeeEntity.getLastName())
+                .role(fromEmployeeEntity.getRole())
+                .status(fromEmployeeEntity.getStatus())
+                .email(fromEmployeeEntity.getEmail())
+                .password(fromEmployeeEntity.getPassword())
                 .branchId(branchId)
                 .build();
         return employeeDto;
