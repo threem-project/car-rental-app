@@ -41,13 +41,13 @@ public class CarControllerTest {
     private CarService carService;
 
     @Test
-    public void shouldCreatNewCarUponReceivingProperCarDto() {
+    public void shouldCreateNewCarUponReceivingProperCarDto() {
         CarDto carDto = new CarDto().builder() // given
                 .carId(null)
                 .vin("JH2SC2608SM506729")
                 .make("Ford")
                 .model("Focus")
-                .bodyType(CarBodyTypeEnum.SEDAN)
+                                .bodyType(CarBodyTypeEnum.SEDAN)
                 .year("2010")
                 .colour(CarColourEnum.WHITE)
                 .mileage(280000)
@@ -78,7 +78,7 @@ public class CarControllerTest {
                 .log().all()
                 .assertThat()
                 .statusCode(HttpStatus.CREATED.value());
-
-
     }
+
+    // TODO test: failing validation? wrong vin?
 }
