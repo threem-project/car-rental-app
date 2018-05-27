@@ -1,5 +1,6 @@
 package com.threem.carrental.app.errorHandler;
 
+import com.threem.carrental.app.errorHandler.customExceptions.IncorrectBranchException;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -34,10 +35,17 @@ public class GeneralControllerAdvisor {
         return ErrorResponse.of(HttpStatus.NOT_FOUND, "General error with application", request.getRequest().getRequestURI());
     }
 
-    //todo - refactor this part as a ConotrollerAdvice which is connected to JSON Dto objects
+    //todo - refactor this stage as a part of ServiceLayer exceptions
     @ExceptionHandler
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ErrorResponse handle(HttpMessageNotReadableException e, ServletWebRequest request) {
+        return ErrorResponse.of(HttpStatus.UNPROCESSABLE_ENTITY, "Invalid JSON format", request.getRequest().getRequestURI());
+    }
+
+    //todo - refactor this part as a ConotrollerAdvice which is connected to JSON Dto objects
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErrorResponse handle(IncorrectBranchException e, ServletWebRequest request) {
         return ErrorResponse.of(HttpStatus.UNPROCESSABLE_ENTITY, "Invalid JSON format", request.getRequest().getRequestURI());
     }
 

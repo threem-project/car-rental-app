@@ -1,5 +1,6 @@
 package com.threem.carrental.app.service;
 
+import com.threem.carrental.app.errorHandler.customExceptions.IncorrectBranchException;
 import com.threem.carrental.app.model.dto.EmployeeDto;
 import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.EmployeeEntity;
@@ -31,16 +32,18 @@ public class EmployeeService {
 
 
     public Optional<EmployeeDto> createEmployee(EmployeeDto employeeDto) {
-        //check if employeeExists in DB
         Optional<EmployeeDto> resultEmployeeDto = Optional.empty();
         EmployeeEntity employeeEntity = employeeMapper.toEmployeeEntity(employeeDto);
         String encodedPassword = passwordEncoder.encode(employeeEntity.getPassword());
         employeeEntity.setPassword(encodedPassword);
 
-        if (employeeDto.getBranchId()!=null) {
-            Optional<BranchEntity> branchEntity = branchRepository.findById(employeeDto.getBranchId());
+        Long employeeBranchId = employeeEntity.getBranch().getId();
+        if (employeeEntity.getBranch()!=null && employeeBranchId!=null) {
+            Optional<BranchEntity> branchEntity = branchRepository.findById(employeeBranchId);
             if (branchEntity.isPresent()) {
                 employeeEntity.setBranch(branchEntity.get());
+            } else {
+                throw new IncorrectBranchException("Given branch ID is incorrect");
             }
         }
 
