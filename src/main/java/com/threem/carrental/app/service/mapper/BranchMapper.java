@@ -31,7 +31,6 @@ public class BranchMapper {
                 .id(fromBranchDto.getId())
                 .address(addressBranchEntity)
                 .mainOffice(mainOfficeEntity)
-                //.bookings()
                 .employees(fromBranchDto.getEmployees())
                 //.cars()
                 .status(fromBranchDto.getBranchStatus())

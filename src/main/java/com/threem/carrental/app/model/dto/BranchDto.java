@@ -30,8 +30,6 @@ public class BranchDto {
 
     private MainOfficeEntity mainOffice;
 
-    private List<BookingEntity> bookings;
-
     private List<EmployeeEntity> employees;
 
     private List<CarEntity> cars;
