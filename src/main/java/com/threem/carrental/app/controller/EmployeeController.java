@@ -5,6 +5,7 @@ import com.threem.carrental.app.service.EmployeeService;
 import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
-    @PostMapping
+    @PostMapping (produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<EmployeeDto> createEmployee(@Validated @RequestBody EmployeeDto employeeDto) {
         Optional<EmployeeDto> employeeDtoFromService = employeeService.createEmployee(employeeDto);
         if (employeeDtoFromService.isPresent()) {
@@ -35,7 +36,7 @@ public class EmployeeController {
         }
     }
 
-    @PutMapping
+    @PutMapping (produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<EmployeeDto> editEmployee(@Validated @RequestBody EmployeeDto employeeDto) {
         Optional<EmployeeDto> employeeDtoFromService = employeeService.updateEmployee(employeeDto);
         if (employeeDtoFromService.isPresent()) {
