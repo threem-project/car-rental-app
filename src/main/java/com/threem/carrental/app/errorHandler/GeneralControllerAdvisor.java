@@ -1,5 +1,7 @@
 package com.threem.carrental.app.errorHandler;
 
+import com.threem.carrental.app.errorHandler.customExceptions.EmployeeAlreadyExistException;
+import com.threem.carrental.app.errorHandler.customExceptions.EmployeeDoesNotExistException;
 import com.threem.carrental.app.errorHandler.customExceptions.IncorrectBranchException;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.HttpStatus;
@@ -49,6 +51,17 @@ public class GeneralControllerAdvisor {
         return ErrorResponse.of(HttpStatus.UNPROCESSABLE_ENTITY, "Wrong branch ID", request.getRequest().getRequestURI());
     }
 
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErrorResponse handle(EmployeeAlreadyExistException e, ServletWebRequest request) {
+        return ErrorResponse.of(HttpStatus.UNPROCESSABLE_ENTITY, "Employee with this ID already exists in DB. Change ID or use PUT instead", request.getRequest().getRequestURI());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErrorResponse handle(EmployeeDoesNotExistException e, ServletWebRequest request) {
+        return ErrorResponse.of(HttpStatus.UNPROCESSABLE_ENTITY, "Employee doesn't exist", request.getRequest().getRequestURI());
+    }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
