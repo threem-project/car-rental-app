@@ -29,7 +29,6 @@ public class CarService {
     }
 
     public Optional<CarDto> createCar(CarDto carDto) {
-        Optional<CarDto> resultCarDto = Optional.empty();
         CarEntity carEntity = carMapper.toCarEntity(carDto);
 
         Optional<BranchEntity> branchEntityInDb = branchRepository.findById(carEntity.getBranch().getId());
@@ -37,15 +36,13 @@ public class CarService {
             carEntity.setBranch(branchEntityInDb.get());
         }
 
-        carRepository.save(carEntity);
-        // TODO if Validation failed, catch ConstraintViolationException and handle in GeneralControllerAdvisor
+        CarEntity carEntityFromDb = carRepository.save(carEntity);
+        // TODO catch exception if save() fails
+        // TODO catch ConstraintViolationException if validation fails
 
-        // TODO: should rather be looking by vin, no? Why doesn't findByVin() work? Make it key?
-        Optional<CarEntity> carEntityFromDb = carRepository.findById(carEntity.getId());
-        if (carEntityFromDb.isPresent()) {
-            CarDto mappedCarDto = carMapper.toCarDto(carEntityFromDb.get());
-            resultCarDto = Optional.of(mappedCarDto);
-        }
+        Optional<CarDto> resultCarDto = Optional.empty();
+        resultCarDto = Optional.of(carMapper.toCarDto(carEntityFromDb));
         return resultCarDto;
     }
+
 }

@@ -41,7 +41,7 @@ public class CarControllerTest {
     private CarService carService;
 
     @Test
-    public void shouldCreateNewCarUponReceivingProperCarDto() {
+    public void shouldCreateNewCarUponReceivingProperCarDto() { // TODO: fix bcz there's no 345 branch id db so test fails...
         CarDto carDto = new CarDto().builder() // given
                 .carId(null)
                 .vin("JH2SC2608SM506729")
@@ -59,7 +59,7 @@ public class CarControllerTest {
                 .transmission(CarTransmissionTypeEnum.MANUAL)
                 .seats(5)
                 .doors(5)
-                .branchId(null)
+                .branchId(345L)
                 .equipment(null)
 //                .photoUrl("https://fakeimageurl.pl")
                 .build();

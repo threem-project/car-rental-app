@@ -38,30 +38,36 @@ public class CarDto {
     @Size(min = 3, max = 100, message = "Model must be between 3 and 100 characters long.")
     private String model;
 
+    @NotNull
     private CarBodyTypeEnum bodyType;
 
     @NotBlank
     @Size(min = 3, max = 100, message = "Production year must be between 3 and 100 characters long.")
     private String year;
 
+    @NotNull
     private CarColourEnum colour;
 
     @NotNull
     private Integer mileage;
 
+    @NotNull
     private CarStatusEnum status;
 
     @NotNull
     @Digits(integer = 6, fraction = 2, message = "Format is: XXXX.XX")
     private BigDecimal dailyRate;
 
+    @NotNull
     private CarEngineTypeEnum engineType;
 
     @NotNull
     private Integer engineCapacity;
 
+    @NotNull
     private CarSegmentTypeEnum segment;
 
+    @NotNull
     private CarTransmissionTypeEnum transmission;
 
     @NotNull
