@@ -41,7 +41,6 @@ public class BranchService {
     }
 
     public BranchDto createBranch(BranchDto branchDto) {
-        BranchDto resultBranchDto = null;
         BranchEntity branchEntity = branchMapper.toBranchEntity(branchDto);
         AddressBranchEntity addressBranchEntity = addressBranchMapper.toAddressBranchEntity(branchDto.getAddress());
         branchEntity.setAddress(addressBranchEntity);
@@ -55,15 +54,9 @@ public class BranchService {
 
         //todo if branch was not saved branchId will be null.must handle it
 
-        if (branchEntityFromDb!=null) {
-            resultBranchDto = branchMapper.toBranchDto(branchEntityFromDb);
-
-            AddressBranchEntity addressBranchEntityFromDb = branchEntityFromDb.getAddress();
-            MainOfficeEntity mainOfficeEntityFromDb = branchEntityFromDb.getMainOffice();
-
-            resultBranchDto.setAddress(addressBranchMapper.toAddressBranchDto(addressBranchEntityFromDb));
-            resultBranchDto.setMainOffice(mainOfficeMapper.toMainOfficeDto(mainOfficeEntityFromDb));
-        }
+        BranchDto resultBranchDto = branchMapper.toBranchDto(branchEntityFromDb);
+        resultBranchDto.setAddress(addressBranchMapper.toAddressBranchDto(branchEntity.getAddress()));
+        resultBranchDto.setMainOffice(mainOfficeMapper.toMainOfficeDto(branchEntity.getMainOffice()));
         return resultBranchDto;
     }
 }
