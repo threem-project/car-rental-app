@@ -47,7 +47,7 @@ public class CarControllerTest {
                 .vin("JH2SC2608SM506729")
                 .make("Ford")
                 .model("Focus")
-                                .bodyType(CarBodyTypeEnum.SEDAN)
+                .bodyType(CarBodyTypeEnum.SEDAN)
                 .year("2010")
                 .colour(CarColourEnum.WHITE)
                 .mileage(280000)

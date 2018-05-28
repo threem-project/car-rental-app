@@ -1,6 +1,7 @@
 package com.threem.carrental.app.service.mapper;
 
 import com.threem.carrental.app.model.dto.CarDto;
+import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.CarEntity;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +31,8 @@ public class CarMapper {
                 .transmission(fromCarDto.getTransmission())
                 .seats(fromCarDto.getSeats())
                 .doors(fromCarDto.getDoors())
-//                 .branch() TODO dummy branch?
-//                 .equipment() TODO dummy branch
+                .branch(new BranchEntity()) // dummy branch
+//                .equipment() TODO dummy branch
 //                .photoUrl(fromCarDto.getPhotoUrl()) TODO figure this out
                 .build();
         return carEntity;

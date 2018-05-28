@@ -1,12 +1,10 @@
 package com.threem.carrental.app.service;
 
 import com.threem.carrental.app.model.dto.CarDto;
-import com.threem.carrental.app.model.dto.EmployeeDto;
 import com.threem.carrental.app.model.entity.CarEntity;
-import com.threem.carrental.app.model.entity.EmployeeEntity;
+import com.threem.carrental.app.repository.BranchRepository;
 import com.threem.carrental.app.repository.CarRepository;
 import com.threem.carrental.app.service.mapper.CarMapper;
-import org.hibernate.NonUniqueObjectException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -20,13 +18,17 @@ import java.util.Optional;
 public class CarService {
 
     private CarRepository carRepository;
+    private BranchRepository branchRepository;
     private CarMapper carMapper;
 
-    public CarService(CarRepository carRepository, CarMapper carMapper) {
+    public CarService(CarRepository carRepository, BranchRepository branchRepository, CarMapper carMapper) {
         this.carRepository = carRepository;
+        this.branchRepository = branchRepository;
         this.carMapper = carMapper;
     }
 
+// przy mapowaniu traktowali BranchEntity w EmployeeEntity jedynie jako nośnik informacji o numerze branchId.
+// Samo sprawdzenie/wyciągnięcie/nadpisanie prawidłowego BranchEntity w EmployeeEntity robimy dopiero w Service
     public Optional<CarDto> createCar(CarDto carDto) {
         Optional<CarDto> resultCarDto = Optional.empty();
         CarEntity carEntity = carMapper.toCarEntity(carDto);
