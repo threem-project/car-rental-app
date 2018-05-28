@@ -72,10 +72,10 @@ public class CarDto {
     @NotNull
     private Integer doors;
 
-    private BranchEntity branch;
+    private Long branchId;
 
     private List<EquipmentEntity> equipment;
 
-    private String photoUrl;
+//    private String photoUrl;
 
 }

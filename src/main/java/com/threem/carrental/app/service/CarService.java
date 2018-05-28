@@ -1,6 +1,7 @@
 package com.threem.carrental.app.service;
 
 import com.threem.carrental.app.model.dto.CarDto;
+import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.CarEntity;
 import com.threem.carrental.app.repository.BranchRepository;
 import com.threem.carrental.app.repository.CarRepository;
@@ -32,6 +33,13 @@ public class CarService {
     public Optional<CarDto> createCar(CarDto carDto) {
         Optional<CarDto> resultCarDto = Optional.empty();
         CarEntity carEntity = carMapper.toCarEntity(carDto);
+
+        // At this point BranchEntity in carEntity is a dummy
+        // If branchrepository has a branch with branchId like in dummy -> get and overwrite (car update)
+        Optional<BranchEntity> branchEntityInDb = branchRepository.findById(carEntity.getBranch().getId());
+        if (branchEntityInDb.isPresent()) {
+            carEntity.setBranch(branchEntityInDb.get());
+        }
 
         carRepository.save(carEntity);
         // TODO catch ConstraintViolationException and handle in GeneralControllerAdvisor

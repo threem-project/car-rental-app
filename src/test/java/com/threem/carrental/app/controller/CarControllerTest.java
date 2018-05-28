@@ -59,9 +59,9 @@ public class CarControllerTest {
                 .transmission(CarTransmissionTypeEnum.MANUAL)
                 .seats(5)
                 .doors(5)
-                .branch(null)
+                .branchId(null)
                 .equipment(null)
-                .photoUrl("https://fakeimageurl.pl")
+//                .photoUrl("https://fakeimageurl.pl")
                 .build();
 
         RequestSpecification given = given()
