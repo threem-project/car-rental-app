@@ -2,6 +2,7 @@ package com.threem.carrental.app.service;
 
 import com.threem.carrental.app.model.dto.AddressBranchDto;
 import com.threem.carrental.app.model.dto.BranchDto;
+import com.threem.carrental.app.model.dto.MainOfficeDto;
 import com.threem.carrental.app.model.entity.AddressBranchEntity;
 import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.MainOfficeEntity;
@@ -39,15 +40,15 @@ public class BranchService {
         this.mainOfficeRepository = mainOfficeRepository;
     }
 
-    public Optional<BranchDto> createBranch(BranchDto branchDto, AddressBranchDto addressBranchDto) {
+    public Optional<BranchDto> createBranch(BranchDto branchDto) {
         Optional<BranchDto> resultBranchDto = Optional.empty();
         BranchEntity branchEntity = branchMapper.toBranchEntity(branchDto);
-        AddressBranchEntity addressBranchEntity = addressBranchMapper.toAddressBranchEntity(addressBranchDto);
+        AddressBranchEntity addressBranchEntity = addressBranchMapper.toAddressBranchEntity(branchDto.getAddress());
         branchEntity.setAddress(addressBranchEntity);
 
         List<MainOfficeEntity> mainOfficeEntities = mainOfficeRepository.findAll();
         branchEntity.setMainOffice(mainOfficeEntities.get(0));
-        //todo findByName();
+        //todo NoMainOfficeException and test it
 
         branchRepository.save(branchEntity);
 
@@ -62,6 +63,7 @@ public class BranchService {
             resultBranchDto.get().setAddress(addressBranchMapper.toAddressBranchDto(addressBranchEntityFromDb));
             resultBranchDto.get().setMainOffice(mainOfficeMapper.toMainOfficeDto(mainOfficeEntityFromDb));
         }
+        //todo else {in DB no branch with this id exception} and test it
         return resultBranchDto;
     }
 }

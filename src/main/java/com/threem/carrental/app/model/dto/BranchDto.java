@@ -25,7 +25,6 @@ public class BranchDto {
 
     private Long id;
 
-    @NotNull(message = "Address can't be empty")
     private AddressBranchDto address;
 
     private MainOfficeDto mainOffice;
