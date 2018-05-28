@@ -5,4 +5,14 @@ package com.threem.carrental.app.model.entity.enumTypes;
  * @project car-rental-app
  */
 public enum CarSegmentTypeEnum {
+
+    A_MINI,
+    B_SMALL,
+    C_MEDIUM,
+    D_LARGE,
+    E_EXECUTIVE,
+    F_LUXURY,
+    J_SPORT_UTILITY_AND_OFF_ROAD,
+    M_MULTI_PURPOSE,
+    S_SPORTS
 }
