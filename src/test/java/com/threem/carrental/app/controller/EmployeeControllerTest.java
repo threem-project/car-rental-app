@@ -1,8 +1,10 @@
 package com.threem.carrental.app.controller;
 
 import com.threem.carrental.app.model.dto.EmployeeDto;
+import com.threem.carrental.app.model.entity.EmployeeEntity;
 import com.threem.carrental.app.model.entity.enumTypes.EmployeeRoleEnum;
 import com.threem.carrental.app.model.entity.enumTypes.EmployeeStatusEnum;
+import com.threem.carrental.app.repository.EmployeeRepository;
 import com.threem.carrental.app.service.EmployeeService;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -39,6 +41,9 @@ public class EmployeeControllerTest {
     @Autowired
     private EmployeeService employeeService;
 
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
     private Random random = new Random();   //todo zapytać Roberta, czemu tutaj nie działa rollback przy testach i muszę używać Random
 
     @Test
@@ -72,21 +77,20 @@ public class EmployeeControllerTest {
 
     @Test
     public void shouldGetStatusUnprocessableEntityWhenCreatingEmployeeWithTheSameIdAsInDb() {
-        Long id = Long.valueOf(random.nextInt());
-
-        EmployeeDto employeeDto = new EmployeeDto().builder()   //given
-                .employeeId(Long.valueOf(id))
+        EmployeeEntity employeeEntity = new EmployeeEntity().builder()  //given
                 .firstName("test")
                 .lastName("test")
                 .password("testTest")
                 .email("testtesttesttest")
                 .status(EmployeeStatusEnum.ACTIVE)
                 .role(EmployeeRoleEnum.OWNER)
-                .branchId(null)
+                .branch(null)
                 .build();
 
+        employeeEntity = employeeRepository.save(employeeEntity);
+
         EmployeeDto employeeDtoWithDuplicatedId = new EmployeeDto().builder()
-                .employeeId(Long.valueOf(id))
+                .employeeId(employeeEntity.getId())
                 .firstName("John")
                 .lastName("Kowalski")
                 .password("testPassword")
@@ -97,21 +101,6 @@ public class EmployeeControllerTest {
                 .build();
 
         //@formatter:off
-        RequestSpecification given = given()
-                .port(port)
-                .body(employeeDto)
-                .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
-                .log().all();
-        Response when = given
-                .when()
-                .post("employee");
-        when.then()
-                .log().all()
-                .assertThat()
-                .statusCode(HttpStatus.CREATED.value());
-
-        //--
-
         RequestSpecification duplicatedGive = given()    //when
                 .port(port)
                 .body(employeeDtoWithDuplicatedId)
@@ -158,20 +147,20 @@ public class EmployeeControllerTest {
 
     @Test
     public void shouldGetStatusAcceptedWhenReceiveProperEmployeeDtoForUpdate() {
-        Integer id = random.nextInt();
-        EmployeeDto employeeDto = new EmployeeDto().builder()   //given
-                .employeeId(Long.valueOf(id))
+        EmployeeEntity employeeEntity = new EmployeeEntity().builder()
                 .firstName("test")
                 .lastName("test")
                 .password("testTest")
                 .email("testtesttesttest")
                 .status(EmployeeStatusEnum.ACTIVE)
                 .role(EmployeeRoleEnum.OWNER)
-                .branchId(null)
+                .branch(null)
                 .build();
 
-        EmployeeDto updatedEmployeeDto = new EmployeeDto().builder()
-                .employeeId(Long.valueOf(id))
+        employeeEntity = employeeRepository.save(employeeEntity);
+
+        EmployeeDto updatedEmployeeDto = new EmployeeDto().builder() //given
+                .employeeId(employeeEntity.getId())
                 .firstName("John")
                 .lastName("Kowalski")
                 .password("testPassword")
@@ -182,21 +171,6 @@ public class EmployeeControllerTest {
                 .build();
 
         //@formatter:off
-        RequestSpecification given = given()
-                .port(port)
-                .body(employeeDto)
-                .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
-                .log().all();
-        Response when = given
-                .when()
-                .post("employee");
-        when.then()
-                .log().all()
-                .assertThat()
-                .statusCode(HttpStatus.CREATED.value());
-
-        //--
-
         RequestSpecification putGiven = given()    //when
                 .port(port)
                 .body(updatedEmployeeDto)
@@ -214,19 +188,8 @@ public class EmployeeControllerTest {
 
     @Test
     public void shouldGetStatusUnprocessableEntityWhenUpdatingNonExistingEmployee() {
-        EmployeeDto employeeDto = new EmployeeDto().builder()   //given
-                .employeeId(Long.valueOf(1))
-                .firstName("test")
-                .lastName("test")
-                .password("testTest")
-                .email("testtesttesttest")
-                .status(EmployeeStatusEnum.ACTIVE)
-                .role(EmployeeRoleEnum.OWNER)
-                .branchId(null)
-                .build();
-
-        EmployeeDto updatedEmployeeDto = new EmployeeDto().builder()
-                .employeeId(Long.valueOf(2))
+        EmployeeDto updatedEmployeeDto = new EmployeeDto().builder() //given
+                .employeeId(Long.valueOf(0))
                 .firstName("John")
                 .lastName("Kowalski")
                 .password("testPassword")
@@ -237,21 +200,6 @@ public class EmployeeControllerTest {
                 .build();
 
         //@formatter:off
-        RequestSpecification given = given()
-                .port(port)
-                .body(employeeDto)
-                .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
-                .log().all();
-        Response when = given
-                .when()
-                .post("employee");
-        when.then()
-                .log().all()
-                .assertThat()
-                .statusCode(HttpStatus.CREATED.value());
-
-        //--
-
         RequestSpecification putGiven = given()    //when
                 .port(port)
                 .body(updatedEmployeeDto)
@@ -269,46 +217,30 @@ public class EmployeeControllerTest {
 
     @Test
     public void shouldGetStatusUnprocessableEntityWhenUpdatingEmployeeWithWrongBranchId() {
-        Long id = random.nextLong();
-
-        EmployeeDto employeeDto = new EmployeeDto().builder()   //given
-                .employeeId(Long.valueOf(id))
+        EmployeeEntity employeeEntity = new EmployeeEntity().builder()  //given
                 .firstName("test")
                 .lastName("test")
                 .password("testTest")
                 .email("testtesttesttest")
                 .status(EmployeeStatusEnum.ACTIVE)
                 .role(EmployeeRoleEnum.OWNER)
-                .branchId(null)
+                .branch(null)
                 .build();
 
+        employeeEntity = employeeRepository.save(employeeEntity);
+
         EmployeeDto updatedEmployeeDto = new EmployeeDto().builder()
-                .employeeId(Long.valueOf(id))
+                .employeeId(employeeEntity.getId())
                 .firstName("John")
                 .lastName("Kowalski")
                 .password("testPassword")
                 .email("email@testdomain.com")
                 .status(EmployeeStatusEnum.NEW)
                 .role(EmployeeRoleEnum.REGULAR_EMPLOYEE)
-                .branchId(Long.valueOf(2))
+                .branchId(Long.valueOf(0))
                 .build();
 
         //@formatter:off
-        RequestSpecification given = given()
-                .port(port)
-                .body(employeeDto)
-                .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
-                .log().all();
-        Response when = given
-                .when()
-                .post("employee");
-        when.then()
-                .log().all()
-                .assertThat()
-                .statusCode(HttpStatus.CREATED.value());
-
-        //--
-
         RequestSpecification putGiven = given()    //when
                 .port(port)
                 .body(updatedEmployeeDto)

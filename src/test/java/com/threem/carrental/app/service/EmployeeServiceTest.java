@@ -106,10 +106,10 @@ public class EmployeeServiceTest {
         branchRepository.save(testBranch);
 
         EmployeeEntity testEmployee = new EmployeeEntity().builder().id(Long.valueOf(1)).build();
-        employeeRepository.save(testEmployee);
+        EmployeeEntity savedEntity = employeeRepository.save(testEmployee);
 
         EmployeeDto employeeDto = new EmployeeDto().builder()
-                .employeeId(Long.valueOf(1))
+                .employeeId(savedEntity.getId())
                 .firstName("John")
                 .lastName("Kowalski")
                 .password("testPassword")
@@ -125,22 +125,22 @@ public class EmployeeServiceTest {
     @Test
     public void shouldUpdateExistingEmployeeWhenReceiveProperEmployeeDtoWithoutBranch() {
         BranchEntity testBranch = new BranchEntity().builder().id(Long.valueOf(1)).build(); //given
-        branchRepository.save(testBranch);
+        BranchEntity savedBranchEntity = branchRepository.save(testBranch);
 
         EmployeeEntity employeeEntity = new EmployeeEntity().builder()
-                .id(Long.valueOf(1))
+                .id(null)
                 .firstName("test")
                 .lastName("test")
                 .email("testTest")
                 .password("testtest")
-                .branch(testBranch)
+                .branch(savedBranchEntity)
                 .role(EmployeeRoleEnum.OWNER)
                 .status(EmployeeStatusEnum.NEW)
                 .build();
-        employeeRepository.save(employeeEntity);
+        EmployeeEntity savedEntity = employeeRepository.save(employeeEntity);
 
         EmployeeDto employeeDto = new EmployeeDto().builder()
-                .employeeId(Long.valueOf(1))
+                .employeeId(savedEntity.getId())
                 .firstName("John")
                 .lastName("Kowalski")
                 .password("testPassword")
@@ -153,7 +153,7 @@ public class EmployeeServiceTest {
         Optional<EmployeeDto> dtoAsSaveResult = employeeService.updateEmployee(employeeDto); //when
 
         Assertions.assertThat(dtoAsSaveResult.get())  //then
-                .hasFieldOrPropertyWithValue("employeeId",Long.valueOf(1))
+                .hasFieldOrPropertyWithValue("employeeId",savedEntity.getId())
                 .hasFieldOrPropertyWithValue("firstName","John")
                 .hasFieldOrPropertyWithValue("lastName","Kowalski")
                 .hasFieldOrPropertyWithValue("password",null)
@@ -176,10 +176,11 @@ public class EmployeeServiceTest {
                 .role(EmployeeRoleEnum.OWNER)
                 .status(EmployeeStatusEnum.NEW)
                 .build();
-        employeeRepository.save(employeeEntity);
+
+        EmployeeEntity savedEntity = employeeRepository.save(employeeEntity);
 
         EmployeeDto employeeDto = new EmployeeDto().builder()
-                .employeeId(Long.valueOf(1))
+                .employeeId(savedEntity.getId())
                 .firstName("John")
                 .lastName("Kowalski")
                 .password("testPassword")
@@ -192,7 +193,7 @@ public class EmployeeServiceTest {
         Optional<EmployeeDto> dtoAsSaveResult = employeeService.updateEmployee(employeeDto); //when
 
         Assertions.assertThat(dtoAsSaveResult.get())  //then
-                .hasFieldOrPropertyWithValue("employeeId",Long.valueOf(1))
+                .hasFieldOrPropertyWithValue("employeeId",savedEntity.getId())
                 .hasFieldOrPropertyWithValue("firstName","John")
                 .hasFieldOrPropertyWithValue("lastName","Kowalski")
                 .hasFieldOrPropertyWithValue("password",null)
@@ -204,20 +205,8 @@ public class EmployeeServiceTest {
 
     @Test(expected = EmployeeDoesNotExistException.class)
     public void shouldNotUpdateNotExistingEmployee() {
-        EmployeeEntity employeeEntity = new EmployeeEntity().builder() //given
-                .id(Long.valueOf(1))
-                .firstName("test")
-                .lastName("test")
-                .email("testTest")
-                .password("testtest")
-                .branch(null)
-                .role(EmployeeRoleEnum.OWNER)
-                .status(EmployeeStatusEnum.NEW)
-                .build();
-        employeeRepository.save(employeeEntity);
-
-        EmployeeDto employeeDto = new EmployeeDto().builder()
-                .employeeId(Long.valueOf(2))
+        EmployeeDto employeeDto = new EmployeeDto().builder()  //given
+                .employeeId(Long.valueOf(0))
                 .firstName("John")
                 .lastName("Kowalski")
                 .password("testPassword")
