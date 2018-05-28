@@ -22,7 +22,7 @@ public class SwaggerConfig {
     public Docket customImplementation() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.threem.carrental.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.threem.carrental.app.controller"))
                 .paths(PathSelectors.regex(".*"))
                 .build()
                 .apiInfo(apiInfo());

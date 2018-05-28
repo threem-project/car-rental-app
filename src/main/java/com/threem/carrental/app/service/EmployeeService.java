@@ -10,6 +10,7 @@ import com.threem.carrental.app.repository.BranchRepository;
 import com.threem.carrental.app.repository.EmployeeRepository;
 import com.threem.carrental.app.service.mapper.EmployeeMapper;
 import com.threem.carrental.app.utilities.PasswordEncoder;
+import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -49,6 +50,16 @@ public class EmployeeService {
             throw new EmployeeDoesNotExistException("Can't find employee with the given ID");
         }
         Optional<EmployeeDto> resultEmployeeDto = createOrUpdateEmployee(givenEmployeeDto,employeeEntity);
+        return resultEmployeeDto;
+    }
+
+    public Optional<EmployeeDto> findById(Long id) {
+        Optional<EmployeeDto> resultEmployeeDto = Optional.empty();
+        Optional<EmployeeEntity> entityFromDb = employeeRepository.findById(id);
+        if (entityFromDb.isPresent()) {
+            EmployeeDto employeeDto = employeeMapper.toEmployeeDto(entityFromDb.get());
+            resultEmployeeDto = Optional.of(employeeDto);
+        }
         return resultEmployeeDto;
     }
 
