@@ -58,6 +58,7 @@ public class EmployeeService {
         Optional<EmployeeEntity> entityFromDb = employeeRepository.findById(id);
         if (entityFromDb.isPresent()) {
             EmployeeDto employeeDto = employeeMapper.toEmployeeDto(entityFromDb.get());
+            employeeDto.setPassword(null);
             resultEmployeeDto = Optional.of(employeeDto);
         }
         return resultEmployeeDto;

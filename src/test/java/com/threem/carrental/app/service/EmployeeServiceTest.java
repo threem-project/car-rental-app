@@ -167,7 +167,7 @@ public class EmployeeServiceTest {
     @Test
     public void shouldUpdateExistingEmployeeWhenReceiveProperEmployeeDtoWithBranch() {
         EmployeeEntity employeeEntity = new EmployeeEntity().builder() //given
-                .id(Long.valueOf(1))
+                .id(null)
                 .firstName("test")
                 .lastName("test")
                 .email("testTest")
@@ -217,6 +217,39 @@ public class EmployeeServiceTest {
                 .build();
 
         employeeService.updateEmployee(employeeDto); //when
+    }
+
+    @Test
+    public void shouldFindEmployeeWhenExistingInDb() {
+        BranchEntity testBranch = new BranchEntity().builder().id(null).build(); //given
+        BranchEntity savedBranchEntity = branchRepository.save(testBranch);
+
+        EmployeeEntity employeeEntity = new EmployeeEntity().builder() //given
+                .id(null)
+                .firstName("John")
+                .lastName("Kowalski")
+                .email("email@testdomain.com")
+                .password("testtest")
+                .branch(savedBranchEntity)
+                .role(EmployeeRoleEnum.REGULAR_EMPLOYEE)
+                .status(EmployeeStatusEnum.ACTIVE)
+                .build();
+
+        EmployeeEntity savedEntity = employeeRepository.save(employeeEntity);
+
+        Optional<EmployeeDto> employeeDtoOptional = employeeService.findById(savedEntity.getId()); //when
+
+        Assertions.assertThat(employeeDtoOptional.get()).isNotNull();
+
+        Assertions.assertThat(employeeDtoOptional.get())  //then
+                .hasFieldOrPropertyWithValue("employeeId",savedEntity.getId())
+                .hasFieldOrPropertyWithValue("firstName","John")
+                .hasFieldOrPropertyWithValue("lastName","Kowalski")
+                .hasFieldOrPropertyWithValue("password",null)
+                .hasFieldOrPropertyWithValue("email","email@testdomain.com")
+                .hasFieldOrPropertyWithValue("status",EmployeeStatusEnum.ACTIVE)
+                .hasFieldOrPropertyWithValue("branchId",savedBranchEntity.getId())
+                .hasFieldOrPropertyWithValue("role",EmployeeRoleEnum.REGULAR_EMPLOYEE);
     }
 
 }
