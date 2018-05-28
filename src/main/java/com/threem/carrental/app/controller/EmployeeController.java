@@ -2,14 +2,13 @@ package com.threem.carrental.app.controller;
 
 import com.threem.carrental.app.model.dto.EmployeeDto;
 import com.threem.carrental.app.service.EmployeeService;
+import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -27,13 +26,23 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
-    @PostMapping
+    @PostMapping (produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<EmployeeDto> createEmployee(@Validated @RequestBody EmployeeDto employeeDto) {
         Optional<EmployeeDto> employeeDtoFromService = employeeService.createEmployee(employeeDto);
         if (employeeDtoFromService.isPresent()) {
             return ResponseEntity.status(HttpStatus.CREATED).body(employeeDtoFromService.get());
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @PutMapping (produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<EmployeeDto> editEmployee(@Validated @RequestBody EmployeeDto employeeDto) {
+        Optional<EmployeeDto> employeeDtoFromService = employeeService.updateEmployee(employeeDto);
+        if (employeeDtoFromService.isPresent()) {
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(employeeDtoFromService.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 }
