@@ -1,6 +1,6 @@
-package com.threem.carrental.installer.repository;
+package com.threem.carrental.app.repository;
 
-import com.threem.carrental.installer.model.outbound.entity.InstallerEntity;
+import com.threem.carrental.app.model.entity.InstallerEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

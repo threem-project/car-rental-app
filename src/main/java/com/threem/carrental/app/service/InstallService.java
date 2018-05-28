@@ -1,4 +1,4 @@
-package com.threem.carrental.installer.service;
+package com.threem.carrental.app.service;
 
 import com.threem.carrental.app.model.entity.EmployeeEntity;
 import com.threem.carrental.app.model.entity.MainOfficeEntity;
@@ -7,11 +7,11 @@ import com.threem.carrental.app.model.entity.enumTypes.EmployeeStatusEnum;
 import com.threem.carrental.app.repository.EmployeeRepository;
 import com.threem.carrental.app.repository.MainOfficeRepository;
 import com.threem.carrental.app.utilities.PasswordEncoder;
-import com.threem.carrental.installer.model.inbound.command.InstallCreateCommand;
-import com.threem.carrental.installer.model.outbound.entity.InstallationStatusEnum;
-import com.threem.carrental.installer.model.outbound.entity.InstallerEntity;
-import com.threem.carrental.installer.model.outbound.view.InstallerView;
-import com.threem.carrental.installer.repository.InstallRepository;
+import com.threem.carrental.app.model.dto.InstallDto;
+import com.threem.carrental.app.model.entity.enumTypes.InstallationStatusEnum;
+import com.threem.carrental.app.model.entity.InstallerEntity;
+import com.threem.carrental.app.model.dto.InstallerViewDto;
+import com.threem.carrental.app.repository.InstallRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -39,7 +39,7 @@ public class InstallService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public InstallerView createMainOffice(InstallCreateCommand command) {
+    public InstallerViewDto createMainOffice(InstallDto command) {
         List<InstallerEntity> installerEntityList = installRepository.findAll();
         if (notCorrectInstallEntityList(installerEntityList)) {
             return null;
@@ -80,7 +80,7 @@ public class InstallService {
         //todo transaction end
 
         Long mainOfficeId = getMainOfficeIdFromDb(mainOfficeRepository.findAll());
-        return new InstallerView(mainOfficeId,command.getCompanyName());
+        return new InstallerViewDto(mainOfficeId,command.getCompanyName());
     }
 
     private boolean notCorrectInstallEntityList(List<InstallerEntity> installerEntityList) {

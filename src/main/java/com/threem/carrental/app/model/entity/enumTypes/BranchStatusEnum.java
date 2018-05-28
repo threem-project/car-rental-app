@@ -6,4 +6,5 @@ package com.threem.carrental.app.model.entity.enumTypes;
  */
 
 public enum BranchStatusEnum {
+        OPENED,CLOSED,TEMPORARILY_UNAVAILABLE;
 }
