@@ -252,4 +252,11 @@ public class EmployeeServiceTest {
                 .hasFieldOrPropertyWithValue("role",EmployeeRoleEnum.REGULAR_EMPLOYEE);
     }
 
+    @Test
+    public void shouldNotFindEmployeeWhenNonExistingInDb() {
+        Long fakeId = 0L; //given
+        Optional<EmployeeDto> employeeDtoOptional = employeeService.findById(fakeId); //when
+        Assertions.assertThat(employeeDtoOptional).isEqualTo(Optional.empty()); //then
+    }
+
 }
