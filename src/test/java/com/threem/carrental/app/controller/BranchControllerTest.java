@@ -54,11 +54,9 @@ public class BranchControllerTest {
     public void shouldCreateAndReturnBranchWithStatusCreatedUsingBranchDto() throws Exception{
         //given
         BranchDto branchDto = BranchDto.builder()
-                .id(1L)
                 .status(BranchStatusEnum.OPENED)
                 .build();
         AddressBranchDto addressBranchDto = AddressBranchDto.builder()
-                .id(1L)
                 .city("Warsaw")
                 .street("Towarowa")
                 .building("20/10")
@@ -90,11 +88,9 @@ public class BranchControllerTest {
     public void shouldNotCreateBranchAndReturnStatusBadRequestUsingBranchDtoWithoutStatus() throws Exception{
         //given
         BranchDto branchDto = BranchDto.builder()
-                .id(1L)
                 .status(null)
                 .build();
         AddressBranchDto addressBranchDto = AddressBranchDto.builder()
-                .id(1L)
                 .city("Warsaw")
                 .street("Towarowa")
                 .building("20/10")

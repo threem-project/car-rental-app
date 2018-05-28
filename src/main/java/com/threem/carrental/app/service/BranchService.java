@@ -51,7 +51,6 @@ public class BranchService {
 
         BranchEntity branchEntityFromDb = branchRepository.save(branchEntity);
 
-
         //todo if branch was not saved branchId will be null.must handle it
 
         BranchDto resultBranchDto = branchMapper.toBranchDto(branchEntityFromDb);
