@@ -1,5 +1,6 @@
 package com.threem.carrental.app.controller;
 
+import com.threem.carrental.app.model.dto.AddressBranchDto;
 import com.threem.carrental.app.model.dto.BranchDto;
 import com.threem.carrental.app.service.BranchService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +32,9 @@ public class BranchController {
 
 
     @PostMapping
-    ResponseEntity<BranchDto> createBranch(@Validated @RequestBody BranchDto branchDto) {
-        Optional<BranchDto> branchDtoFromService = branchService.createBranch(branchDto);
+    ResponseEntity<BranchDto> createBranch(@Validated @RequestBody BranchDto branchDto,
+                                           @Validated @RequestBody AddressBranchDto addressBranchDto) {
+        Optional<BranchDto> branchDtoFromService = branchService.createBranch(branchDto,addressBranchDto);
         if (branchDtoFromService.isPresent()) {
             return ResponseEntity.status(HttpStatus.CREATED).body(branchDtoFromService.get());
         } else {

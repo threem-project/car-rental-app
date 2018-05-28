@@ -30,6 +30,7 @@ public class BranchDto {
 
     private MainOfficeDto mainOffice;
 
+    @NotNull(message = "Status of branch can't be empty")
     private BranchStatusEnum status;
 
 }

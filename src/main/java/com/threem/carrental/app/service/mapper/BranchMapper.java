@@ -19,17 +19,8 @@ import java.util.List;
 public class BranchMapper {
 
     public BranchEntity toBranchEntity(BranchDto fromBranchDto) {
-        AddressBranchEntity addressBranchEntity = AddressBranchEntity.builder()
-                .id(fromBranchDto.getAddress().getId())
-                .build();
-        MainOfficeEntity mainOfficeEntity = MainOfficeEntity.builder()
-                .id(fromBranchDto.getMainOffice().getId())
-                .build();
-
         return BranchEntity.builder()
                 .id(fromBranchDto.getId())
-                .address(addressBranchEntity)
-                .mainOffice(mainOfficeEntity)
                 .status(fromBranchDto.getStatus())
                 .build();
     }
@@ -37,8 +28,6 @@ public class BranchMapper {
     public BranchDto toBranchDto(BranchEntity fromBranchEntity) {
         return BranchDto.builder()
                 .id(fromBranchEntity.getId())
-                .address(null)
-                .mainOffice(null)
                 .status(fromBranchEntity.getStatus())
                 .build();
     }
