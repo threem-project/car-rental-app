@@ -40,8 +40,8 @@ public class BranchService {
         this.mainOfficeRepository = mainOfficeRepository;
     }
 
-    public Optional<BranchDto> createBranch(BranchDto branchDto) {
-        Optional<BranchDto> resultBranchDto = Optional.empty();
+    public BranchDto createBranch(BranchDto branchDto) {
+        BranchDto resultBranchDto = null;
         BranchEntity branchEntity = branchMapper.toBranchEntity(branchDto);
         AddressBranchEntity addressBranchEntity = addressBranchMapper.toAddressBranchEntity(branchDto.getAddress());
         branchEntity.setAddress(addressBranchEntity);
@@ -50,20 +50,20 @@ public class BranchService {
         branchEntity.setMainOffice(mainOfficeEntities.get(0));
         //todo NoMainOfficeException and test it
 
-        branchRepository.save(branchEntity);
+        BranchEntity branchEntityFromDb = branchRepository.save(branchEntity);
 
-        Optional<BranchEntity> branchEntityFromDb = branchRepository.findById(branchEntity.getId());
 
-        if (branchEntityFromDb.isPresent()) {
-            resultBranchDto = Optional.of(branchMapper.toBranchDto(branchEntityFromDb.get()));
+        //todo if branch was not saved branchId will be null.must handle it
 
-            AddressBranchEntity addressBranchEntityFromDb = branchEntityFromDb.get().getAddress();
-            MainOfficeEntity mainOfficeEntityFromDb = branchEntityFromDb.get().getMainOffice();
+        if (branchEntityFromDb!=null) {
+            resultBranchDto = branchMapper.toBranchDto(branchEntityFromDb);
 
-            resultBranchDto.get().setAddress(addressBranchMapper.toAddressBranchDto(addressBranchEntityFromDb));
-            resultBranchDto.get().setMainOffice(mainOfficeMapper.toMainOfficeDto(mainOfficeEntityFromDb));
+            AddressBranchEntity addressBranchEntityFromDb = branchEntityFromDb.getAddress();
+            MainOfficeEntity mainOfficeEntityFromDb = branchEntityFromDb.getMainOffice();
+
+            resultBranchDto.setAddress(addressBranchMapper.toAddressBranchDto(addressBranchEntityFromDb));
+            resultBranchDto.setMainOffice(mainOfficeMapper.toMainOfficeDto(mainOfficeEntityFromDb));
         }
-        //todo else {in DB no branch with this id exception} and test it
         return resultBranchDto;
     }
 }

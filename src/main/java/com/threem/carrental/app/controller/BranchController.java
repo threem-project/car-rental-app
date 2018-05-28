@@ -34,9 +34,9 @@ public class BranchController {
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     ResponseEntity<BranchDto> createBranch(@Validated @RequestBody BranchDto branchDto) {
-        Optional<BranchDto> branchDtoFromService = branchService.createBranch(branchDto);
-        if (branchDtoFromService.isPresent()) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(branchDtoFromService.get());
+        BranchDto branchDtoFromService = branchService.createBranch(branchDto);
+        if (branchDtoFromService!=null) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(branchDtoFromService);
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
