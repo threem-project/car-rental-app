@@ -1,6 +1,5 @@
 package com.threem.carrental.app.model.dto;
 
-import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.EquipmentEntity;
 import com.threem.carrental.app.model.entity.enumTypes.*;
 import lombok.AllArgsConstructor;
@@ -8,7 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.Constraint;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.List;

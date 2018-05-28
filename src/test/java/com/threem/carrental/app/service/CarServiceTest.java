@@ -3,8 +3,6 @@ package com.threem.carrental.app.service;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 /**
  * @author Marika Grzebieniowska on 28.05.2018
  * @project car-rental-app

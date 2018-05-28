@@ -5,21 +5,14 @@ import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.CarEntity;
 import com.threem.carrental.app.model.entity.EquipmentEntity;
 import com.threem.carrental.app.model.entity.enumTypes.*;
-import io.restassured.internal.assertion.Assertion;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.persistence.*;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
 
 /**
  * @author Marika Grzebieniowska on 28.05.2018

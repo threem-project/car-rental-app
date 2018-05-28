@@ -2,10 +2,8 @@ package com.threem.carrental.app.model.entity;
 
 import com.threem.carrental.app.model.entity.enumTypes.*;
 import lombok.*;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
-import javax.validation.Constraint;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -13,7 +11,6 @@ import java.util.List;
  * @author misza_lemko on 11.05.2018
  * @project car-rental-app
  */
-
 
 @Entity
 @Table(name = "car")
@@ -91,5 +88,4 @@ public class CarEntity {
             inverseJoinColumns = {@JoinColumn(name = "equipment_id")}
     )
     private List<EquipmentEntity> equipment;
-
 }
