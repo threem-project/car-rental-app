@@ -51,12 +51,12 @@ public class BranchServiceTest {
                 .build();
         branchDto.setAddress(addressBranchDto);
         //when
-        Optional<BranchDto> createdBranch = branchService.createBranch(branchDto);
+        BranchDto createdBranch = branchService.createBranch(branchDto);
         //then
-        Assertions.assertThat(createdBranch.get())
+        Assertions.assertThat(createdBranch)
                 .hasFieldOrPropertyWithValue("id", branchDto.getId())
                 .hasFieldOrPropertyWithValue("status", branchDto.getStatus());
-        Assertions.assertThat(createdBranch.get().getAddress())
+        Assertions.assertThat(createdBranch.getAddress())
                 .hasFieldOrPropertyWithValue("id", addressBranchDto.getId())
                 .hasFieldOrPropertyWithValue("city", addressBranchDto.getCity())
                 .hasFieldOrPropertyWithValue("street", addressBranchDto.getStreet())
@@ -64,6 +64,6 @@ public class BranchServiceTest {
                 .hasFieldOrPropertyWithValue("zipCode", addressBranchDto.getZipCode())
                 .hasFieldOrPropertyWithValue("country", addressBranchDto.getCountry())
                 .hasFieldOrPropertyWithValue("phone", addressBranchDto.getPhone());
-        Assertions.assertThat(createdBranch.get().getMainOffice()).isNotNull();
+        Assertions.assertThat(createdBranch.getMainOffice()).isNotNull();
     }
 }
