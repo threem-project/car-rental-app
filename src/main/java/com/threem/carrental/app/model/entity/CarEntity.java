@@ -2,8 +2,10 @@ package com.threem.carrental.app.model.entity;
 
 import com.threem.carrental.app.model.entity.enumTypes.*;
 import lombok.*;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
+import javax.validation.Constraint;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -27,13 +29,14 @@ public class CarEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "label")
-    @Enumerated(EnumType.STRING)
-    private CarLabelEnum label;
+    @Column(name = "vin", unique = true)
+    private String vin;
+
+    @Column(name = "make")
+    private String make;
 
     @Column(name = "model")
-    @Enumerated(EnumType.STRING)
-    private CarModelEnum model;
+    private String model;
 
     @Column(name = "body_type")
     @Enumerated(EnumType.STRING)
@@ -53,8 +56,8 @@ public class CarEntity {
     @Enumerated(EnumType.STRING)
     private CarStatusEnum status;
 
-    @Column(name = "daily_rade")
-    private BigDecimal dailyRade;
+    @Column(name = "daily_rate")
+    private BigDecimal dailyRate;
 
     @Column(name = "engine_type")
     @Enumerated(EnumType.STRING)
@@ -64,6 +67,7 @@ public class CarEntity {
     private Integer engineCapacity;
 
     @Column(name = "segment")
+    @Enumerated(EnumType.STRING)
     private CarSegmentTypeEnum segment;
 
     @Column(name = "transmission")
@@ -83,9 +87,9 @@ public class CarEntity {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "car_equipment",
-            joinColumns ={@JoinColumn(name = "car_id")},
+            joinColumns = {@JoinColumn(name = "car_id")},
             inverseJoinColumns = {@JoinColumn(name = "equipment_id")}
     )
-    private List<EquipmentEntity> equipments;
+    private List<EquipmentEntity> equipment;
 
 }
