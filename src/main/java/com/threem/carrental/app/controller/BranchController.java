@@ -8,10 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -31,7 +28,6 @@ public class BranchController {
         this.branchService = branchService;
     }
 
-
     @PostMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     ResponseEntity<BranchDto> createBranch(@Validated @RequestBody BranchDto branchDto) {
         BranchDto branchDtoFromService = branchService.createBranch(branchDto);
@@ -40,5 +36,14 @@ public class BranchController {
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+    }
+
+    @GetMapping(value = "{id}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    ResponseEntity<BranchDto> findBranchById(@PathVariable Long id) {
+        BranchDto branchDto = branchService.findBranchById(id);
+        if (branchDto==null) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(branchDto);
     }
 }

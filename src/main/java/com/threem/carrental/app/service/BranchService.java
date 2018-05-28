@@ -58,4 +58,18 @@ public class BranchService {
         resultBranchDto.setMainOffice(mainOfficeMapper.toMainOfficeDto(branchEntity.getMainOffice()));
         return resultBranchDto;
     }
+
+    public BranchDto findBranchById(Long id) {
+        BranchDto branchDto = new BranchDto();
+        Optional<BranchEntity> branchEntityOptional = branchRepository.findById(id);
+        if(branchEntityOptional.isPresent()) {
+            branchDto = branchMapper.toBranchDto(branchEntityOptional.get());
+            AddressBranchEntity addressBranchEntity = branchEntityOptional.get().getAddress();
+            MainOfficeEntity mainOfficeEntity = branchEntityOptional.get().getMainOffice();
+
+            branchDto.setAddress(addressBranchMapper.toAddressBranchDto(addressBranchEntity));
+            branchDto.setMainOffice(mainOfficeMapper.toMainOfficeDto(mainOfficeEntity));
+        }
+        return branchDto;
+    }
 }
