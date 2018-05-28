@@ -26,7 +26,7 @@ public class CarDto {
 
     private Long carId;
 
-    // TODO fix regex or write validator for vin nr https://pl.wikipedia.org/wiki/Vehicle_Identification_Number
+    // TODO fix regex or write validator for vin using control number https://pl.wikipedia.org/wiki/Vehicle_Identification_Number
     @NotBlank
     @Size(min = 17, max = 17, message = "VIN must have 17 characters")
 //    @Pattern(regexp = "/^([A-HJ-NPR-Z\\d]{3})([A-HJ-NPR-Z\\d]{5})([\\dX])(([A-HJ-NPR-Z\\d])([A-HJ-NPR-Z\\d])([A-HJ-NPR-Z\\d]{6}))$/i")

@@ -28,22 +28,19 @@ public class CarService {
         this.carMapper = carMapper;
     }
 
-// przy mapowaniu traktowali BranchEntity w EmployeeEntity jedynie jako nośnik informacji o numerze branchId.
-// Samo sprawdzenie/wyciągnięcie/nadpisanie prawidłowego BranchEntity w EmployeeEntity robimy dopiero w Service
     public Optional<CarDto> createCar(CarDto carDto) {
         Optional<CarDto> resultCarDto = Optional.empty();
         CarEntity carEntity = carMapper.toCarEntity(carDto);
 
-        // At this point BranchEntity in carEntity is a dummy
-        // If branchrepository has a branch with branchId like in dummy -> get and overwrite (car update)
         Optional<BranchEntity> branchEntityInDb = branchRepository.findById(carEntity.getBranch().getId());
         if (branchEntityInDb.isPresent()) {
             carEntity.setBranch(branchEntityInDb.get());
         }
 
         carRepository.save(carEntity);
-        // TODO catch ConstraintViolationException and handle in GeneralControllerAdvisor
+        // TODO if Validation failed, catch ConstraintViolationException and handle in GeneralControllerAdvisor
 
+        // TODO: should rather be looking by vin, no? Why doesn't findByVin() work? Make it key?
         Optional<CarEntity> carEntityFromDb = carRepository.findById(carEntity.getId());
         if (carEntityFromDb.isPresent()) {
             CarDto mappedCarDto = carMapper.toCarDto(carEntityFromDb.get());
