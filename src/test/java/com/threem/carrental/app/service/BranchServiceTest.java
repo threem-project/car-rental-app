@@ -37,11 +37,11 @@ public class BranchServiceTest {
     public void shouldCreateAndReturnBranchUsingBranchDto() throws InterruptedException {
         //given
         BranchDto branchDto = BranchDto.builder()
-                .id(1L)
+                .id(null)
                 .status(BranchStatusEnum.OPENED)
                 .build();
         AddressBranchDto addressBranchDto = AddressBranchDto.builder()
-                .id(1L)
+                .id(null)
                 .city("Warsaw")
                 .street("Towarowa")
                 .building("20/10")
@@ -54,10 +54,10 @@ public class BranchServiceTest {
         BranchDto createdBranch = branchService.createBranch(branchDto);
         //then
         Assertions.assertThat(createdBranch)
-                .hasFieldOrPropertyWithValue("id", branchDto.getId())
+                .hasFieldOrPropertyWithValue("id", createdBranch.getId())
                 .hasFieldOrPropertyWithValue("status", branchDto.getStatus());
         Assertions.assertThat(createdBranch.getAddress())
-                .hasFieldOrPropertyWithValue("id", addressBranchDto.getId())
+                .hasFieldOrPropertyWithValue("id", createdBranch.getAddress().getId())
                 .hasFieldOrPropertyWithValue("city", addressBranchDto.getCity())
                 .hasFieldOrPropertyWithValue("street", addressBranchDto.getStreet())
                 .hasFieldOrPropertyWithValue("building", addressBranchDto.getBuilding())
