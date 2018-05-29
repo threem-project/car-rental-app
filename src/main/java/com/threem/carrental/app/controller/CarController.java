@@ -35,7 +35,7 @@ public class CarController {
         if (carDtoFromService.isPresent()) {
             return ResponseEntity.status(HttpStatus.CREATED).body(carDtoFromService.get());
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // TODO check correct response to give?
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // TODO other responses in exception handling depending on the fault
         }
     }
 }

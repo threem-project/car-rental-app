@@ -1,7 +1,10 @@
 package com.threem.carrental.app.controller;
 
+import com.threem.carrental.app.model.dto.AddressBranchDto;
+import com.threem.carrental.app.model.dto.BranchDto;
 import com.threem.carrental.app.model.dto.CarDto;
 import com.threem.carrental.app.model.entity.enumTypes.*;
+import com.threem.carrental.app.service.BranchService;
 import com.threem.carrental.app.service.CarService;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -17,6 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import static io.restassured.RestAssured.given;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
@@ -38,11 +42,32 @@ public class CarControllerTest {
     private Integer port;
 
     @Autowired
-    private CarService carService;
+    private BranchService branchService;
 
     @Test
-    public void shouldCreateNewCarUponReceivingProperCarDto() { // TODO: fix bcz there's no 345 branch id db so test fails...
-        CarDto carDto = new CarDto().builder() // given
+    public void shouldCreateNewCarUponReceivingProperCarDto() { 
+
+        // given
+        BranchDto branchDto = BranchDto.builder()
+                .id(12L)
+                .status(BranchStatusEnum.OPENED)
+                .build();
+        AddressBranchDto addressBranchDto = AddressBranchDto.builder()
+                .id(123L)
+                .city("Warsaw")
+                .street("Towarowa")
+                .building("20/10")
+                .zipCode("02-495")
+                .country("Poland")
+                .phone("111-222-333")
+                .build();
+        branchDto.setAddress(addressBranchDto);
+
+        // calls mapper and saves BranchEntity in DB
+        Optional<BranchDto> branchDtoFromDb;
+        branchDtoFromDb = Optional.of(branchService.createBranch(branchDto));
+
+        CarDto carDto = CarDto.builder()
                 .carId(null)
                 .vin("JH2SC2608SM506729")
                 .make("Ford")
@@ -57,9 +82,9 @@ public class CarControllerTest {
                 .engineCapacity(1800)
                 .segment(CarSegmentTypeEnum.C_MEDIUM)
                 .transmission(CarTransmissionTypeEnum.MANUAL)
-                .seats(5)
-                .doors(5)
-                .branchId(345L)
+                .seats(6)
+                .doors(3)
+                .branchId(12L)
                 .equipment(null)
 //                .photoUrl("https://fakeimageurl.pl")
                 .build();

@@ -40,7 +40,7 @@ public class CarService {
         // TODO catch exception if save() fails
         // TODO catch ConstraintViolationException if validation fails
 
-        Optional<CarDto> resultCarDto = Optional.empty();
+        Optional<CarDto> resultCarDto;
         resultCarDto = Optional.of(carMapper.toCarDto(carEntityFromDb));
         return resultCarDto;
     }

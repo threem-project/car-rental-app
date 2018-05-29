@@ -1,11 +1,10 @@
 package com.threem.carrental.app.service;
 
+import com.threem.carrental.app.model.dto.AddressBranchDto;
+import com.threem.carrental.app.model.dto.BranchDto;
 import com.threem.carrental.app.model.dto.CarDto;
 import com.threem.carrental.app.model.dto.EmployeeDto;
-import com.threem.carrental.app.model.entity.AddressBranchEntity;
-import com.threem.carrental.app.model.entity.BranchEntity;
-import com.threem.carrental.app.model.entity.CarEntity;
-import com.threem.carrental.app.model.entity.EmployeeEntity;
+import com.threem.carrental.app.model.entity.*;
 import com.threem.carrental.app.model.entity.enumTypes.*;
 import com.threem.carrental.app.repository.BranchRepository;
 import org.assertj.core.api.Assertions;
@@ -36,20 +35,34 @@ public class CarServiceTest {
 
     @Autowired
     private CarService carService;
+    @Autowired
+    private BranchService branchService;
+    @Autowired
     private BranchRepository branchRepository;
 
     @Test
-    public void shouldCreateCarWhenReceiveProperCarDto() {
+    public void shouldCreateCarWhenReceivesProperCarDto() {
 
         // given: proper CarDto & chosen BranchEntity present in DB
-
-        BranchEntity branchEntity = new BranchEntity().builder()
-                .address(new AddressBranchEntity())
+        BranchDto branchDto = BranchDto.builder()
+                .id(12L)
+                .status(BranchStatusEnum.OPENED)
                 .build();
+        AddressBranchDto addressBranchDto = AddressBranchDto.builder()
+                .id(123L)
+                .city("Warsaw")
+                .street("Towarowa")
+                .building("20/10")
+                .zipCode("02-495")
+                .country("Poland")
+                .phone("111-222-333")
+                .build();
+        branchDto.setAddress(addressBranchDto);
 
-        branchEntity = branchRepository.save(branchEntity);
+        // calls mapper and saves BranchEntity in DB
+        BranchDto createdBranch = branchService.createBranch(branchDto);
 
-        CarDto carDto = new CarDto().builder()
+        CarDto carDto = CarDto.builder()
                 .carId(null)
                 .vin("JH2SC2608SM506729")
                 .make("Ford")
@@ -64,65 +77,26 @@ public class CarServiceTest {
                 .engineCapacity(1800)
                 .segment(CarSegmentTypeEnum.C_MEDIUM)
                 .transmission(CarTransmissionTypeEnum.MANUAL)
-                .seats(5)
+                .seats(4)
                 .doors(5)
-                .branchId(branchEntity.getId())
+                .branchId(createdBranch.getId())
                 .equipment(null)
 //                .photoUrl("https://fakeimageurl.pl")
                 .build();
 
         // when: run create method
-
         Optional<CarDto> carDtoFromDb = carService.createCar(carDto);
 
         // then:
         // save() worked and returned updated dto
-        // it has a id not null and all fields as expected
+        // it has a carId and all fields as expected
 
-        Long carId = 0L;
         if (carDtoFromDb.isPresent()) {
-            carId = carDtoFromDb.get().getCarId();
+            Assertions.assertThat(carDtoFromDb.get())
+                    .hasFieldOrPropertyWithValue("carId", 1L)
+                    .hasFieldOrPropertyWithValue("vin", "JH2SC2608SM506729");
+
+            Assertions.assertThat(carDtoFromDb.get().getBranchId() == 12L);
         }
-        Assertions.assertThat(carId != 0L);
-
-
-
     }
 }
-
-//
-//public class EmployeeServiceTest {
-//
-//
-//
-//    @Test
-//    public void shouldCreateEmployeeWhenReceiveProperEmployeeDto() throws InterruptedException {
-//        EmployeeDto employeeDto = new EmployeeDto().builder()   //given
-//                .employeeId(null)
-//                .firstName("John")
-//                .lastName("Kowalski")
-//                .password("testPassword")
-//                .email("email@testdomain.com")
-//                .status(EmployeeStatusEnum.NEW)
-//                .role(EmployeeRoleEnum.REGULAR_EMPLOYEE)
-//                .branchId(Long.valueOf(1))
-//                .build();
-//
-//        Optional<EmployeeDto> createdDto = employeeService.createEmployee(employeeDto); //when
-//
-//        Assertions.assertThat(createdDto.get())  //then
-//                .hasFieldOrPropertyWithValue("firstName","John")
-//                .hasFieldOrPropertyWithValue("lastName","Kowalski")
-//                .hasFieldOrPropertyWithValue("password",null)
-//                .hasFieldOrPropertyWithValue("email","email@testdomain.com")
-//                .hasFieldOrPropertyWithValue("status",EmployeeStatusEnum.NEW)
-////                .hasFieldOrPropertyWithValue("branchId",null) //todo refactor this as soon, as there is branchEntity implementation
-//                .hasFieldOrPropertyWithValue("role",EmployeeRoleEnum.REGULAR_EMPLOYEE);
-//
-//        Assertions.assertThat(createdDto.get().getEmployeeId())
-//                .isNotNull();
-//    }
-//
-//}
-//*
-//* */

@@ -85,9 +85,9 @@ public class CarMapperTest {
     @Test
     public void shouldMapCarDtoToCarEntityWhenNoBranchIdSupplied() {
 
-        //given: CarDto with no branchId
+        //given: CarDto with no branchId (updating car)
         List<EquipmentEntity> equipmentEntities = new ArrayList<>();
-        CarDto carDto = new CarDto().builder()
+        CarDto carDto = CarDto.builder()
                 .carId(123456L)
                 .vin("JH2SC2608SM506729")
                 .make("Ford")
@@ -131,7 +131,7 @@ public class CarMapperTest {
         equipmentEntity.setName("entitty");
         equipmentEntities.add(equipmentEntity);
 
-        CarEntity carEntity = new CarEntity().builder()
+        CarEntity carEntity = CarEntity.builder()
                 .id(99999L)
                 .vin("JH2SC2608SM506729")
                 .make("Opel")
@@ -178,6 +178,5 @@ public class CarMapperTest {
                 .hasFieldOrPropertyWithValue("equipment", equipmentEntities);
 //    .hasFieldOrPropertyWithValue("photoUrl", "https://fakeurl.pl")
     }
-
 
 }
