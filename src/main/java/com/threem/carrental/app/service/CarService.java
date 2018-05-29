@@ -31,7 +31,7 @@ public class CarService {
     public Optional<CarDto> createCar(CarDto carDto) {
         CarEntity carEntity = carMapper.toCarEntity(carDto);
 
-        Optional<BranchEntity> branchEntityInDb = branchRepository.findById(carEntity.getBranch().getId());
+        Optional<BranchEntity> branchEntityInDb = branchRepository.findById(carDto.getBranchId());
         if (branchEntityInDb.isPresent()) {
             carEntity.setBranch(branchEntityInDb.get());
         }

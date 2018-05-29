@@ -3,9 +3,11 @@ package com.threem.carrental.app.controller;
 import com.threem.carrental.app.model.dto.AddressBranchDto;
 import com.threem.carrental.app.model.dto.BranchDto;
 import com.threem.carrental.app.model.dto.CarDto;
+import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.enumTypes.*;
+import com.threem.carrental.app.repository.BranchRepository;
 import com.threem.carrental.app.service.BranchService;
-import com.threem.carrental.app.service.CarService;
+import com.threem.carrental.app.service.mapper.BranchMapper;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.Test;
@@ -44,8 +46,14 @@ public class CarControllerTest {
     @Autowired
     private BranchService branchService;
 
+    @Autowired
+    private BranchRepository branchRepository;
+
+    @Autowired
+    private BranchMapper branchMapper;
+
     @Test
-    public void shouldCreateNewCarUponReceivingProperCarDto() { 
+    public void shouldCreateNewCarUponReceivingProperCarDto() {
 
         // given
         BranchDto branchDto = BranchDto.builder()
@@ -64,8 +72,7 @@ public class CarControllerTest {
         branchDto.setAddress(addressBranchDto);
 
         // calls mapper and saves BranchEntity in DB
-        Optional<BranchDto> branchDtoFromDb;
-        branchDtoFromDb = Optional.of(branchService.createBranch(branchDto));
+        branchService.createBranch(branchDto);
 
         CarDto carDto = CarDto.builder()
                 .carId(null)
@@ -96,8 +103,7 @@ public class CarControllerTest {
                 .log().all();
 
         Response when = given
-                .when()
-                .post("car");
+                .when().post("car");
 
         when.then()
                 .log().all()
