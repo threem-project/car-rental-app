@@ -46,22 +46,16 @@ public class CarControllerTest {
     @Autowired
     private BranchService branchService;
 
-    @Autowired
-    private BranchRepository branchRepository;
-
-    @Autowired
-    private BranchMapper branchMapper;
-
     @Test
     public void shouldCreateNewCarUponReceivingProperCarDto() {
 
         // given
         BranchDto branchDto = BranchDto.builder()
-                .id(12L)
+                .id(null)
                 .status(BranchStatusEnum.OPENED)
                 .build();
         AddressBranchDto addressBranchDto = AddressBranchDto.builder()
-                .id(123L)
+                .id(null)
                 .city("Warsaw")
                 .street("Towarowa")
                 .building("20/10")
@@ -72,7 +66,7 @@ public class CarControllerTest {
         branchDto.setAddress(addressBranchDto);
 
         // calls mapper and saves BranchEntity in DB
-        branchService.createBranch(branchDto);
+        BranchDto branchDtoFromDb = branchService.createBranch(branchDto);
 
         CarDto carDto = CarDto.builder()
                 .carId(null)
@@ -91,7 +85,7 @@ public class CarControllerTest {
                 .transmission(CarTransmissionTypeEnum.MANUAL)
                 .seats(6)
                 .doors(3)
-                .branchId(12L)
+                .branchId(branchDtoFromDb.getId())
                 .equipment(null)
 //                .photoUrl("https://fakeimageurl.pl")
                 .build();
