@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,13 @@ public class GeneralControllerAdvisor {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handle(CannotCreateTransactionException e, ServletWebRequest request) {
         return ErrorResponse.of(HttpStatus.NOT_FOUND, "General error with application", request.getRequest().getRequestURI());
+    }
+
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handle(MethodArgumentTypeMismatchException e, ServletWebRequest request) {
+        return ErrorResponse.of(HttpStatus.BAD_REQUEST, "Incorrect parameter or parameters", request.getRequest().getRequestURI());
     }
 
     //todo - refactor this stage as a part of ServiceLayer exceptions

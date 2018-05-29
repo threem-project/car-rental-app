@@ -45,4 +45,14 @@ public class EmployeeController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
+
+    @GetMapping (value = "{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<EmployeeDto> findById(@PathVariable Long id) {
+        Optional<EmployeeDto> employeeDtoFromService = employeeService.findById(id);
+        if (employeeDtoFromService.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK).body(employeeDtoFromService.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
 }
