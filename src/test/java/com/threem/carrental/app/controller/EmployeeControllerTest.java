@@ -119,14 +119,14 @@ public class EmployeeControllerTest {
     @Test
     public void shouldGetStatusUnprocessableEntityWhenCreatingEmployeeWithWrongBranchId() {
         EmployeeDto employeeDto = new EmployeeDto().builder()   //given
-                .employeeId(Long.valueOf(1))
+                .employeeId(null)
                 .firstName("test")
                 .lastName("test")
                 .password("testTest")
                 .email("testtesttesttest")
                 .status(EmployeeStatusEnum.ACTIVE)
                 .role(EmployeeRoleEnum.OWNER)
-                .branchId(Long.valueOf(1))
+                .branchId(0L)
                 .build();
 
         //@formatter:off
@@ -189,7 +189,7 @@ public class EmployeeControllerTest {
     @Test
     public void shouldGetStatusUnprocessableEntityWhenUpdatingNonExistingEmployee() {
         EmployeeDto updatedEmployeeDto = new EmployeeDto().builder() //given
-                .employeeId(Long.valueOf(0))
+                .employeeId(0L)
                 .firstName("John")
                 .lastName("Kowalski")
                 .password("testPassword")
@@ -237,7 +237,7 @@ public class EmployeeControllerTest {
                 .email("email@testdomain.com")
                 .status(EmployeeStatusEnum.NEW)
                 .role(EmployeeRoleEnum.REGULAR_EMPLOYEE)
-                .branchId(Long.valueOf(0))
+                .branchId(0L)
                 .build();
 
         //@formatter:off
@@ -253,6 +253,72 @@ public class EmployeeControllerTest {
                 .log().all()
                 .assertThat()
                 .statusCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
+        //@formatter:on
+    }
+
+    @Test
+    public void shouldGetBadRequestForIncorrectIdFormat() {
+        //@formatter:off
+        RequestSpecification getGiven = given()    //when
+                .port(port)
+                .pathParam("id","x")
+                .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+                .log().all();
+        Response getWhen = getGiven
+                .when()
+                .get("employee/{id}");
+        getWhen.then()
+                .log().all()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+        //@formatter:on
+    }
+
+    @Test
+    public void shouldGetNotFoundStatusWhenEmployeeNotExisting() {
+        //@formatter:off
+        RequestSpecification getGiven = given()    //when
+                .port(port)
+                .pathParam("id",0)
+                .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+                .log().all();
+        Response getWhen = getGiven
+                .when()
+                .get("employee/{id}");
+        getWhen.then()
+                .log().all()
+                .assertThat()
+                .statusCode(HttpStatus.NOT_FOUND.value());
+        //@formatter:on
+    }
+
+    @Test
+    public void shouldGetProperEmployeeDtoWhenEmployeeExisting() {
+        EmployeeEntity employeeEntity = new EmployeeEntity().builder()  //given
+                .firstName("test")
+                .lastName("test")
+                .password("testTest")
+                .email("testtesttesttest")
+                .status(EmployeeStatusEnum.ACTIVE)
+                .role(EmployeeRoleEnum.OWNER)
+                .branch(null)
+                .build();
+
+        EmployeeEntity savedEmployeeEntity = employeeRepository.save(employeeEntity);
+
+        //@formatter:off
+        RequestSpecification getGiven = given()    //when
+                .port(port)
+                .pathParam("id",savedEmployeeEntity.getId())
+                .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+                .log().all();
+        Response getWhen = getGiven
+                .when()
+                .get("employee/{id}");
+        getWhen.then()
+                .log().all()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value());
         //@formatter:on
     }
 }
