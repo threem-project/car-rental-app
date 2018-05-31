@@ -31,12 +31,13 @@ public class CarMapperTest {
     @Test
     public void shouldMapCarDtoToCarEntityWhenBranchIdSupplied() {
 
-        //given: CarDto (with branchId)
+        //given: CarDto with branchId
         List<EquipmentEntity> equipmentEntities = new ArrayList<>();
         BranchEntity dummyBranchEntity = new BranchEntity();
-        dummyBranchEntity.setId(123456L);
+        dummyBranchEntity.setId(4L);
+
         CarDto carDto = CarDto.builder()
-                .carId(123456L)
+                .carId(321L)
                 .vin("JH2SC2608SM506729")
                 .make("Ford")
                 .model("Focus")
@@ -52,7 +53,7 @@ public class CarMapperTest {
                 .transmission(CarTransmissionTypeEnum.MANUAL)
                 .seats(5)
                 .doors(4)
-                .branchId(123456L)
+                .branchId(dummyBranchEntity.getId())
                 .equipment(equipmentEntities)
 //                .photoUrl("https://fakeimageurl.pl")
                 .build();
@@ -62,7 +63,7 @@ public class CarMapperTest {
 
         //then: CarEntity exists with branchid
         Assertions.assertThat(carEntity)
-                .hasFieldOrPropertyWithValue("id", 123456L)
+                .hasFieldOrPropertyWithValue("id", 321L)
                 .hasFieldOrPropertyWithValue("vin", "JH2SC2608SM506729")
                 .hasFieldOrPropertyWithValue("make", "Ford")
                 .hasFieldOrPropertyWithValue("model", "Focus")
@@ -85,11 +86,11 @@ public class CarMapperTest {
     @Test
     public void shouldMapCarDtoToCarEntityWhenNoBranchIdSupplied() {
 
-        //given: CarDto with no branchId (updating car)
+        //given: CarDto with no branchId (case: updating car)
         List<EquipmentEntity> equipmentEntities = new ArrayList<>();
         CarDto carDto = CarDto.builder()
-                .carId(123456L)
-                .vin("JH2SC2608SM506729")
+                .carId(44L)
+                .vin("JH2SC2608SM506329")
                 .make("Ford")
                 .model("Focus")
                 .bodyType(CarBodyTypeEnum.SEDAN)
@@ -115,25 +116,25 @@ public class CarMapperTest {
         //then
         Assertions.assertThat(carEntity.getBranch().getId() == null);
 
-
+        Assertions.assertThat(carEntity)
+                .hasFieldOrPropertyWithValue("id", 44L)
+                .hasFieldOrPropertyWithValue("vin", "JH2SC2608SM506329");
     }
 
     @Test
-    public void shouldMapCarEntityToCarDto() {
-
-        //given: car in database
+    public void shouldMapCarEntityToCarDtoWithEquipment() {
         BranchEntity branchEntityFromDbButOnlyWithId = new BranchEntity();
-        branchEntityFromDbButOnlyWithId.setId(234567L);
+        branchEntityFromDbButOnlyWithId.setId(55L);
 
         List<EquipmentEntity> equipmentEntities = new ArrayList<>();
         EquipmentEntity equipmentEntity = new EquipmentEntity();
         equipmentEntity.setId(123L);
-        equipmentEntity.setName("entitty");
+        equipmentEntity.setName("Air conditioning");
         equipmentEntities.add(equipmentEntity);
 
         CarEntity carEntity = CarEntity.builder()
-                .id(99999L)
-                .vin("JH2SC2608SM506729")
+                .id(777L)
+                .vin("4T1BK46K77U046314")
                 .make("Opel")
                 .model("Astra")
                 .bodyType(CarBodyTypeEnum.ESTATE)
@@ -158,8 +159,8 @@ public class CarMapperTest {
 
         //then: assertions
         Assertions.assertThat(carDto)
-                .hasFieldOrPropertyWithValue("carId", 99999L)
-                .hasFieldOrPropertyWithValue("vin", "JH2SC2608SM506729")
+                .hasFieldOrPropertyWithValue("carId", 777L)
+                .hasFieldOrPropertyWithValue("vin", "4T1BK46K77U046314")
                 .hasFieldOrPropertyWithValue("make", "Opel")
                 .hasFieldOrPropertyWithValue("model", "Astra")
                 .hasFieldOrPropertyWithValue("bodyType", CarBodyTypeEnum.ESTATE)
@@ -174,7 +175,7 @@ public class CarMapperTest {
                 .hasFieldOrPropertyWithValue("transmission", CarTransmissionTypeEnum.AUTOMATIC)
                 .hasFieldOrPropertyWithValue("seats", 6)
                 .hasFieldOrPropertyWithValue("doors", 5)
-                .hasFieldOrPropertyWithValue("branchId", 234567L)
+                .hasFieldOrPropertyWithValue("branchId", 55L)
                 .hasFieldOrPropertyWithValue("equipment", equipmentEntities);
 //    .hasFieldOrPropertyWithValue("photoUrl", "https://fakeurl.pl")
     }

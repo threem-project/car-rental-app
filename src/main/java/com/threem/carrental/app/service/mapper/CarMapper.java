@@ -44,7 +44,7 @@ public class CarMapper {
     }
 
     public CarDto toCarDto(CarEntity carEntity) {
-        Long branchId = null; // TODO change it, bcz we assume cars must have a branch + catch exception other than NPE
+        // TODO? catch exception other than NPE
         CarDto carDto = CarDto.builder()
                 .carId(carEntity.getId())
                 .vin(carEntity.getVin())
@@ -64,7 +64,6 @@ public class CarMapper {
                 .doors(carEntity.getDoors())
                 .branchId(carEntity.getBranch().getId())
                 .equipment(carEntity.getEquipment())
-                .branchId(branchId)
                 .build();
         return carDto;
     }

@@ -42,8 +42,6 @@ public class CarService {
             } else {
                 throw new IncorrectBranchException("Given branch ID is incorrect");
             }
-        } else {
-            carEntity.setBranch(null);  // frontend will disallow adding cars with no branchId
         }
 
         try {
