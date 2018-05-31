@@ -1,5 +1,6 @@
 package com.threem.carrental.app.service;
 
+import com.threem.carrental.app.errorHandler.customExceptions.CarAlreadyExistsException;
 import com.threem.carrental.app.errorHandler.customExceptions.IncorrectBranchException;
 import com.threem.carrental.app.model.dto.CarDto;
 import com.threem.carrental.app.model.entity.BranchEntity;
@@ -7,6 +8,7 @@ import com.threem.carrental.app.model.entity.CarEntity;
 import com.threem.carrental.app.repository.BranchRepository;
 import com.threem.carrental.app.repository.CarRepository;
 import com.threem.carrental.app.service.mapper.CarMapper;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -44,8 +46,13 @@ public class CarService {
             carEntity.setBranch(null);  // frontend will disallow adding cars with no branchId
         }
 
-        CarEntity savedCarEntity = carRepository.save(carEntity);
-        result = Optional.of(carMapper.toCarDto(savedCarEntity));
-        return result;
+        try {
+            CarEntity savedCarEntity = carRepository.save(carEntity);
+            result = Optional.of(carMapper.toCarDto(savedCarEntity));
+            return result;
+        } catch (DataIntegrityViolationException e) {
+            throw new CarAlreadyExistsException("Car with this vin number is already in DB", e);
+        }
+
     }
 }

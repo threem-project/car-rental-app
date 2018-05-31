@@ -87,4 +87,48 @@ public class CarControllerTest {
                 .statusCode(HttpStatus.CREATED.value());
     }
 
+    @Test
+    public void shouldThrowValidationExceptionWhenReceivesWrongVin() {
+
+        // given: vin too short
+        BranchEntity branchEntity = new BranchEntity();
+        branchRepository.save(branchEntity);
+
+        CarDto carDto = CarDto.builder()
+                .carId(null)
+                .vin("4M2DU86W53UJ0902")
+                .make("Ford")
+                .model("Focus")
+                .bodyType(CarBodyTypeEnum.SEDAN)
+                .year("2010")
+                .colour(CarColourEnum.WHITE)
+                .mileage(280000)
+                .status(CarStatusEnum.AVAILABLE)
+                .dailyRate(new BigDecimal("500.50"))
+                .engineType(CarEngineTypeEnum.PETROL)
+                .engineCapacity(1800)
+                .segment(CarSegmentTypeEnum.C_MEDIUM)
+                .transmission(CarTransmissionTypeEnum.MANUAL)
+                .seats(6)
+                .doors(3)
+                .branchId(branchEntity.getId())
+                .equipment(null)
+//                .photoUrl("https://fakeimageurl.pl")
+                .build();
+
+        RequestSpecification given = given()
+                .port(port)
+                .body(carDto)
+                .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+                .log().all();
+
+        Response when = given
+                .when().post("car");
+
+        when.then()
+                .log().all()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
 }

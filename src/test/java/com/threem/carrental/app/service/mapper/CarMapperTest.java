@@ -35,7 +35,7 @@ public class CarMapperTest {
         List<EquipmentEntity> equipmentEntities = new ArrayList<>();
         BranchEntity dummyBranchEntity = new BranchEntity();
         dummyBranchEntity.setId(123456L);
-        CarDto carDto = new CarDto().builder()
+        CarDto carDto = CarDto.builder()
                 .carId(123456L)
                 .vin("JH2SC2608SM506729")
                 .make("Ford")
