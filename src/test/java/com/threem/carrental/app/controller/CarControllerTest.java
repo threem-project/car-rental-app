@@ -7,7 +7,6 @@ import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.enumTypes.*;
 import com.threem.carrental.app.repository.BranchRepository;
 import com.threem.carrental.app.service.BranchService;
-import com.threem.carrental.app.service.mapper.BranchMapper;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.Test;
@@ -22,7 +21,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Optional;
 
 import static io.restassured.RestAssured.given;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
@@ -36,7 +34,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Rollback
-@Transactional
 @ActiveProfiles("test")
 public class CarControllerTest {
 
@@ -44,33 +41,18 @@ public class CarControllerTest {
     private Integer port;
 
     @Autowired
-    private BranchService branchService;
+    private BranchRepository branchRepository;
 
     @Test
-    public void shouldCreateNewCarUponReceivingProperCarDto() {
+    public void shouldCreateNewCarUponReceivingProperCarDtoWithProperBranchSet() {
 
-        // given
-        BranchDto branchDto = BranchDto.builder()
-                .id(null)
-                .status(BranchStatusEnum.OPENED)
-                .build();
-        AddressBranchDto addressBranchDto = AddressBranchDto.builder()
-                .id(null)
-                .city("Warsaw")
-                .street("Towarowa")
-                .building("20/10")
-                .zipCode("02-495")
-                .country("Poland")
-                .phone("111-222-333")
-                .build();
-        branchDto.setAddress(addressBranchDto);
-
-        // calls mapper and saves BranchEntity in DB
-        BranchDto branchDtoFromDb = branchService.createBranch(branchDto);
+        // given: proper CarDto & chosen BranchEntity present in DB
+        BranchEntity branchEntity = new BranchEntity();
+        branchRepository.save(branchEntity);
 
         CarDto carDto = CarDto.builder()
                 .carId(null)
-                .vin("JH2SC2608SM506729")
+                .vin("4M2DU86W53UJ09027")
                 .make("Ford")
                 .model("Focus")
                 .bodyType(CarBodyTypeEnum.SEDAN)
@@ -85,7 +67,7 @@ public class CarControllerTest {
                 .transmission(CarTransmissionTypeEnum.MANUAL)
                 .seats(6)
                 .doors(3)
-                .branchId(branchDtoFromDb.getId())
+                .branchId(branchEntity.getId())
                 .equipment(null)
 //                .photoUrl("https://fakeimageurl.pl")
                 .build();
@@ -105,5 +87,4 @@ public class CarControllerTest {
                 .statusCode(HttpStatus.CREATED.value());
     }
 
-    // TODO test: failing validation? wrong vin?
 }

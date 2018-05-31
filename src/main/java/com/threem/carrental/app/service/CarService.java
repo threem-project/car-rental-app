@@ -1,5 +1,6 @@
 package com.threem.carrental.app.service;
 
+import com.threem.carrental.app.errorHandler.customExceptions.IncorrectBranchException;
 import com.threem.carrental.app.model.dto.CarDto;
 import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.CarEntity;
@@ -29,20 +30,22 @@ public class CarService {
     }
 
     public Optional<CarDto> createCar(CarDto carDto) {
+        Optional<CarDto> result = Optional.empty();
         CarEntity carEntity = carMapper.toCarEntity(carDto);
 
-        Optional<BranchEntity> branchEntityInDb = branchRepository.findById(carDto.getBranchId());
-        if (branchEntityInDb.isPresent()) {
-            carEntity.setBranch(branchEntityInDb.get());
+        if (carEntity.getBranch().getId() != null) {
+            Optional<BranchEntity> branchEntityInDb = branchRepository.findById(carDto.getBranchId());
+            if (branchEntityInDb.isPresent()) {
+                carEntity.setBranch(branchEntityInDb.get());
+            } else {
+                throw new IncorrectBranchException("Given branch ID is incorrect");
+            }
+        } else {
+            carEntity.setBranch(null);  // frontend will disallow adding cars with no branchId
         }
 
-        CarEntity carEntityFromDb = carRepository.save(carEntity);
-        // TODO catch exception if save() fails
-        // TODO catch ConstraintViolationException if validation fails
-
-        Optional<CarDto> resultCarDto;
-        resultCarDto = Optional.of(carMapper.toCarDto(carEntityFromDb));
-        return resultCarDto;
+        CarEntity savedCarEntity = carRepository.save(carEntity);
+        result = Optional.of(carMapper.toCarDto(savedCarEntity));
+        return result;
     }
-
 }
