@@ -122,7 +122,7 @@ public class CarMapperTest {
     }
 
     @Test
-    public void shouldMapCarEntityToCarDtoWithEquipment() {
+    public void shouldMapCarEntityToCarDto() {
         BranchEntity branchEntityFromDbButOnlyWithId = new BranchEntity();
         branchEntityFromDbButOnlyWithId.setId(55L);
 

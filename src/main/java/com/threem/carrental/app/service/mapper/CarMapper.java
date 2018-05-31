@@ -44,7 +44,7 @@ public class CarMapper {
     }
 
     public CarDto toCarDto(CarEntity carEntity) {
-        // TODO? catch exception other than NPE
+
         CarDto carDto = CarDto.builder()
                 .carId(carEntity.getId())
                 .vin(carEntity.getVin())

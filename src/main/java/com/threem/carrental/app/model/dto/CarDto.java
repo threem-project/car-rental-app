@@ -76,6 +76,7 @@ public class CarDto {
     @NotNull
     private Integer doors;
 
+    @NotNull
     private Long branchId;
 
     private List<EquipmentEntity> equipment;
