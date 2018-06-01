@@ -1,34 +1,44 @@
 package com.threem.carrental.sampleDataInitializer.dataSamples;
 
 import com.threem.carrental.app.model.entity.AddressBranchEntity;
-import com.threem.carrental.app.model.entity.BranchEntity;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 /**
  * @author marek_j on 2018-06-01
  */
-public class BranchAndAddressDataSamples {
+public class AddressBranchDataSample {
 
     private static Random random = new Random();
 
-    public List<BranchEntity> generateBranchEntites(Integer numberOfEntitiesToGenerate) {
-        for ()
-        return null;
+    public static List<AddressBranchEntity> generateBranchAddressEntities(Integer numberOfEntitiesToGenerate) {
+        List<AddressBranchEntity> entities = new ArrayList<>();
+        for (int i=0;i<numberOfEntitiesToGenerate;i++) {
+            entities.add(GenerateAddress.generateRandomAddress());
+        }
+        return entities;
     }
 
     private static class GenerateAddress {
 
-        private static AddressBranchEntity generateRandomAddressWarszawa() {
+        private static AddressBranchEntity generateRandomAddress() {
             return new AddressBranchEntity().builder()
                     .building(generateBuildingNumber())
-                    .city("Warszawa")
+                    .city(generateRandomCity())
                     .country("Poland")
                     .phone(generatePhoneNumber())
-                    .street("Ulica testowa")
+                    .street(generateStreet())
                     .zipCode(generateZipCode())
                     .build();
+        }
+
+        private static String generateRandomCity() {
+            List<String> cities = Arrays.asList("Warszwa","Kraków","Łódź","Poznań");
+            Integer index = random.nextInt(cities.size());
+            return cities.get(index);
         }
 
         private static String generateBuildingNumber() {
@@ -41,14 +51,24 @@ public class BranchAndAddressDataSamples {
             return buildingNumber.toString();
         }
 
+        private static String generateStreet() {
+            Integer streetSufix = random.nextInt(300);
+            if (streetSufix==0) {
+                streetSufix=+100;
+            } else if (streetSufix<0) {
+                streetSufix=streetSufix*(-1);
+            }
+            return "Ulica " + streetSufix + " testowa";
+        }
+
         private static String generatePhoneNumber() {
-            String phoneNumber = null;
+            String phoneNumber = "";
             for (int i=1;i<10;i++) {
                 Integer randomInt = random.nextInt(10);
                 if (randomInt<0) {
                     randomInt*=(-1);
                 }
-                if (i==4 || i==8) {
+                if (i==4 || i==7) {
                     phoneNumber+="-";
                 }
                 phoneNumber+=String.valueOf(randomInt);
@@ -57,7 +77,7 @@ public class BranchAndAddressDataSamples {
         }
 
         private static String generateZipCode() {
-            String zipCode = null;
+            String zipCode = "";
             for (int i=1;i<6;i++) {
                 Integer randomInt = random.nextInt(10);
                 if (randomInt<0) {
