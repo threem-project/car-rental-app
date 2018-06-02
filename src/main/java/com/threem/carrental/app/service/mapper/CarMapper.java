@@ -3,7 +3,12 @@ package com.threem.carrental.app.service.mapper;
 import com.threem.carrental.app.model.dto.CarDto;
 import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.CarEntity;
+import com.threem.carrental.app.model.entity.EquipmentEntity;
+import com.threem.carrental.app.repository.EquipmentRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Marika Grzebieniowska on 27.05.2018
@@ -13,31 +18,32 @@ import org.springframework.stereotype.Service;
 @Service
 public class CarMapper {
 
-    public CarEntity toCarEntity(CarDto fromCarDto) {
+    public CarEntity toCarEntity(CarDto carDto) {
+
         BranchEntity dummyBranchEntity = new BranchEntity();
-        if (fromCarDto.getBranchId() != null) {
-            dummyBranchEntity.setId(fromCarDto.getBranchId());
+        if (carDto.getBranchId() != null) {
+            dummyBranchEntity.setId(carDto.getBranchId());
         }
 
         CarEntity carEntity = CarEntity.builder()
-                .id(fromCarDto.getCarId())
-                .vin(fromCarDto.getVin())
-                .make(fromCarDto.getMake())
-                .model(fromCarDto.getModel())
-                .bodyType(fromCarDto.getBodyType())
-                .year(fromCarDto.getYear())
-                .colour(fromCarDto.getColour())
-                .mileage(fromCarDto.getMileage())
-                .status(fromCarDto.getStatus())
-                .dailyRate(fromCarDto.getDailyRate())
-                .engineType(fromCarDto.getEngineType())
-                .engineCapacity(fromCarDto.getEngineCapacity())
-                .segment(fromCarDto.getSegment())
-                .transmission(fromCarDto.getTransmission())
-                .seats(fromCarDto.getSeats())
-                .doors(fromCarDto.getDoors())
+                .id(carDto.getCarId())
+                .vin(carDto.getVin())
+                .make(carDto.getMake())
+                .model(carDto.getModel())
+                .bodyType(carDto.getBodyType())
+                .year(carDto.getYear())
+                .colour(carDto.getColour())
+                .mileage(carDto.getMileage())
+                .status(carDto.getStatus())
+                .dailyRate(carDto.getDailyRate())
+                .engineType(carDto.getEngineType())
+                .engineCapacity(carDto.getEngineCapacity())
+                .segment(carDto.getSegment())
+                .transmission(carDto.getTransmission())
+                .seats(carDto.getSeats())
+                .doors(carDto.getDoors())
                 .branch(dummyBranchEntity) // dummy branch with only branchId
-                .equipment(fromCarDto.getEquipment())
+                .equipment(carDto.getEquipment())
 //                .photoUrl(fromCarDto.getPhotoUrl()) - not sure how to store media, fix later
                 .build();
         return carEntity;
