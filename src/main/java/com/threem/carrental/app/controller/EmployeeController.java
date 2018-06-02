@@ -1,6 +1,7 @@
 package com.threem.carrental.app.controller;
 
 import com.threem.carrental.app.model.dto.EmployeeDto;
+import com.threem.carrental.app.model.dto.EmployeeDtoPaginated;
 import com.threem.carrental.app.model.entity.EmployeeEntity;
 import com.threem.carrental.app.service.EmployeeService;
 import org.hibernate.cfg.NotYetImplementedException;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,9 +62,9 @@ public class EmployeeController {
     }
 
     @GetMapping (produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-//    public ResponseEntity<EmployeeEntity> getAllEmployees(@RequestParam Integer currentPage,@RequestParam Integer reultsPerPage) {
-    public ResponseEntity<?> getAllEmployees() {
-        Page<EmployeeEntity> employeeEntityPage = employeeService.findAllPaginated(1,1);
-        return ResponseEntity.status(HttpStatus.OK).body(employeeEntityPage);
+    public ResponseEntity<EmployeeDtoPaginated> findAllPaginated(@RequestParam(defaultValue = "0") Integer currentPage,
+                                                                         @RequestParam(defaultValue = "20") Integer resultsPerPage) {
+        EmployeeDtoPaginated employeeDtoPaginated = employeeService.findAllPaginated(currentPage,resultsPerPage);
+        return ResponseEntity.status(HttpStatus.OK).body(employeeDtoPaginated);
     }
 }

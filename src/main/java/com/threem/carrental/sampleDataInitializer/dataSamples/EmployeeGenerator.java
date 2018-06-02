@@ -105,7 +105,7 @@ public class EmployeeGenerator {
     }
 
     private EmployeeRoleEnum assignRole() {
-        List<EmployeeRoleEnum> roleEnumList = Arrays.asList(EmployeeRoleEnum.OWNER,EmployeeRoleEnum.REGULAR_EMPLOYEE);
+        List<EmployeeRoleEnum> roleEnumList = Arrays.asList(EmployeeRoleEnum.REGULAR_EMPLOYEE);
         Integer index = random.nextInt(roleEnumList.size());
         return roleEnumList.get(index);
     }

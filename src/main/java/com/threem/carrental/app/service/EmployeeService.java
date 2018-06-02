@@ -4,19 +4,20 @@ import com.threem.carrental.app.errorHandler.customExceptions.EmployeeAlreadyExi
 import com.threem.carrental.app.errorHandler.customExceptions.EmployeeDoesNotExistException;
 import com.threem.carrental.app.errorHandler.customExceptions.IncorrectBranchException;
 import com.threem.carrental.app.model.dto.EmployeeDto;
+import com.threem.carrental.app.model.dto.EmployeeDtoPaginated;
 import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.EmployeeEntity;
 import com.threem.carrental.app.repository.BranchRepository;
 import com.threem.carrental.app.repository.EmployeeRepository;
 import com.threem.carrental.app.service.mapper.EmployeeMapper;
 import com.threem.carrental.app.utilities.PasswordEncoder;
-import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -40,10 +41,10 @@ public class EmployeeService {
     public Optional<EmployeeDto> createEmployee(EmployeeDto givenEmployeeDto) {
         EmployeeEntity employeeEntity = employeeMapper.toEmployeeEntity(givenEmployeeDto);
         EmployeeEntity employeeInDb = findEmployeeInDb(employeeEntity);
-        if (employeeInDb!=null) {
+        if (employeeInDb != null) {
             throw new EmployeeAlreadyExistException("Given Employee ID is already in DB");
         }
-        Optional<EmployeeDto> resultEmployeeDto = createOrUpdateEmployee(givenEmployeeDto,employeeEntity);
+        Optional<EmployeeDto> resultEmployeeDto = createOrUpdateEmployee(givenEmployeeDto, employeeEntity);
         return resultEmployeeDto;
     }
 
@@ -53,7 +54,7 @@ public class EmployeeService {
         if (employeeInDb == null) {
             throw new EmployeeDoesNotExistException("Can't find employee with the given ID");
         }
-        Optional<EmployeeDto> resultEmployeeDto = createOrUpdateEmployee(givenEmployeeDto,employeeEntity);
+        Optional<EmployeeDto> resultEmployeeDto = createOrUpdateEmployee(givenEmployeeDto, employeeEntity);
         return resultEmployeeDto;
     }
 
@@ -68,26 +69,43 @@ public class EmployeeService {
         return resultEmployeeDto;
     }
 
-    public Page<EmployeeEntity> findAllPaginated(Integer pageNumber, Integer pageSize) {
-        PageRequest pageableRequest = new PageRequest(pageNumber-1, pageSize);
-        Page<EmployeeEntity> employeeEntityPage = employeeRepository.findAll(pageableRequest);
-        return employeeEntityPage;
+    @Transactional
+    public EmployeeDtoPaginated findAllPaginated(Integer pageNumber, Integer elementsPerPage) {
+        PageRequest pageableRequest = PageRequest.of(pageNumber, elementsPerPage);
+
+        Page<EmployeeEntity> employeePage = employeeRepository.findAll(pageableRequest);
+        List<EmployeeEntity> employeeEntityList = employeePage.getContent();
+
+        List<EmployeeDto> employeeDtoList = new ArrayList<>();
+        employeeEntityList.forEach((e) -> e.getBranch());
+        employeeEntityList.forEach((e) -> employeeDtoList.add(employeeMapper.toEmployeeDto(e)));
+        employeeDtoList.forEach((e) -> e.setPassword(null));
+
+        EmployeeDtoPaginated employeeDtoPaginated = new EmployeeDtoPaginated().builder()
+                .currentPage(pageNumber)
+                .elementsPerPage(elementsPerPage)
+                .employeeDtoList(employeeDtoList)
+                .totalElements(employeePage.getTotalElements())
+                .totalPages(employeePage.getTotalPages())
+                .build();
+
+        return employeeDtoPaginated;
     }
 
     private Optional<EmployeeDto> createOrUpdateEmployee(EmployeeDto employeeDto, EmployeeEntity employeeEntity) {
         Optional<EmployeeDto> resultEmployeeDto = Optional.empty();
 
-        if (employeeEntity.getPassword()!=null) {
+        if (employeeEntity.getPassword() != null) {
             employeeEntity.setPassword(employeeDto.getPassword());
             employeeEntity = entityWithEncodedPassword(employeeEntity);
         }
 
-        if (employeeEntity.getBranch()!=null) {
+        if (employeeEntity.getBranch() != null) {
             employeeEntity = setBranchForEmployee(employeeEntity);
         }
 
         EmployeeEntity savedEmployeeEntity = employeeRepository.save(employeeEntity);
-        if (savedEmployeeEntity!=null) {
+        if (savedEmployeeEntity != null) {
             resultEmployeeDto = employeeDtoWithPasswordNull(savedEmployeeEntity);
         }
 
@@ -109,26 +127,24 @@ public class EmployeeService {
     private EmployeeEntity setBranchForEmployee(EmployeeEntity givenEmployee) {
         EmployeeEntity employeeEntity = employeeMapper.toEmployeeEntity(givenEmployee);
 
-//        if (employeeEntity.getBranch()!=null) {
-            Long employeeBranchId = employeeEntity.getBranch().getId();
-            if (employeeBranchId!=null) {
-                Optional<BranchEntity> branchEntity = branchRepository.findById(employeeBranchId);
-                if (branchEntity.isPresent()) {
-                    employeeEntity.setBranch(branchEntity.get());
-                } else {
-                    throw new IncorrectBranchException("Given branch ID is incorrect");
-                }
+        Long employeeBranchId = employeeEntity.getBranch().getId();
+        if (employeeBranchId != null) {
+            Optional<BranchEntity> branchEntity = branchRepository.findById(employeeBranchId);
+            if (branchEntity.isPresent()) {
+                employeeEntity.setBranch(branchEntity.get());
             } else {
-                employeeEntity.setBranch(null);
+                throw new IncorrectBranchException("Given branch ID is incorrect");
             }
-//        }
+        } else {
+            employeeEntity.setBranch(null);
+        }
         return employeeEntity;
     }
 
     private Optional<EmployeeDto> employeeDtoWithPasswordNull(EmployeeEntity employeeEntity) {
-            EmployeeDto employeeDto = employeeMapper.toEmployeeDto(employeeEntity);
-            employeeDto.setPassword(null);
-            return Optional.of(employeeDto);
+        EmployeeDto employeeDto = employeeMapper.toEmployeeDto(employeeEntity);
+        employeeDto.setPassword(null);
+        return Optional.of(employeeDto);
     }
 
     private EmployeeEntity entityWithEncodedPassword(EmployeeEntity employeeEntity) {

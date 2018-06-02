@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 /**
  * @author marek_j on 2018-06-01
  */
@@ -15,10 +17,10 @@ import org.springframework.data.domain.Page;
 @Builder
 public class EmployeeDtoPaginated {
 
-    private Integer currentIndex;
-    private Integer firstIndex;
-    private Integer lastIndex;
+    private Integer currentPage;
+    private Integer totalPages;
+    private Long totalElements;
     private Integer elementsPerPage;
-    private Page<EmployeeDto> employeeDtoPage;
+    private List<EmployeeDto> employeeDtoList;
 
 }
