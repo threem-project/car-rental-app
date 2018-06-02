@@ -1,7 +1,14 @@
 package com.threem.carrental.app.controller;
 
+import com.threem.carrental.app.errorHandler.customExceptions.IncorrectBranchException;
 import com.threem.carrental.app.model.dto.AddressBranchDto;
 import com.threem.carrental.app.model.dto.BranchDto;
+<<<<<<< HEAD
+=======
+import com.threem.carrental.app.model.entity.AddressBranchEntity;
+import com.threem.carrental.app.model.entity.BranchEntity;
+import com.threem.carrental.app.model.entity.MainOfficeEntity;
+>>>>>>> develop
 import com.threem.carrental.app.model.entity.enumTypes.BranchStatusEnum;
 import com.threem.carrental.app.repository.MainOfficeRepository;
 import com.threem.carrental.app.service.BranchService;
@@ -106,6 +113,66 @@ public class BranchControllerTest {
                 .post("branch");
 
         when.then()
+                .log().all()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+        //@formatter:on
+    }
+
+    @Test
+    public void shouldFindBranchByIdAndReturnOkStatusAndBranch() throws Exception{
+        //given
+        Long testId = 1L;
+        //@formatter:off
+        RequestSpecification getGiven = given()    //when
+                .port(port)
+                .pathParam("id",testId)
+                .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+                .log().all();
+        Response getWhen = getGiven
+                .when()
+                .get("branch/{id}");
+        getWhen.then()
+                .log().all()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value());
+        //@formatter:on
+    }
+
+    @Test
+    public void shouldGetNoContentStatusWhenTryFindBranchById() throws Exception {
+        //given
+        Long testId = 0L;
+        //@formatter:off
+        RequestSpecification getGiven = given()    //when
+                .port(port)
+                .pathParam("id",testId)
+                .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+                .log().all();
+        Response getWhen = getGiven
+                .when()
+                .get("branch/{id}");
+        getWhen.then()
+                .log().all()
+                .assertThat()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+        //@formatter:on
+    }
+
+    @Test
+    public void shouldGetBadRequestStatusWhenTryFindBranchByIdOfNotLongType() throws Exception {
+        //given
+        String testId = "testId";
+        //@formatter:off
+        RequestSpecification getGiven = given()    //when
+                .port(port)
+                .pathParam("id",testId)
+                .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+                .log().all();
+        Response getWhen = getGiven
+                .when()
+                .get("branch/{id}");
+        getWhen.then()
                 .log().all()
                 .assertThat()
                 .statusCode(HttpStatus.BAD_REQUEST.value());

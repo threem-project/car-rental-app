@@ -2,7 +2,6 @@ package com.threem.carrental.sampleDataInitializer;
 
 import com.threem.carrental.app.model.entity.AddressBranchEntity;
 import com.threem.carrental.app.model.entity.BranchEntity;
-import com.threem.carrental.app.model.entity.EmployeeEntity;
 import com.threem.carrental.app.model.entity.MainOfficeEntity;
 import com.threem.carrental.app.repository.AddressBranchRepository;
 import com.threem.carrental.app.repository.BranchRepository;

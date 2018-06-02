@@ -1,5 +1,6 @@
 package com.threem.carrental.app.service;
 
+import com.threem.carrental.app.errorHandler.customExceptions.IncorrectBranchException;
 import com.threem.carrental.app.model.dto.AddressBranchDto;
 import com.threem.carrental.app.model.dto.BranchDto;
 import com.threem.carrental.app.model.dto.MainOfficeDto;
@@ -40,13 +41,26 @@ public class BranchService {
         BranchEntity branchEntity = branchMapper.toBranchEntity(branchDto);
         AddressBranchEntity addressBranchEntity = addressBranchMapper.toAddressBranchEntity(branchDto.getAddress());
         branchEntity.setAddress(addressBranchEntity);
+        BranchDto resultBranchDto = new BranchDto();
 
         BranchEntity branchEntityFromDb = branchRepository.save(branchEntity);
 
-        //todo if branch was not saved branchId will be null.must handle it
-
-        BranchDto resultBranchDto = branchMapper.toBranchDto(branchEntityFromDb);
-        resultBranchDto.setAddress(addressBranchMapper.toAddressBranchDto(branchEntity.getAddress()));
+        if (branchEntityFromDb.getId() != null) {
+            resultBranchDto = branchMapper.toBranchDto(branchEntityFromDb);
+            resultBranchDto.setAddress(addressBranchMapper.toAddressBranchDto(branchEntity.getAddress()));
+        }
         return resultBranchDto;
+    }
+
+    public BranchDto findBranchById(Long id) {
+        BranchDto branchDto = new BranchDto();
+        Optional<BranchEntity> branchEntityOptional = branchRepository.findById(id);
+
+        if (branchEntityOptional.isPresent()) {
+            branchDto = branchMapper.toBranchDto(branchEntityOptional.get());
+            AddressBranchEntity addressBranchEntity = branchEntityOptional.get().getAddress();
+            branchDto.setAddress(addressBranchMapper.toAddressBranchDto(addressBranchEntity));
+        }
+        return branchDto;
     }
 }
