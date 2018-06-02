@@ -5,6 +5,7 @@ import com.threem.carrental.app.model.dto.CarDto;
 import com.threem.carrental.app.model.entity.*;
 import com.threem.carrental.app.model.entity.enumTypes.*;
 import com.threem.carrental.app.repository.BranchRepository;
+import com.threem.carrental.app.repository.EquipmentRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +19,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -38,13 +41,23 @@ public class CarServiceTest {
     @Autowired
     private BranchRepository branchRepository;
 
+    @Autowired
+    private EquipmentRepository equipmentRepository;
+
     @Test
-    public void shouldCreateCarWhenReceivesProperCarDtoWithProperBranch() {
+    public void shouldCreateCarWhenReceivesProperCarDtoWithProperBranchAndEquipmentList() {
 
         // given: proper CarDto & chosen BranchEntity present in DB
 
-        BranchEntity branchEntity = new BranchEntity();
-        branchRepository.save(branchEntity);
+        BranchEntity branchEntityFromDb = branchRepository.save(new BranchEntity());
+
+        EquipmentEntity equipmentEntityFromDb1 = equipmentRepository.save(new EquipmentEntity(1L,"Air conditioning"));
+        EquipmentEntity equipmentEntityFromDb2 = equipmentRepository.save(new EquipmentEntity(2L,"GPS navigation"));
+        EquipmentEntity equipmentEntityFromDb3 = equipmentRepository.save(new EquipmentEntity(3L,"Internet access"));
+        List<EquipmentEntity> equipment = new ArrayList<>();
+        equipment.add(equipmentEntityFromDb1);
+        equipment.add(equipmentEntityFromDb2);
+        equipment.add(equipmentEntityFromDb3);
 
         CarDto carDto = CarDto.builder()
                 .carId(null)
@@ -63,8 +76,8 @@ public class CarServiceTest {
                 .transmission(CarTransmissionTypeEnum.MANUAL)
                 .seats(4)
                 .doors(5)
-                .branchId(branchEntity.getId())
-                .equipment(null)
+                .branchId(branchEntityFromDb.getId())
+                .equipment(equipment)
                 //.photoUrl("https://fakeimage.pl")
                 .build();
 
@@ -78,7 +91,7 @@ public class CarServiceTest {
 
         Assertions.assertThat(carDtoFromDb.get())
                 .hasFieldOrPropertyWithValue("vin", "JH2SC2608SM506729")
-                .hasFieldOrPropertyWithValue("branchId", branchEntity.getId())
+                .hasFieldOrPropertyWithValue("branchId", branchEntityFromDb.getId())
                 .hasFieldOrPropertyWithValue("make", "Ford")
                 .hasFieldOrPropertyWithValue("model", "Focus")
                 .hasFieldOrPropertyWithValue("bodyType", CarBodyTypeEnum.SEDAN)
@@ -93,9 +106,9 @@ public class CarServiceTest {
                 .hasFieldOrPropertyWithValue("transmission", CarTransmissionTypeEnum.MANUAL)
                 .hasFieldOrPropertyWithValue("seats", 4)
                 .hasFieldOrPropertyWithValue("doors", 5)
-                .hasFieldOrPropertyWithValue("branchId", branchEntity.getId())
-                .hasFieldOrPropertyWithValue("equipment", null);
-
+                .hasFieldOrPropertyWithValue("branchId", branchEntityFromDb.getId());
+        Assertions.assertThat(carDtoFromDb.get().getEquipment().size() == 3);
+        Assertions.assertThat(carDtoFromDb.get().getEquipment().get(2).getName().equals("Internet access"));
     }
 
     @Test(expected = CarAlreadyExistsException.class)

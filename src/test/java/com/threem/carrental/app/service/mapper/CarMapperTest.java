@@ -32,9 +32,6 @@ public class CarMapperTest {
 
     private CarMapper carMapper;
 
-    @Autowired
-    private EquipmentRepository equipmentRepository;
-
     @Before
     public void setUp() {
 
