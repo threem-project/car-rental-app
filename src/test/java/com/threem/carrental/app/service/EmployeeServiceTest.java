@@ -3,14 +3,16 @@ package com.threem.carrental.app.service;
 import com.threem.carrental.app.errorHandler.customExceptions.EmployeeAlreadyExistException;
 import com.threem.carrental.app.errorHandler.customExceptions.EmployeeDoesNotExistException;
 import com.threem.carrental.app.model.dto.EmployeeDto;
+import com.threem.carrental.app.model.dto.EmployeeDtoPaginated;
 import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.EmployeeEntity;
 import com.threem.carrental.app.model.entity.enumTypes.EmployeeRoleEnum;
 import com.threem.carrental.app.model.entity.enumTypes.EmployeeStatusEnum;
 import com.threem.carrental.app.repository.BranchRepository;
 import com.threem.carrental.app.repository.EmployeeRepository;
+import io.swagger.models.auth.In;
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -258,5 +261,28 @@ public class EmployeeServiceTest {
         Long fakeId = 0L; //given
         Optional<EmployeeDto> employeeDtoOptional = employeeService.findById(fakeId); //when
         Assertions.assertThat(employeeDtoOptional).isEqualTo(Optional.empty()); //then
+    }
+
+    @Test
+    public void shouldFindAllEmployeesPaginated() {
+        //given
+        Integer testEmployeesNumber = 10;
+        for (Integer i=0;i<testEmployeesNumber;i++) {
+            EmployeeEntity employeeEntity = new EmployeeEntity().builder().firstName("test " + i).build();
+            employeeRepository.save(employeeEntity);
+        }
+        List<EmployeeEntity> listBeforeChange = employeeRepository.findAll();
+        Integer sizeBeforeChange = listBeforeChange.size();
+        EmployeeDtoPaginated paginatedBeforeChange = employeeService.findAllPaginated(1,sizeBeforeChange);
+
+        //when
+        for (Integer i=0;i<testEmployeesNumber;i++) {
+            EmployeeEntity employeeEntity = new EmployeeEntity().builder().firstName("test " + i).build();
+            employeeRepository.save(employeeEntity);
+        }
+        EmployeeDtoPaginated paginatedAfterChange = employeeService.findAllPaginated(1,sizeBeforeChange);
+
+        //then
+        Assertions.assertThat(paginatedBeforeChange.getTotalPages()).isLessThan(paginatedAfterChange.getTotalPages());
     }
 }
