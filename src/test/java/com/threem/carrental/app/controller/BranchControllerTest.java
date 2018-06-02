@@ -1,14 +1,7 @@
 package com.threem.carrental.app.controller;
 
-import com.threem.carrental.app.errorHandler.customExceptions.IncorrectBranchException;
 import com.threem.carrental.app.model.dto.AddressBranchDto;
 import com.threem.carrental.app.model.dto.BranchDto;
-<<<<<<< HEAD
-=======
-import com.threem.carrental.app.model.entity.AddressBranchEntity;
-import com.threem.carrental.app.model.entity.BranchEntity;
-import com.threem.carrental.app.model.entity.MainOfficeEntity;
->>>>>>> develop
 import com.threem.carrental.app.model.entity.enumTypes.BranchStatusEnum;
 import com.threem.carrental.app.repository.MainOfficeRepository;
 import com.threem.carrental.app.service.BranchService;
@@ -43,13 +36,6 @@ public class BranchControllerTest {
 
     @LocalServerPort
     private Integer port;
-
-    @Autowired
-    private BranchService branchService;
-    @Autowired
-    private static MainOfficeRepository mainOfficeRepository;
-    @Autowired
-    private MainOfficeMapper mainOfficeMapper;
 
     @Test
     public void shouldCreateAndReturnBranchWithStatusCreatedUsingBranchDto() throws Exception{
