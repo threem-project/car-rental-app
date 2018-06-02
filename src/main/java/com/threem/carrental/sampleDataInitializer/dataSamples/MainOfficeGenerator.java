@@ -7,13 +7,19 @@ import com.threem.carrental.app.model.entity.MainOfficeEntity;
  */
 public class MainOfficeGenerator {
 
+    private final String domain;
+
+    public MainOfficeGenerator(String domain_name) {
+        this.domain = domain_name;
+    }
+
     public MainOfficeEntity generate() {
         return new MainOfficeEntity().builder()
                 .name("Wypożyczalnia Pieska Leszka")
-                .domain("wypozyczalna-pieska-leszka")
+                .domain(domain)
                 .address("Warszawa, ul. Psia 100")
                 .phone("111-222-333")
-                .email("wypozyczalnia@pieskaleszka.com")
+                .email("car-rental-app.com")
                 .build();
     }
 }

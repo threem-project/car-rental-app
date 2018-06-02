@@ -2,7 +2,6 @@ package com.threem.carrental.app.service;
 
 import com.threem.carrental.app.model.dto.AddressBranchDto;
 import com.threem.carrental.app.model.dto.BranchDto;
-import com.threem.carrental.app.model.entity.MainOfficeEntity;
 import com.threem.carrental.app.model.entity.enumTypes.BranchStatusEnum;
 import com.threem.carrental.app.repository.MainOfficeRepository;
 import org.assertj.core.api.Assertions;
@@ -14,8 +13,6 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 /**
  * @author misza_lemko on 28.05.2018
@@ -38,7 +35,7 @@ public class BranchServiceTest {
         //given
         BranchDto branchDto = BranchDto.builder()
                 .id(1L)
-                .status(BranchStatusEnum.OPENED)
+                .status(BranchStatusEnum.OPEN)
                 .build();
         AddressBranchDto addressBranchDto = AddressBranchDto.builder()
                 .id(1L)

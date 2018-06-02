@@ -5,6 +5,6 @@ package com.threem.carrental.app.model.entity.enumTypes;
  */
 public enum EmployeeStatusEnum {
 
-    NEW,ACTIVE;
+    NEW,ACTIVE,DEACTIVATED;
 
 }
