@@ -64,6 +64,5 @@ public class BranchServiceTest {
                 .hasFieldOrPropertyWithValue("zipCode", addressBranchDto.getZipCode())
                 .hasFieldOrPropertyWithValue("country", addressBranchDto.getCountry())
                 .hasFieldOrPropertyWithValue("phone", addressBranchDto.getPhone());
-        Assertions.assertThat(createdBranch.getMainOffice()).isNotNull();
     }
 }
