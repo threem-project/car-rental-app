@@ -29,10 +29,6 @@ public class BranchEntity {
     @JoinColumn(name = "address_id")
     private AddressBranchEntity address;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "main_office_id")
-    private MainOfficeEntity mainOffice;
-
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private BranchStatusEnum status;

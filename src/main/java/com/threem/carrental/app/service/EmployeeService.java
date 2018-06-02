@@ -12,6 +12,9 @@ import com.threem.carrental.app.service.mapper.EmployeeMapper;
 import com.threem.carrental.app.utilities.PasswordEncoder;
 import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -65,10 +68,10 @@ public class EmployeeService {
         return resultEmployeeDto;
     }
 
-    public Optional<Page<EmployeeDto>> findAllPaginated(Integer pageNumber) {
-
-
-        return Optional.empty();
+    public Page<EmployeeEntity> findAllPaginated(Integer pageNumber, Integer pageSize) {
+        PageRequest pageableRequest = new PageRequest(pageNumber-1, pageSize);
+        Page<EmployeeEntity> employeeEntityPage = employeeRepository.findAll(pageableRequest);
+        return employeeEntityPage;
     }
 
     private Optional<EmployeeDto> createOrUpdateEmployee(EmployeeDto employeeDto, EmployeeEntity employeeEntity) {

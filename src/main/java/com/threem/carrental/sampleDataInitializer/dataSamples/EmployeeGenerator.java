@@ -1,8 +1,11 @@
 package com.threem.carrental.sampleDataInitializer.dataSamples;
 
+import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.EmployeeEntity;
 import com.threem.carrental.app.model.entity.enumTypes.EmployeeRoleEnum;
 import com.threem.carrental.app.model.entity.enumTypes.EmployeeStatusEnum;
+import com.threem.carrental.app.repository.BranchRepository;
+import com.threem.carrental.app.repository.EmployeeRepository;
 import com.threem.carrental.app.utilities.PasswordEncoder;
 
 import java.util.ArrayList;
@@ -18,15 +21,25 @@ public class EmployeeGenerator {
     private Random random = new Random();
     private PasswordEncoder passwordEncoder = new PasswordEncoder();
     private String domain;
+    private EmployeeRepository employeeRepository;
+    private BranchRepository branchRepository;
 
-    public EmployeeGenerator(String domain) {
+    public EmployeeGenerator(String domain, EmployeeRepository employeeRepository, BranchRepository branchRepository) {
+        this.employeeRepository = employeeRepository;
+        this.branchRepository = branchRepository;
         this.domain = domain;
     }
 
-    public List<EmployeeEntity> generate(Integer numberOfSamples) {
+    public List<EmployeeEntity> generateAndSaveEmployees(Integer numberOfSamples) {
+        List<BranchEntity> branchList = branchRepository.findAll();
         List<EmployeeEntity> entities = new ArrayList<>();
         for (int i = 0; i < numberOfSamples; i++) {
-            entities.add(generateRandomEmployee());
+            EmployeeEntity employeeEntity = generateRandomEmployee();
+            Integer index = random.nextInt(branchList.size());
+            BranchEntity branchEntity = branchList.get(index);
+            employeeEntity.setBranch(branchEntity);
+            employeeRepository.save(employeeEntity);
+            entities.add(employeeEntity);
         }
         return entities;
     }

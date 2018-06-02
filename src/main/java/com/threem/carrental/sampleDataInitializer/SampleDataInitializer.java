@@ -8,7 +8,6 @@ import com.threem.carrental.app.repository.AddressBranchRepository;
 import com.threem.carrental.app.repository.BranchRepository;
 import com.threem.carrental.app.repository.EmployeeRepository;
 import com.threem.carrental.app.repository.MainOfficeRepository;
-import com.threem.carrental.sampleDataInitializer.dataSamples.AddressBranchGenerator;
 import com.threem.carrental.sampleDataInitializer.dataSamples.BranchGenerator;
 import com.threem.carrental.sampleDataInitializer.dataSamples.EmployeeGenerator;
 import com.threem.carrental.sampleDataInitializer.dataSamples.MainOfficeGenerator;
@@ -25,8 +24,8 @@ import java.util.List;
 @Configuration
 public class SampleDataInitializer {
 
-    private final Integer BRANCH_QTY = 20;
-    private final Integer EMPLOYEES_QTY = 50;
+    private final Integer BRANCH_QTY = 50;
+    private final Integer EMPLOYEES_QTY = 150;
     private final String DOMAIN_NAME = "car-rental-app.com";
 
     private final MainOfficeRepository mainOfficeRepository;
@@ -45,7 +44,6 @@ public class SampleDataInitializer {
     @PostConstruct
     void init() {
         generateAndSaveMainOffice();
-        generateAndSaveAddressBranch();
         generateAndSaveBranch();
         generateAndSaveEmployees();
     }
@@ -56,22 +54,15 @@ public class SampleDataInitializer {
         mainOfficeRepository.save(mainOfficeEntity);
     }
 
-    private void generateAndSaveAddressBranch() {
-        AddressBranchGenerator addressGenerator = new AddressBranchGenerator();
-        List<AddressBranchEntity> addressBranchEntityList = addressGenerator.generate(BRANCH_QTY);
-        addressBranchRepository.saveAll(addressBranchEntityList);
-    }
-
     private void generateAndSaveBranch() {
         List<AddressBranchEntity> addressBranchList = addressBranchRepository.findAll();
-        BranchGenerator branchGenerator = new BranchGenerator(addressBranchList);
-        List<BranchEntity> branchEntityList = branchGenerator.generate(BRANCH_QTY);
-        branchRepository.saveAll(branchEntityList);
+        BranchGenerator branchGenerator = new BranchGenerator(branchRepository, addressBranchRepository);
+        branchGenerator.generateAndSaveBranchAndAddress(BRANCH_QTY);
     }
 
     private void generateAndSaveEmployees() {
-        EmployeeGenerator employeeGenerator = new EmployeeGenerator(DOMAIN_NAME);
-        List<EmployeeEntity> employeeEntityList = employeeGenerator.generate(EMPLOYEES_QTY);
-        employeeRepository.saveAll(employeeEntityList);
+        List<BranchEntity> branchEntityList = branchRepository.findAll();
+        EmployeeGenerator employeeGenerator = new EmployeeGenerator(DOMAIN_NAME, employeeRepository, branchRepository);
+        employeeGenerator.generateAndSaveEmployees(EMPLOYEES_QTY);
     }
 }

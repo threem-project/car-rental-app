@@ -14,15 +14,7 @@ public class AddressBranchGenerator {
 
     private Random random = new Random();
 
-    public List<AddressBranchEntity> generate(Integer numberOfSamples) {
-        List<AddressBranchEntity> entities = new ArrayList<>();
-        for (int i = 0; i < numberOfSamples; i++) {
-            entities.add(generateRandomAddress());
-        }
-        return entities;
-    }
-
-    private AddressBranchEntity generateRandomAddress() {
+    public AddressBranchEntity generate() {
         return new AddressBranchEntity().builder()
                 .building(generateBuildingNumber())
                 .city(generateRandomCity())
