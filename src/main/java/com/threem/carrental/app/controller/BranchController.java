@@ -1,6 +1,5 @@
 package com.threem.carrental.app.controller;
 
-import com.threem.carrental.app.model.dto.AddressBranchDto;
 import com.threem.carrental.app.model.dto.BranchDto;
 import com.threem.carrental.app.service.BranchService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
 
 /**
  * @author misza_lemko on 22.05.2018
@@ -41,7 +39,7 @@ public class BranchController {
     @GetMapping(value = "{id}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     ResponseEntity<BranchDto> findBranchById(@PathVariable Long id) {
         BranchDto branchDto = branchService.findBranchById(id);
-        if (branchDto==null) {
+        if (branchDto.getId()==null) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(branchDto);
