@@ -44,13 +44,14 @@ public class CarService {
             }
         }
 
-        try {
+        // check if car with this vin already exists
+        if (carRepository.findByVin(carDto.getVin()) != null) {
+            throw new CarAlreadyExistsException("Car with this vin number is already in DB");
+        }
             CarEntity savedCarEntity = carRepository.save(carEntity);
             result = Optional.of(carMapper.toCarDto(savedCarEntity));
             return result;
-        } catch (DataIntegrityViolationException e) {
-            throw new CarAlreadyExistsException("Car with this vin number is already in DB", e);
         }
 
     }
-}
+
