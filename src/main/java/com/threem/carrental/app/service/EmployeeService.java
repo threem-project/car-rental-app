@@ -10,7 +10,6 @@ import com.threem.carrental.app.repository.BranchRepository;
 import com.threem.carrental.app.repository.EmployeeRepository;
 import com.threem.carrental.app.service.mapper.EmployeeMapper;
 import com.threem.carrental.app.utilities.PasswordEncoder;
-import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -33,6 +32,7 @@ public class EmployeeService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // #RW createEmployee oraz updateEmployee duplikują sporo kodu
     public Optional<EmployeeDto> createEmployee(EmployeeDto givenEmployeeDto) {
         EmployeeEntity employeeEntity = employeeMapper.toEmployeeEntity(givenEmployeeDto);
         EmployeeEntity employeeInDb = findEmployeeInDb(employeeEntity);
@@ -53,6 +53,7 @@ public class EmployeeService {
         return resultEmployeeDto;
     }
 
+    // #RW zbyt zawiła logika, to nie jest tylko findById, proponuję uprościć
     public Optional<EmployeeDto> findById(Long id) {
         Optional<EmployeeDto> resultEmployeeDto = Optional.empty();
         Optional<EmployeeEntity> entityFromDb = employeeRepository.findById(id);
@@ -64,6 +65,7 @@ public class EmployeeService {
         return resultEmployeeDto;
     }
 
+    // #RW bardzo brzydka iflogia
     private Optional<EmployeeDto> createOrUpdateEmployee(EmployeeDto employeeDto, EmployeeEntity employeeEntity) {
         Optional<EmployeeDto> resultEmployeeDto = Optional.empty();
 
@@ -96,21 +98,22 @@ public class EmployeeService {
         return employeeEntity;
     }
 
+    // #RW za dużo zagnieżdzonych if-ów, mało czytelne i łatwo się pomylić
     private EmployeeEntity setBranchForEmployee(EmployeeEntity givenEmployee) {
         EmployeeEntity employeeEntity = employeeMapper.toEmployeeEntity(givenEmployee);
 
 //        if (employeeEntity.getBranch()!=null) {
-            Long employeeBranchId = employeeEntity.getBranch().getId();
-            if (employeeBranchId!=null) {
-                Optional<BranchEntity> branchEntity = branchRepository.findById(employeeBranchId);
-                if (branchEntity.isPresent()) {
-                    employeeEntity.setBranch(branchEntity.get());
-                } else {
-                    throw new IncorrectBranchException("Given branch ID is incorrect");
-                }
+        Long employeeBranchId = employeeEntity.getBranch().getId();
+        if (employeeBranchId!=null) {
+            Optional<BranchEntity> branchEntity = branchRepository.findById(employeeBranchId);
+            if (branchEntity.isPresent()) {
+                employeeEntity.setBranch(branchEntity.get());
             } else {
-                employeeEntity.setBranch(null);
+                throw new IncorrectBranchException("Given branch ID is incorrect");
             }
+        } else {
+            employeeEntity.setBranch(null);
+        }
 //        }
         return employeeEntity;
     }

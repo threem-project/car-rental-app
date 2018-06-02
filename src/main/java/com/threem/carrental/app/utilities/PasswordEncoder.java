@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
+// #RW nie ma potrzeby aby ta klasa była komponentem, metoda encode może być statyczna
+// Proponuję podpiąć logger to logowania błędów.
+
 /**
  * @author marek_j on 2018-05-10
  */

@@ -1,17 +1,17 @@
 package com.threem.carrental.app.service;
 
+import com.threem.carrental.app.model.dto.InstallDto;
+import com.threem.carrental.app.model.dto.InstallerViewDto;
 import com.threem.carrental.app.model.entity.EmployeeEntity;
+import com.threem.carrental.app.model.entity.InstallerEntity;
 import com.threem.carrental.app.model.entity.MainOfficeEntity;
 import com.threem.carrental.app.model.entity.enumTypes.EmployeeRoleEnum;
 import com.threem.carrental.app.model.entity.enumTypes.EmployeeStatusEnum;
+import com.threem.carrental.app.model.entity.enumTypes.InstallationStatusEnum;
 import com.threem.carrental.app.repository.EmployeeRepository;
+import com.threem.carrental.app.repository.InstallRepository;
 import com.threem.carrental.app.repository.MainOfficeRepository;
 import com.threem.carrental.app.utilities.PasswordEncoder;
-import com.threem.carrental.app.model.dto.InstallDto;
-import com.threem.carrental.app.model.entity.enumTypes.InstallationStatusEnum;
-import com.threem.carrental.app.model.entity.InstallerEntity;
-import com.threem.carrental.app.model.dto.InstallerViewDto;
-import com.threem.carrental.app.repository.InstallRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -39,6 +39,7 @@ public class InstallService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // #RW logika jest zbyt złożona, rozbiłbym na prywatne metody
     public InstallerViewDto createMainOffice(InstallDto command) {
         List<InstallerEntity> installerEntityList = installRepository.findAll();
         if (notCorrectInstallEntityList(installerEntityList)) {
@@ -73,6 +74,7 @@ public class InstallService {
                 .installationStatus(InstallationStatusEnum.COMPLETED)
                 .build();
 
+        // #RW transakcja powinna być na całą metodą a nie wyłącznie tych kilku operacjach
         //todo transaction start
         employeeRepository.save(employee);
         mainOfficeRepository.save(mainOffice);
@@ -83,6 +85,7 @@ public class InstallService {
         return new InstallerViewDto(mainOfficeId,command.getCompanyName());
     }
 
+    // #RW czy nie można tego zapisać prościej: return installerEntityList.size()>0
     private boolean notCorrectInstallEntityList(List<InstallerEntity> installerEntityList) {
         boolean result = false;
         if (installerEntityList.size()>0) {
@@ -92,6 +95,7 @@ public class InstallService {
         return result;
     }
 
+    // #RW styl, mozna zapisać prościej, unikamy magic numbers
     private boolean mainOfficeAlreadyInDb(List<MainOfficeEntity> mainOfficeEntityList) {
         boolean result = false;
         if (mainOfficeEntityList.size()!=0) {
@@ -101,6 +105,7 @@ public class InstallService {
         return result;
     }
 
+    // #RW styl, mozna zapisać prościej, unikamy magic numbers
     private Long getMainOfficeIdFromDb(List<MainOfficeEntity> mainOfficeEntityList) {
         if (mainOfficeEntityList.size()==1) {
             return mainOfficeEntityList.get(0).getId();
