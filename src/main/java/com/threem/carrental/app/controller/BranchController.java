@@ -31,9 +31,8 @@ public class BranchController {
         BranchDto branchDtoFromService = branchService.createBranch(branchDto);
         if (branchDtoFromService!=null) {
             return ResponseEntity.status(HttpStatus.CREATED).body(branchDtoFromService);
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
     @GetMapping(value = "{id}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

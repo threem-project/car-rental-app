@@ -31,8 +31,6 @@ public class BranchServiceTest {
 
     @Autowired
     private BranchService branchService;
-    @Autowired
-    private MainOfficeRepository mainOfficeRepository;
 
     @Test
     public void shouldCreateAndReturnBranchUsingBranchDto() throws InterruptedException {
@@ -82,7 +80,7 @@ public class BranchServiceTest {
                 .phone("111-222-333")
                 .build();
         branchDto.setAddress(addressBranchDto);
-        BranchDto createdBranch = branchService.createBranch(branchDto);
+        branchService.createBranch(branchDto);
         Long testId = 1L;
         //when
         BranchDto branchDtoFromDb = branchService.findBranchById(testId);

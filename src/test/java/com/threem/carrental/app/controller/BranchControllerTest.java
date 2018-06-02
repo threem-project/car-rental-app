@@ -46,13 +46,6 @@ public class BranchControllerTest {
     @LocalServerPort
     private Integer port;
 
-    @Autowired
-    private BranchService branchService;
-    @Autowired
-    private static MainOfficeRepository mainOfficeRepository;
-    @Autowired
-    private MainOfficeMapper mainOfficeMapper;
-
     @Test
     public void shouldCreateAndReturnBranchWithStatusCreatedUsingBranchDto() throws Exception{
         //given
@@ -126,7 +119,7 @@ public class BranchControllerTest {
         //given
         Long testId = 1L;
         //@formatter:off
-        RequestSpecification getGiven = given()    //when
+        RequestSpecification getGiven = given()
                 .port(port)
                 .pathParam("id",testId)
                 .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
@@ -146,7 +139,7 @@ public class BranchControllerTest {
         //given
         Long testId = 0L;
         //@formatter:off
-        RequestSpecification getGiven = given()    //when
+        RequestSpecification getGiven = given()
                 .port(port)
                 .pathParam("id",testId)
                 .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
@@ -166,7 +159,7 @@ public class BranchControllerTest {
         //given
         String testId = "testId";
         //@formatter:off
-        RequestSpecification getGiven = given()    //when
+        RequestSpecification getGiven = given()
                 .port(port)
                 .pathParam("id",testId)
                 .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
