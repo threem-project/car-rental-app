@@ -3,8 +3,10 @@ package com.threem.carrental.sampleDataInitializer;
 import com.threem.carrental.app.model.entity.AddressBranchEntity;
 import com.threem.carrental.app.model.entity.MainOfficeEntity;
 import com.threem.carrental.app.repository.AddressBranchRepository;
+import com.threem.carrental.app.repository.EmployeeRepository;
 import com.threem.carrental.app.repository.MainOfficeRepository;
-import com.threem.carrental.sampleDataInitializer.dataSamples.AddressBranchDataSample;
+import com.threem.carrental.sampleDataInitializer.dataSamples.AddressBranchGenerator;
+import com.threem.carrental.sampleDataInitializer.dataSamples.MainOfficeGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,36 +20,40 @@ import java.util.List;
 @Configuration
 public class SampleDataInitializer {
 
-    private final Integer NUMBER_OF_BRANCH_ADDRESS_ENTITIES=20;
+    private final Integer ADDRES_BRANCH_QTY = 20;
+    private final Integer EMPLOYEES_QTY = 50;
 
     private final MainOfficeRepository mainOfficeRepository;
     private final AddressBranchRepository addressBranchRepository;
+    private final EmployeeRepository employeeRepository;
 
     @Autowired
-    public SampleDataInitializer(MainOfficeRepository mainOfficeRepository, AddressBranchRepository addressBranchRepository) {
+    public SampleDataInitializer(MainOfficeRepository mainOfficeRepository, AddressBranchRepository addressBranchRepository, EmployeeRepository employeeRepository) {
         this.mainOfficeRepository = mainOfficeRepository;
         this.addressBranchRepository = addressBranchRepository;
+        this.employeeRepository = employeeRepository;
     }
 
     @PostConstruct
     void init() {
-        generateAndSaveMainOfficeEntity();
-        generateAndSaveAddressBranchEntites();
+        generateAndSaveMainOffice();
+        generateAndSaveAddressBranch();
+        generateAndSaveEmployees();
     }
 
-    private void generateAndSaveAddressBranchEntites() {
-        List<AddressBranchEntity> addressBranchEntityList = AddressBranchDataSample
-                .generateBranchAddressEntities(NUMBER_OF_BRANCH_ADDRESS_ENTITIES);
+    private void generateAndSaveMainOffice() {
+        MainOfficeGenerator officeGenerator = new MainOfficeGenerator();
+        MainOfficeEntity mainOfficeEntity = officeGenerator.generate();
+        mainOfficeRepository.save(mainOfficeEntity);
+    }
+
+    private void generateAndSaveAddressBranch() {
+        AddressBranchGenerator addressGenerator = new AddressBranchGenerator();
+        List<AddressBranchEntity> addressBranchEntityList = addressGenerator.generate(ADDRES_BRANCH_QTY);
         addressBranchRepository.saveAll(addressBranchEntityList);
     }
 
-    private void generateAndSaveMainOfficeEntity() {
-        mainOfficeRepository.save(MainOfficeEntity.builder()
-                .name("Google")
-                .domain("google.com")
-                .address("Mountain View, California, U.S.")
-                .phone("111-222-333")
-                .email("office@google.com")
-                .build());
+    private void generateAndSaveEmployees() {
+
     }
 }
