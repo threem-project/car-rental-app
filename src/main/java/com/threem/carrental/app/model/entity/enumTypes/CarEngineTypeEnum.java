@@ -6,4 +6,7 @@ package com.threem.carrental.app.model.entity.enumTypes;
  */
 
 public enum CarEngineTypeEnum {
+
+    // Maybe split into engine type and 
+    DIESEL, LPG, PETROL, ELECTRIC, HYBRID
 }
