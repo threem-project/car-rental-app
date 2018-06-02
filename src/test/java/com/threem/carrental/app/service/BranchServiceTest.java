@@ -34,12 +34,10 @@ public class BranchServiceTest {
     public void shouldCreateAndReturnBranchUsingBranchDto() throws InterruptedException {
         //given
         BranchDto branchDto = BranchDto.builder()
-                .id(1L)
                 .status(BranchStatusEnum.OPEN)
 
                 .build();
         AddressBranchDto addressBranchDto = AddressBranchDto.builder()
-                .id(null)
                 .city("Warsaw")
                 .street("Towarowa")
                 .building("20/10")
@@ -64,7 +62,6 @@ public class BranchServiceTest {
                 .hasFieldOrPropertyWithValue("phone", addressBranchDto.getPhone());
     }
 
-    @Ignore
     @Test
     public void shouldFindBranchById() throws Exception{
         //given
@@ -80,13 +77,12 @@ public class BranchServiceTest {
                 .phone("111-222-333")
                 .build();
         branchDto.setAddress(addressBranchDto);
-        branchService.createBranch(branchDto);
-        Long testId = 1L;
+        BranchDto createdBranchDto = branchService.createBranch(branchDto);
         //when
-        BranchDto branchDtoFromDb = branchService.findBranchById(testId);
+        BranchDto branchDtoFromDb = branchService.findBranchById(createdBranchDto.getId());
         //then
         Assertions.assertThat(branchDtoFromDb)
-                .hasFieldOrPropertyWithValue("id", testId)
+                .hasFieldOrPropertyWithValue("id", createdBranchDto.getId())
                 .hasFieldOrPropertyWithValue("status", branchDto.getStatus());
         Assertions.assertThat(branchDtoFromDb.getAddress())
                 .hasFieldOrPropertyWithValue("id", branchDtoFromDb.getAddress().getId())
