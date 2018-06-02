@@ -27,8 +27,6 @@ public class BranchDto {
 
     private AddressBranchDto address;
 
-    private MainOfficeDto mainOffice;
-
     @NotNull(message = "Status of branch can't be empty")
     private BranchStatusEnum status;
 
