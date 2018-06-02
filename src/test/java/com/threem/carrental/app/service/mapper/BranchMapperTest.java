@@ -7,8 +7,6 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 /**
  * @author misza_lemko on 28.05.2018
  * @project car-rental-app
@@ -27,7 +25,7 @@ public class BranchMapperTest {
         //given
         BranchDto branchDto = BranchDto.builder()
                 .id(1L)
-                .status(BranchStatusEnum.OPENED)
+                .status(BranchStatusEnum.OPEN)
                 .build();
         //when
         BranchEntity branchEntity = branchMapper.toBranchEntity(branchDto);
@@ -42,7 +40,7 @@ public class BranchMapperTest {
         //given
         BranchEntity branchEntity = BranchEntity.builder()
                 .id(1L)
-                .status(BranchStatusEnum.OPENED)
+                .status(BranchStatusEnum.OPEN)
                 .build();
         //when
         BranchDto branchDto = branchMapper.toBranchDto(branchEntity);
