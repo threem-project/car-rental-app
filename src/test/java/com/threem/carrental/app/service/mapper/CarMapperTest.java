@@ -40,156 +40,39 @@ public class CarMapperTest {
 
     @Test
     public void shouldMapCarDtoToCarEntityWhenBranchIdSuppliedAndEquipmentListFilled() { // adding new car
-
         //given: CarDto with branchId, filled equipment list
-        List<EquipmentEntity> equipment = new ArrayList<>();
-        equipment.add(new EquipmentEntity(1L,"Air conditioning"));
-        equipment.add(new EquipmentEntity(2L,"GPS navigation"));
-        equipment.add(new EquipmentEntity(3L,"Internet access"));
-
-        BranchEntity dummyBranchEntity = new BranchEntity();
-        dummyBranchEntity.setId(4L);
-
-        CarDto carDto = CarDto.builder()
-                .carId(321L)
-                .vin("JH2SC2608SM506729")
-                .make("Ford")
-                .model("Focus")
-                .bodyType(CarBodyTypeEnum.SEDAN)
-                .year("2010")
-                .colour(CarColourEnum.WHITE)
-                .mileage(280000)
-                .status(CarStatusEnum.AVAILABLE)
-                .dailyRate(new BigDecimal("500.50"))
-                .engineType(CarEngineTypeEnum.PETROL)
-                .engineCapacity(1800)
-                .segment(CarSegmentTypeEnum.C_MEDIUM)
-                .transmission(CarTransmissionTypeEnum.MANUAL)
-                .seats(5)
-                .doors(4)
-                .branchId(dummyBranchEntity.getId())
-                .equipment(equipment)
-//                .photoUrl("https://fakeimageurl.pl")
-                .build();
-
+        CarDto carDto = buildCarDto(3L, true);
         //when: mapping
         CarEntity carEntity = carMapper.toCarEntity(carDto);
-
         //then: CarEntity exists with branchId
-        Assertions.assertThat(carEntity)
-                .hasFieldOrPropertyWithValue("id", 321L)
-                .hasFieldOrPropertyWithValue("vin", "JH2SC2608SM506729")
-                .hasFieldOrPropertyWithValue("make", "Ford")
-                .hasFieldOrPropertyWithValue("model", "Focus")
-                .hasFieldOrPropertyWithValue("bodyType", CarBodyTypeEnum.SEDAN)
-                .hasFieldOrPropertyWithValue("year", "2010")
-                .hasFieldOrPropertyWithValue("colour", CarColourEnum.WHITE)
-                .hasFieldOrPropertyWithValue("mileage", 280000)
-                .hasFieldOrPropertyWithValue("status", CarStatusEnum.AVAILABLE)
-                .hasFieldOrPropertyWithValue("dailyRate", new BigDecimal("500.50"))
-                .hasFieldOrPropertyWithValue("engineType", CarEngineTypeEnum.PETROL)
-                .hasFieldOrPropertyWithValue("engineCapacity", 1800)
-                .hasFieldOrPropertyWithValue("segment", CarSegmentTypeEnum.C_MEDIUM)
-                .hasFieldOrPropertyWithValue("transmission", CarTransmissionTypeEnum.MANUAL)
-                .hasFieldOrPropertyWithValue("seats", 5)
-                .hasFieldOrPropertyWithValue("doors", 4)
-                .hasFieldOrPropertyWithValue("equipment", equipment);
-        Assertions.assertThat(carEntity.getBranch().equals(dummyBranchEntity));
+        checkCarEntityFieldVsCarDtoFields(carEntity, carDto);
         Assertions.assertThat(carEntity.getEquipment().size() == 3);
-        Assertions.assertThat(carEntity.getEquipment().get(2).getName().equals("Internet access"));
+        Assertions.assertThat(carEntity.getEquipment().get(2).getName().equals(carDto.getEquipment().get(2).getName()));
+        Assertions.assertThat(carEntity.getBranch().getId().equals(carDto.getBranchId()));
+        Assertions.assertThat(carEntity.getEquipment().equals(carDto.getEquipment()));
     }
 
     @Test
     public void shouldMapCarDtoToCarEntityWhenBranchIdSuppliedAndEquipmentListNull() { // adding new car with no equipment
 
         //given: CarDto with branchId, equipment list == null
-
-        BranchEntity dummyBranchEntity = new BranchEntity();
-        dummyBranchEntity.setId(4L);
-
-        CarDto carDto = CarDto.builder()
-                .carId(321L)
-                .vin("JF2SC2908SM506729")
-                .make("Ford")
-                .model("Focus")
-                .bodyType(CarBodyTypeEnum.SEDAN)
-                .year("2010")
-                .colour(CarColourEnum.WHITE)
-                .mileage(280000)
-                .status(CarStatusEnum.AVAILABLE)
-                .dailyRate(new BigDecimal("500.50"))
-                .engineType(CarEngineTypeEnum.PETROL)
-                .engineCapacity(1800)
-                .segment(CarSegmentTypeEnum.C_MEDIUM)
-                .transmission(CarTransmissionTypeEnum.MANUAL)
-                .seats(5)
-                .doors(4)
-                .branchId(dummyBranchEntity.getId())
-                .equipment(null)
-//                .photoUrl("https://fakeimageurl.pl")
-                .build();
-
+        CarDto carDto = buildCarDto(4L, false);
         //when: mapping
         CarEntity carEntity = carMapper.toCarEntity(carDto);
-
         //then: CarEntity exists with branchId
-        Assertions.assertThat(carEntity)
-                .hasFieldOrPropertyWithValue("id", 321L)
-                .hasFieldOrPropertyWithValue("vin", "JF2SC2908SM506729")
-                .hasFieldOrPropertyWithValue("make", "Ford")
-                .hasFieldOrPropertyWithValue("model", "Focus")
-                .hasFieldOrPropertyWithValue("bodyType", CarBodyTypeEnum.SEDAN)
-                .hasFieldOrPropertyWithValue("year", "2010")
-                .hasFieldOrPropertyWithValue("colour", CarColourEnum.WHITE)
-                .hasFieldOrPropertyWithValue("mileage", 280000)
-                .hasFieldOrPropertyWithValue("status", CarStatusEnum.AVAILABLE)
-                .hasFieldOrPropertyWithValue("dailyRate", new BigDecimal("500.50"))
-                .hasFieldOrPropertyWithValue("engineType", CarEngineTypeEnum.PETROL)
-                .hasFieldOrPropertyWithValue("engineCapacity", 1800)
-                .hasFieldOrPropertyWithValue("segment", CarSegmentTypeEnum.C_MEDIUM)
-                .hasFieldOrPropertyWithValue("transmission", CarTransmissionTypeEnum.MANUAL)
-                .hasFieldOrPropertyWithValue("seats", 5)
-                .hasFieldOrPropertyWithValue("doors", 4)
-                .hasFieldOrPropertyWithValue("equipment", null);
-        Assertions.assertThat(carEntity.getBranch().equals(dummyBranchEntity));
+        checkCarEntityFieldVsCarDtoFields(carEntity, carDto);
     }
 
     @Test
     public void shouldMapCarDtoToCarEntityWhenNoBranchIdSupplied() { // update
-
         //given: CarDto with no branchId (case: updating car)
-        List<EquipmentEntity> equipmentEntities = new ArrayList<>();
-        CarDto carDto = CarDto.builder()
-                .carId(44L)
-                .vin("JH2SC2608SM506329")
-                .make("Ford")
-                .model("Focus")
-                .bodyType(CarBodyTypeEnum.SEDAN)
-                .year("2010")
-                .colour(CarColourEnum.WHITE)
-                .mileage(280000)
-                .status(CarStatusEnum.AVAILABLE)
-                .dailyRate(new BigDecimal("500.50"))
-                .engineType(CarEngineTypeEnum.PETROL)
-                .engineCapacity(1800)
-                .segment(CarSegmentTypeEnum.C_MEDIUM)
-                .transmission(CarTransmissionTypeEnum.MANUAL)
-                .seats(5)
-                .doors(4)
-                .branchId(null)
-                .equipment(equipmentEntities)
-//                .photoUrl("https://fakeimageurl.pl")
-                .build();
-
+        CarDto carDto = buildCarDto(null, false);
         //when
         CarEntity carEntity = carMapper.toCarEntity(carDto);
-
         //then
-        Assertions.assertThat(carEntity.getBranch().getId() == null);
-
-        Assertions.assertThat(carEntity)
-                .hasFieldOrPropertyWithValue("id", 44L)
-                .hasFieldOrPropertyWithValue("vin", "JH2SC2608SM506329");
+        checkCarEntityFieldVsCarDtoFields(carEntity, carDto);
+        Assertions.assertThat(carEntity.getBranch().getId()).isNull();
+        Assertions.assertThat(carEntity.getEquipment()).isNull();
     }
 
     @Test
@@ -222,33 +105,70 @@ public class CarMapperTest {
                 .doors(5)
                 .branch(branchEntityFromDbButOnlyWithId)
                 .equipment(equipmentEntities)
-//                .photoUrl("https://fakeurl.pl")
                 .build();
 
         //when: mapping
         CarDto carDto = carMapper.toCarDto(carEntity);
 
         //then: assertions
-        Assertions.assertThat(carDto)
-                .hasFieldOrPropertyWithValue("carId", 777L)
-                .hasFieldOrPropertyWithValue("vin", "4T1BK46K77U046314")
-                .hasFieldOrPropertyWithValue("make", "Opel")
-                .hasFieldOrPropertyWithValue("model", "Astra")
-                .hasFieldOrPropertyWithValue("bodyType", CarBodyTypeEnum.ESTATE)
-                .hasFieldOrPropertyWithValue("year", "2015")
-                .hasFieldOrPropertyWithValue("colour", CarColourEnum.BLUE)
-                .hasFieldOrPropertyWithValue("mileage", 70000)
-                .hasFieldOrPropertyWithValue("status", CarStatusEnum.IN_REPAIR)
-                .hasFieldOrPropertyWithValue("dailyRate", new BigDecimal("250.50"))
-                .hasFieldOrPropertyWithValue("engineType", CarEngineTypeEnum.DIESEL)
-                .hasFieldOrPropertyWithValue("engineCapacity", 2100)
-                .hasFieldOrPropertyWithValue("segment", CarSegmentTypeEnum.D_LARGE)
-                .hasFieldOrPropertyWithValue("transmission", CarTransmissionTypeEnum.AUTOMATIC)
-                .hasFieldOrPropertyWithValue("seats", 6)
-                .hasFieldOrPropertyWithValue("doors", 5)
-                .hasFieldOrPropertyWithValue("branchId", 55L)
-                .hasFieldOrPropertyWithValue("equipment", equipmentEntities);
-//    .hasFieldOrPropertyWithValue("photoUrl", "https://fakeurl.pl")
+        checkCarEntityFieldVsCarDtoFields(carEntity, carDto);
+        Assertions.assertThat(carEntity.getBranch().getId().equals(carDto.getBranchId()));
+        Assertions.assertThat(carEntity.getEquipment().equals(carDto.getEquipment()));
+
     }
+
+    private CarDto buildCarDto(Long branchId, boolean carHasEquipment) {
+
+        List<EquipmentEntity> equipment = null;
+
+        if (carHasEquipment) {
+            equipment = new ArrayList<>();
+            equipment.add(new EquipmentEntity(1L, "Air conditioning"));
+            equipment.add(new EquipmentEntity(2L, "GPS navigation"));
+            equipment.add(new EquipmentEntity(3L, "Internet access"));
+        }
+
+        return CarDto.builder()
+                .carId(2L)
+                .vin("JH2SC2608SM506729")
+                .make("Ford")
+                .model("Focus")
+                .bodyType(CarBodyTypeEnum.SEDAN)
+                .year("2010")
+                .colour(CarColourEnum.WHITE)
+                .mileage(280000)
+                .status(CarStatusEnum.AVAILABLE)
+                .dailyRate(new BigDecimal("500.50"))
+                .engineType(CarEngineTypeEnum.PETROL)
+                .engineCapacity(1800)
+                .segment(CarSegmentTypeEnum.C_MEDIUM)
+                .transmission(CarTransmissionTypeEnum.MANUAL)
+                .seats(5)
+                .doors(4)
+                .branchId(branchId)
+                .equipment(equipment)
+                .build();
+    }
+
+    private void checkCarEntityFieldVsCarDtoFields(CarEntity carEntity, CarDto carDto) {
+        Assertions.assertThat(carEntity.getId().equals(carDto.getCarId()));
+        Assertions.assertThat(carEntity.getVin().equals(carDto.getVin()));
+        Assertions.assertThat(carEntity.getMake().equals(carDto.getMake()));
+        Assertions.assertThat(carEntity.getModel().equals(carDto.getModel()));
+        Assertions.assertThat(carEntity.getBodyType().equals(carDto.getBodyType()));
+        Assertions.assertThat(carEntity.getYear().equals(carDto.getYear()));
+        Assertions.assertThat(carEntity.getColour().equals(carDto.getColour()));
+        Assertions.assertThat(carEntity.getMileage().equals(carDto.getMileage()));
+        Assertions.assertThat(carEntity.getStatus().equals(carDto.getStatus()));
+        Assertions.assertThat(carEntity.getDailyRate().equals(carDto.getDailyRate()));
+        Assertions.assertThat(carEntity.getEngineType().equals(carDto.getEngineType()));
+        Assertions.assertThat(carEntity.getEngineCapacity().equals(carDto.getEngineCapacity()));
+        Assertions.assertThat(carEntity.getSegment().equals(carDto.getSegment()));
+        Assertions.assertThat(carEntity.getTransmission().equals(carDto.getTransmission()));
+        Assertions.assertThat(carEntity.getSeats().equals(carDto.getSeats()));
+        Assertions.assertThat(carEntity.getDoors().equals(carDto.getDoors()));
+
+    }
+
 
 }

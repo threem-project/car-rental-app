@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author Marika Grzebieniowska on 27.05.2018
@@ -43,7 +44,6 @@ public class CarService {
             throw new CarAlreadyExistsException("Car with this vin number is already in DB");
         }
 
-//        Optional<CarDto> result = Optional.empty();
         CarEntity carEntity = carMapper.toCarEntity(carDto);
 
         setBranchUsingId(carEntity, carDto);
@@ -56,23 +56,28 @@ public class CarService {
     private void setBranchUsingId(CarEntity carEntity, CarDto carDto) {
         if (carEntity.getBranch().getId() != null) {
             Optional<BranchEntity> branchEntityInDb = branchRepository.findById(carDto.getBranchId());
-            if (branchEntityInDb.isPresent()) {
-                carEntity.setBranch(branchEntityInDb.get());
-            } else {
-                throw new IncorrectBranchException("Given branch ID is incorrect");
-            }
+            branchEntityInDb.orElseThrow(() -> new IncorrectBranchException("Given branch ID is incorrect"));
         }
     }
 
     private void setEquipment(CarEntity carEntity, CarDto carDto) {
         if (carDto.getEquipment() != null) {
-            List<EquipmentEntity> equipmentForSaving = new ArrayList<>();
-            for (EquipmentEntity equipmentEntity : carDto.getEquipment()) {
-                equipmentForSaving.add(equipmentRepository.findById(equipmentEntity.getId()).get());
-                carEntity.setEquipment(equipmentForSaving);
-            }
+            carEntity.setEquipment(mapToEntitiesFromDb(carDto));
         }
     }
 
+    private List<EquipmentEntity> mapToEntitiesFromDb(CarDto carDto) {
+        return carDto.getEquipment()
+                .stream()
+                .map(e -> equipmentRepository.findById(e.getId()).get())
+                .collect(Collectors.toList()
+                );
+    }
+
 }
+
+
+
+
+
 

@@ -20,9 +20,9 @@ public class CarMapper {
 
     public CarEntity toCarEntity(CarDto carDto) {
 
-        BranchEntity dummyBranchEntity = new BranchEntity();
+        BranchEntity branchEntity = new BranchEntity();
         if (carDto.getBranchId() != null) {
-            dummyBranchEntity.setId(carDto.getBranchId());
+            branchEntity.setId(carDto.getBranchId());
         }
 
         return CarEntity.builder()
@@ -42,9 +42,8 @@ public class CarMapper {
                 .transmission(carDto.getTransmission())
                 .seats(carDto.getSeats())
                 .doors(carDto.getDoors())
-                .branch(dummyBranchEntity) // dummy branch with only branchId
+                .branch(branchEntity)
                 .equipment(carDto.getEquipment())
-//                .photoUrl(fromCarDto.getPhotoUrl()) - not sure how to store media, fix later
                 .build();
     }
 

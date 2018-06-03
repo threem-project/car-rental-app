@@ -6,6 +6,7 @@ import com.threem.carrental.app.model.entity.enumTypes.*;
 import com.threem.carrental.app.repository.BranchRepository;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,47 +40,19 @@ public class CarControllerTest {
     @Autowired
     private BranchRepository branchRepository;
 
+    @Before
+
+
     @Test
     public void shouldCreateNewCarUponReceivingProperCarDtoWithProperBranchSet() {
-
-        // given:
-
         CarDto carDto = buildCarDto("WAU32AFD3FN006326");
-
-        RequestSpecification given = given()
-                .port(port)
-                .body(carDto)
-                .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
-                .log().all();
-
-        Response when = given
-                .when().post("car");
-
-        when.then()
-                .log().all()
-                .assertThat()
-                .statusCode(HttpStatus.CREATED.value());
+        givenWhenThen(carDto, HttpStatus.CREATED);
     }
 
     @Test
     public void shouldThrowValidationExceptionWhenReceivesWrongVin() {
-
-        // given:
         CarDto carDto = buildCarDto("1GNCS13W1Y211404");
-
-        RequestSpecification given = given()
-                .port(port)
-                .body(carDto)
-                .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
-                .log().all();
-
-        Response when = given
-                .when().post("car");
-
-        when.then()
-                .log().all()
-                .assertThat()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+        givenWhenThen(carDto, HttpStatus.BAD_REQUEST);
     }
 
     private CarDto buildCarDto(String vin) {
@@ -104,8 +77,23 @@ public class CarControllerTest {
                 .doors(3)
                 .branchId(branchEntity.getId())
                 .equipment(null)
-//                .photoUrl("https://fakeimageurl.pl")
                 .build();
+    }
+
+    private void givenWhenThen(CarDto carDto, HttpStatus expectedHttpStatusCode) {
+        RequestSpecification given = given()
+                .port(port)
+                .body(carDto)
+                .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+                .log().all();
+
+        Response when = given
+                .when().post("car");
+
+        when.then()
+                .log().all()
+                .assertThat()
+                .statusCode(expectedHttpStatusCode.value());
     }
 
 }
