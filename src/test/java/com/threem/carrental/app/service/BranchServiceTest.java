@@ -3,18 +3,24 @@ package com.threem.carrental.app.service;
 import com.threem.carrental.app.errorHandler.customExceptions.IncorrectBranchException;
 import com.threem.carrental.app.model.dto.AddressBranchDto;
 import com.threem.carrental.app.model.dto.BranchDto;
+import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.enumTypes.BranchStatusEnum;
+import com.threem.carrental.app.repository.BranchRepository;
 import com.threem.carrental.app.repository.MainOfficeRepository;
 import org.assertj.core.api.Assertions;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author misza_lemko on 28.05.2018
@@ -29,19 +35,18 @@ public class BranchServiceTest {
 
     @Autowired
     private BranchService branchService;
+
     @Autowired
-    private MainOfficeRepository mainOfficeRepository;
+    private BranchRepository branchRepository;
 
     @Test
     public void shouldCreateAndReturnBranchUsingBranchDto() throws InterruptedException {
         //given
         BranchDto branchDto = BranchDto.builder()
-                .id(1L)
                 .status(BranchStatusEnum.OPEN)
 
                 .build();
         AddressBranchDto addressBranchDto = AddressBranchDto.builder()
-                .id(null)
                 .city("Warsaw")
                 .street("Towarowa")
                 .building("20/10")
@@ -66,7 +71,6 @@ public class BranchServiceTest {
                 .hasFieldOrPropertyWithValue("phone", addressBranchDto.getPhone());
     }
 
-    @Ignore
     @Test
     public void shouldFindBranchById() throws Exception{
         //given
@@ -82,13 +86,12 @@ public class BranchServiceTest {
                 .phone("111-222-333")
                 .build();
         branchDto.setAddress(addressBranchDto);
-        BranchDto createdBranch = branchService.createBranch(branchDto);
-        Long testId = 1L;
+        BranchDto createdBranchDto = branchService.createBranch(branchDto);
         //when
-        BranchDto branchDtoFromDb = branchService.findBranchById(testId);
+        BranchDto branchDtoFromDb = branchService.findBranchById(createdBranchDto.getId());
         //then
         Assertions.assertThat(branchDtoFromDb)
-                .hasFieldOrPropertyWithValue("id", testId)
+                .hasFieldOrPropertyWithValue("id", createdBranchDto.getId())
                 .hasFieldOrPropertyWithValue("status", branchDto.getStatus());
         Assertions.assertThat(branchDtoFromDb.getAddress())
                 .hasFieldOrPropertyWithValue("id", branchDtoFromDb.getAddress().getId())
@@ -98,5 +101,39 @@ public class BranchServiceTest {
                 .hasFieldOrPropertyWithValue("zipCode", addressBranchDto.getZipCode())
                 .hasFieldOrPropertyWithValue("country", addressBranchDto.getCountry())
                 .hasFieldOrPropertyWithValue("phone", addressBranchDto.getPhone());
+    }
+
+    @Test
+    public void shouldFindAllBranchesPaginated() {
+        //given
+        Integer testBranchesNumber = 10;
+        for (Integer i=0;i<testBranchesNumber;i++) {
+            BranchEntity branchEntity = BranchEntity.builder().status(BranchStatusEnum.OPEN).build();
+            branchRepository.save(branchEntity);
+        }
+        List<BranchEntity> listBeforeChange = branchRepository.findAll();
+        Integer sizeBeforeChange = listBeforeChange.size();
+        Page<BranchEntity> paginatedBefore = branchService.findAllPaginated(0,sizeBeforeChange);
+
+        //when
+        for (Integer i=0;i<testBranchesNumber;i++) {
+            BranchEntity branchEntity = BranchEntity.builder().status(BranchStatusEnum.OPEN).build();
+            branchRepository.save(branchEntity);
+        }
+        Page<BranchEntity> paginatedAfter = branchService.findAllPaginated(0,sizeBeforeChange);
+
+        //then
+        Assertions.assertThat(paginatedBefore.getTotalPages()).isLessThan(paginatedAfter.getTotalPages());
+    }
+
+    @Test
+    public void shouldGetListOfAllBranchesFromDb() {
+        //given
+        Integer listSizeBefore = branchService.findAll().size();
+        //when
+        branchRepository.save(BranchEntity.builder().status(BranchStatusEnum.OPEN).build());
+        Integer listSizeAfter = branchService.findAll().size();
+        //then
+        Assertions.assertThat(listSizeBefore).isLessThan(listSizeAfter);
     }
 }
