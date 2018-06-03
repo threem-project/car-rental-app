@@ -4,7 +4,6 @@ import com.threem.carrental.app.errorHandler.customExceptions.EmployeeAlreadyExi
 import com.threem.carrental.app.errorHandler.customExceptions.EmployeeDoesNotExistException;
 import com.threem.carrental.app.errorHandler.customExceptions.IncorrectBranchException;
 import com.threem.carrental.app.model.dto.EmployeeDto;
-import com.threem.carrental.app.model.dto.EmployeeDtoPaginated;
 import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.EmployeeEntity;
 import com.threem.carrental.app.repository.BranchRepository;
@@ -16,8 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -69,27 +66,11 @@ public class EmployeeService {
         return resultEmployeeDto;
     }
 
-    @Transactional
-    public EmployeeDtoPaginated findAllPaginated(Integer pageNumber, Integer elementsPerPage) {
+    public Page<EmployeeEntity> findAllPaginated(Integer pageNumber, Integer elementsPerPage) {
         PageRequest pageableRequest = PageRequest.of(pageNumber, elementsPerPage);
-
         Page<EmployeeEntity> employeePage = employeeRepository.findAll(pageableRequest);
-        List<EmployeeEntity> employeeEntityList = employeePage.getContent();
-
-        List<EmployeeDto> employeeDtoList = new ArrayList<>();
-        employeeEntityList.forEach((e) -> e.getBranch());
-        employeeEntityList.forEach((e) -> employeeDtoList.add(employeeMapper.toEmployeeDto(e)));
-        employeeDtoList.forEach((e) -> e.setPassword(null));
-
-        EmployeeDtoPaginated employeeDtoPaginated = new EmployeeDtoPaginated().builder()
-                .currentPage(pageNumber)
-                .elementsPerPage(elementsPerPage)
-                .employeeDtoList(employeeDtoList)
-                .totalElements(employeePage.getTotalElements())
-                .totalPages(employeePage.getTotalPages())
-                .build();
-
-        return employeeDtoPaginated;
+        employeePage.getContent().forEach(e -> e.setPassword(null));
+        return employeePage;
     }
 
     private Optional<EmployeeDto> createOrUpdateEmployee(EmployeeDto employeeDto, EmployeeEntity employeeEntity) {

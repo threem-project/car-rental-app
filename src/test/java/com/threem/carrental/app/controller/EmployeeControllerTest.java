@@ -19,6 +19,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import static io.restassured.RestAssured.given;
@@ -321,4 +323,27 @@ public class EmployeeControllerTest {
                 .statusCode(HttpStatus.OK.value());
         //@formatter:on
     }
+
+    @Test
+    public void shouldGetStatus200WhileGettingAllEmployeesPaginatedCorrectly() {
+        Map<String, Integer> parameters = new HashMap<>();
+        parameters.put("currentPage",0);
+        parameters.put("resultsPerPage",5);
+
+        //@formatter:off
+        RequestSpecification getGiven = given()    //when
+                .port(port)
+                .params(parameters)
+                .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+                .log().all();
+        Response getWhen = getGiven
+                .when()
+                .get("employee");
+        getWhen.then()
+                .log().all()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value());
+        //@formatter:on
+    }
+
 }

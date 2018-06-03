@@ -1,9 +1,10 @@
 package com.threem.carrental.app.model.entity;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.threem.carrental.app.model.entity.enumTypes.BranchStatusEnum;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
  * @author misza_lemko on 11.05.2018
@@ -25,6 +26,7 @@ public class BranchEntity {
     @Column(name = "id")
     private Long id;
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private AddressBranchEntity address;

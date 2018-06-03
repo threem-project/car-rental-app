@@ -1,11 +1,11 @@
 package com.threem.carrental.app.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.threem.carrental.app.model.entity.enumTypes.EmployeeRoleEnum;
 import com.threem.carrental.app.model.entity.enumTypes.EmployeeStatusEnum;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
  * @author marek_j on 2018-05-10
@@ -45,6 +45,7 @@ public class EmployeeEntity {
     @Column(name = "email")
     private String email;
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "branch_id")
     private BranchEntity branch;
