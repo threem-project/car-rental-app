@@ -1,5 +1,6 @@
 package com.threem.carrental.app.errorHandler;
 
+import com.threem.carrental.app.errorHandler.customExceptions.CarAlreadyExistsException;
 import com.threem.carrental.app.errorHandler.customExceptions.EmployeeAlreadyExistException;
 import com.threem.carrental.app.errorHandler.customExceptions.EmployeeDoesNotExistException;
 import com.threem.carrental.app.errorHandler.customExceptions.IncorrectBranchException;
@@ -69,6 +70,12 @@ public class GeneralControllerAdvisor {
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ErrorResponse handle(EmployeeDoesNotExistException e, ServletWebRequest request) {
         return ErrorResponse.of(HttpStatus.UNPROCESSABLE_ENTITY, "Employee doesn't exist", request.getRequest().getRequestURI());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErrorResponse handle(CarAlreadyExistsException e, ServletWebRequest request) {
+        return ErrorResponse.of(HttpStatus.UNPROCESSABLE_ENTITY, "Car with this vin number is already in DB", request.getRequest().getRequestURI());
     }
 
     @ExceptionHandler
