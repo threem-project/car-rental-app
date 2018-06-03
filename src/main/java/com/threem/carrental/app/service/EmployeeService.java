@@ -7,9 +7,9 @@ import com.threem.carrental.app.errorHandler.customExceptions.IncorrectBranchExc
 import com.threem.carrental.app.model.dto.EmployeeDto;
 import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.EmployeeEntity;
-import com.threem.carrental.app.model.entity.QEmployeeEntity;
 import com.threem.carrental.app.repository.BranchRepository;
 import com.threem.carrental.app.repository.EmployeeRepository;
+import com.threem.carrental.app.repository.expressionBuilder.QEmployeeExpressionBuilder;
 import com.threem.carrental.app.service.mapper.EmployeeMapper;
 import com.threem.carrental.app.utilities.PasswordEncoder;
 import org.springframework.data.domain.Page;
@@ -77,21 +77,23 @@ public class EmployeeService {
     }
 
     public List<EmployeeEntity> findByEmployeeEntity(EmployeeEntity employeeEntity) {
-        BooleanExpression firstnameExpression = null;
-        BooleanExpression lastnameExpression = null;
-
-        if (employeeEntity.getFirstName()!=null) {
-            firstnameExpression = QEmployeeEntity.employeeEntity.firstName.like(employeeEntity.getFirstName());
-        }
-
-        if (employeeEntity.getLastName()!=null) {
-            lastnameExpression = QEmployeeEntity.employeeEntity.lastName.like(employeeEntity.getLastName());
-        }
-
-        BooleanExpression expression = firstnameExpression.and(lastnameExpression);
-        Iterable<EmployeeEntity> employeeEntities = employeeRepository.findAll(expression);
         List<EmployeeEntity> employeesList = new ArrayList<>();
-        employeeEntities.forEach(e -> employeesList.add(e));
+
+        QEmployeeExpressionBuilder builder = new QEmployeeExpressionBuilder.Builder()
+                .id(employeeEntity.getId())
+                .firstName(employeeEntity.getFirstName())
+                .lastName(employeeEntity.getLastName())
+                .email(employeeEntity.getEmail())
+                .role(employeeEntity.getRole())
+                .status(employeeEntity.getStatus())
+                .addressCity(employeeEntity.getBranch().getAddress())
+                .build();
+
+        if (builder.hasExpression()) {
+            BooleanExpression booleanExpression = builder.getExpression();
+            Iterable<EmployeeEntity> employeeEntities = employeeRepository.findAll(booleanExpression);
+            employeeEntities.forEach(e -> employeesList.add(e));
+        }
 
         return employeesList;
     }
