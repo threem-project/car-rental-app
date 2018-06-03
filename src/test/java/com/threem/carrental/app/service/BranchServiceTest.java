@@ -1,11 +1,12 @@
 package com.threem.carrental.app.service;
 
+import com.threem.carrental.app.errorHandler.customExceptions.IncorrectBranchException;
 import com.threem.carrental.app.model.dto.AddressBranchDto;
 import com.threem.carrental.app.model.dto.BranchDto;
-import com.threem.carrental.app.model.entity.MainOfficeEntity;
 import com.threem.carrental.app.model.entity.enumTypes.BranchStatusEnum;
 import com.threem.carrental.app.repository.MainOfficeRepository;
 import org.assertj.core.api.Assertions;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,6 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 /**
  * @author misza_lemko on 28.05.2018
@@ -38,10 +37,11 @@ public class BranchServiceTest {
         //given
         BranchDto branchDto = BranchDto.builder()
                 .id(1L)
-                .status(BranchStatusEnum.OPENED)
+                .status(BranchStatusEnum.OPEN)
+
                 .build();
         AddressBranchDto addressBranchDto = AddressBranchDto.builder()
-                .id(1L)
+                .id(null)
                 .city("Warsaw")
                 .street("Towarowa")
                 .building("20/10")
@@ -54,16 +54,49 @@ public class BranchServiceTest {
         BranchDto createdBranch = branchService.createBranch(branchDto);
         //then
         Assertions.assertThat(createdBranch)
-                .hasFieldOrPropertyWithValue("id", branchDto.getId())
+                .hasFieldOrPropertyWithValue("id", createdBranch.getId())
                 .hasFieldOrPropertyWithValue("status", branchDto.getStatus());
         Assertions.assertThat(createdBranch.getAddress())
-                .hasFieldOrPropertyWithValue("id", addressBranchDto.getId())
+                .hasFieldOrPropertyWithValue("id", createdBranch.getAddress().getId())
                 .hasFieldOrPropertyWithValue("city", addressBranchDto.getCity())
                 .hasFieldOrPropertyWithValue("street", addressBranchDto.getStreet())
                 .hasFieldOrPropertyWithValue("building", addressBranchDto.getBuilding())
                 .hasFieldOrPropertyWithValue("zipCode", addressBranchDto.getZipCode())
                 .hasFieldOrPropertyWithValue("country", addressBranchDto.getCountry())
                 .hasFieldOrPropertyWithValue("phone", addressBranchDto.getPhone());
-        Assertions.assertThat(createdBranch.getMainOffice()).isNotNull();
+    }
+
+    @Ignore
+    @Test
+    public void shouldFindBranchById() throws Exception{
+        //given
+        BranchDto branchDto = BranchDto.builder()
+                .status(BranchStatusEnum.OPEN)
+                .build();
+        AddressBranchDto addressBranchDto = AddressBranchDto.builder()
+                .city("Warsaw")
+                .street("Towarowa")
+                .building("20/10")
+                .zipCode("02-495")
+                .country("Poland")
+                .phone("111-222-333")
+                .build();
+        branchDto.setAddress(addressBranchDto);
+        BranchDto createdBranch = branchService.createBranch(branchDto);
+        Long testId = 1L;
+        //when
+        BranchDto branchDtoFromDb = branchService.findBranchById(testId);
+        //then
+        Assertions.assertThat(branchDtoFromDb)
+                .hasFieldOrPropertyWithValue("id", testId)
+                .hasFieldOrPropertyWithValue("status", branchDto.getStatus());
+        Assertions.assertThat(branchDtoFromDb.getAddress())
+                .hasFieldOrPropertyWithValue("id", branchDtoFromDb.getAddress().getId())
+                .hasFieldOrPropertyWithValue("city", addressBranchDto.getCity())
+                .hasFieldOrPropertyWithValue("street", addressBranchDto.getStreet())
+                .hasFieldOrPropertyWithValue("building", addressBranchDto.getBuilding())
+                .hasFieldOrPropertyWithValue("zipCode", addressBranchDto.getZipCode())
+                .hasFieldOrPropertyWithValue("country", addressBranchDto.getCountry())
+                .hasFieldOrPropertyWithValue("phone", addressBranchDto.getPhone());
     }
 }

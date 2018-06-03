@@ -2,15 +2,12 @@ package com.threem.carrental.app.controller;
 
 import com.threem.carrental.app.model.dto.AddressBranchDto;
 import com.threem.carrental.app.model.dto.BranchDto;
-import com.threem.carrental.app.model.entity.MainOfficeEntity;
 import com.threem.carrental.app.model.entity.enumTypes.BranchStatusEnum;
 import com.threem.carrental.app.repository.MainOfficeRepository;
 import com.threem.carrental.app.service.BranchService;
 import com.threem.carrental.app.service.mapper.MainOfficeMapper;
-import io.restassured.mapper.ObjectMapper;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
-
 import static io.restassured.RestAssured.given;
-import static org.junit.Assert.*;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -43,18 +37,11 @@ public class BranchControllerTest {
     @LocalServerPort
     private Integer port;
 
-    @Autowired
-    private BranchService branchService;
-    @Autowired
-    private static MainOfficeRepository mainOfficeRepository;
-    @Autowired
-    private MainOfficeMapper mainOfficeMapper;
-
     @Test
     public void shouldCreateAndReturnBranchWithStatusCreatedUsingBranchDto() throws Exception{
         //given
         BranchDto branchDto = BranchDto.builder()
-                .status(BranchStatusEnum.OPENED)
+                .status(BranchStatusEnum.OPEN)
                 .build();
         AddressBranchDto addressBranchDto = AddressBranchDto.builder()
                 .city("Warsaw")
@@ -112,6 +99,66 @@ public class BranchControllerTest {
                 .post("branch");
 
         when.then()
+                .log().all()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+        //@formatter:on
+    }
+
+    @Test
+    public void shouldFindBranchByIdAndReturnOkStatusAndBranch() throws Exception{
+        //given
+        Long testId = 1L;
+        //@formatter:off
+        RequestSpecification getGiven = given()    //when
+                .port(port)
+                .pathParam("id",testId)
+                .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+                .log().all();
+        Response getWhen = getGiven
+                .when()
+                .get("branch/{id}");
+        getWhen.then()
+                .log().all()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value());
+        //@formatter:on
+    }
+
+    @Test
+    public void shouldGetNoContentStatusWhenTryFindBranchById() throws Exception {
+        //given
+        Long testId = 0L;
+        //@formatter:off
+        RequestSpecification getGiven = given()    //when
+                .port(port)
+                .pathParam("id",testId)
+                .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+                .log().all();
+        Response getWhen = getGiven
+                .when()
+                .get("branch/{id}");
+        getWhen.then()
+                .log().all()
+                .assertThat()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+        //@formatter:on
+    }
+
+    @Test
+    public void shouldGetBadRequestStatusWhenTryFindBranchByIdOfNotLongType() throws Exception {
+        //given
+        String testId = "testId";
+        //@formatter:off
+        RequestSpecification getGiven = given()    //when
+                .port(port)
+                .pathParam("id",testId)
+                .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+                .log().all();
+        Response getWhen = getGiven
+                .when()
+                .get("branch/{id}");
+        getWhen.then()
                 .log().all()
                 .assertThat()
                 .statusCode(HttpStatus.BAD_REQUEST.value());

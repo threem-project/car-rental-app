@@ -1,5 +1,6 @@
 package com.threem.carrental.app.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.threem.carrental.app.model.entity.enumTypes.EmployeeRoleEnum;
 import com.threem.carrental.app.model.entity.enumTypes.EmployeeStatusEnum;
 import lombok.AllArgsConstructor;

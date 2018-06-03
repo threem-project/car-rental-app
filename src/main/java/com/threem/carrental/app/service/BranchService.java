@@ -1,5 +1,6 @@
 package com.threem.carrental.app.service;
 
+import com.threem.carrental.app.errorHandler.customExceptions.IncorrectBranchException;
 import com.threem.carrental.app.model.dto.AddressBranchDto;
 import com.threem.carrental.app.model.dto.BranchDto;
 import com.threem.carrental.app.model.dto.MainOfficeDto;
@@ -28,34 +29,38 @@ public class BranchService {
     private final BranchRepository branchRepository;
     private final BranchMapper branchMapper;
     private final AddressBranchMapper addressBranchMapper;
-    private final MainOfficeMapper mainOfficeMapper;
-    private final MainOfficeRepository mainOfficeRepository;
 
     @Autowired
-    public BranchService(BranchRepository branchRepository, BranchMapper branchMapper, AddressBranchMapper addressBranchMapper, MainOfficeMapper mainOfficeMapper, MainOfficeRepository mainOfficeRepository) {
+    public BranchService(BranchRepository branchRepository, BranchMapper branchMapper, AddressBranchMapper addressBranchMapper) {
         this.branchRepository = branchRepository;
         this.branchMapper = branchMapper;
         this.addressBranchMapper = addressBranchMapper;
-        this.mainOfficeMapper = mainOfficeMapper;
-        this.mainOfficeRepository = mainOfficeRepository;
     }
 
     public BranchDto createBranch(BranchDto branchDto) {
         BranchEntity branchEntity = branchMapper.toBranchEntity(branchDto);
         AddressBranchEntity addressBranchEntity = addressBranchMapper.toAddressBranchEntity(branchDto.getAddress());
         branchEntity.setAddress(addressBranchEntity);
-
-        List<MainOfficeEntity> mainOfficeEntities = mainOfficeRepository.findAll();
-        branchEntity.setMainOffice(mainOfficeEntities.get(0));
-        //todo NoMainOfficeException and test it
+        BranchDto resultBranchDto = new BranchDto();
 
         BranchEntity branchEntityFromDb = branchRepository.save(branchEntity);
 
-        //todo if branch was not saved branchId will be null.must handle it
-
-        BranchDto resultBranchDto = branchMapper.toBranchDto(branchEntityFromDb);
-        resultBranchDto.setAddress(addressBranchMapper.toAddressBranchDto(branchEntity.getAddress()));
-        resultBranchDto.setMainOffice(mainOfficeMapper.toMainOfficeDto(branchEntity.getMainOffice()));
+        if (branchEntityFromDb.getId() != null) {
+            resultBranchDto = branchMapper.toBranchDto(branchEntityFromDb);
+            resultBranchDto.setAddress(addressBranchMapper.toAddressBranchDto(branchEntity.getAddress()));
+        }
         return resultBranchDto;
+    }
+
+    public BranchDto findBranchById(Long id) {
+        BranchDto branchDto = new BranchDto();
+        Optional<BranchEntity> branchEntityOptional = branchRepository.findById(id);
+
+        if (branchEntityOptional.isPresent()) {
+            branchDto = branchMapper.toBranchDto(branchEntityOptional.get());
+            AddressBranchEntity addressBranchEntity = branchEntityOptional.get().getAddress();
+            branchDto.setAddress(addressBranchMapper.toAddressBranchDto(addressBranchEntity));
+        }
+        return branchDto;
     }
 }
