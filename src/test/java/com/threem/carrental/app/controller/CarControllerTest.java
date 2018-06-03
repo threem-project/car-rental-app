@@ -40,18 +40,15 @@ public class CarControllerTest {
     @Autowired
     private BranchRepository branchRepository;
 
-    @Before
-
-
     @Test
     public void shouldCreateNewCarUponReceivingProperCarDtoWithProperBranchSet() {
-        CarDto carDto = buildCarDto("WAU32AFD3FN006326");
+        CarDto carDto = buildCarDto("2C3CCAPT7CH236207");
         givenWhenThen(carDto, HttpStatus.CREATED);
     }
 
     @Test
-    public void shouldThrowValidationExceptionWhenReceivesWrongVin() {
-        CarDto carDto = buildCarDto("1GNCS13W1Y211404");
+    public void shouldThrowValidationExceptionWhenReceivedVinTooShort() {
+        CarDto carDto = buildCarDto("1GNCS13W1Y404");
         givenWhenThen(carDto, HttpStatus.BAD_REQUEST);
     }
 

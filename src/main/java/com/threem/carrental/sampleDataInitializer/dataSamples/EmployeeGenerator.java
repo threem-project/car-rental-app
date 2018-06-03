@@ -50,7 +50,7 @@ public class EmployeeGenerator {
         String email = generateEmail(firstName,lastName);
         String password = generatePassword(firstName,lastName,email);
 
-        return new EmployeeEntity().builder()
+        return EmployeeEntity.builder()
                 .firstName(firstName)
                 .lastName(lastName)
                 .email(email)

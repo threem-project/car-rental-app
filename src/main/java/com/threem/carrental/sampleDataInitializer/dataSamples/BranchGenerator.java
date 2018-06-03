@@ -45,7 +45,7 @@ public class BranchGenerator {
     }
 
     private BranchEntity generate() {
-        return new BranchEntity().builder()
+        return BranchEntity.builder()
                 .status(generateBranchStatus())
                 .build();
     }
