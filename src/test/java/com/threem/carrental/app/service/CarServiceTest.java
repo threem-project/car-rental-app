@@ -194,8 +194,7 @@ public class CarServiceTest {
         return BranchEntity.builder()
                 .id(id)
                 .address(new AddressBranchEntity())
-                .status(BranchStatusEnum.OPENED)
-                .mainOffice(new MainOfficeEntity())
+                .status(BranchStatusEnum.OPEN)
                 .build();
     }
 
