@@ -39,14 +39,21 @@ public class CarService {
 
     public Optional<CarDto> createCar(CarDto carDto) {
 
-        // check if car with this vin already exists
         if (carRepository.findByVin(carDto.getVin()) != null) {
             throw new CarAlreadyExistsException("Car with this vin number is already in DB");
         }
 
-        Optional<CarDto> result = Optional.empty();
+//        Optional<CarDto> result = Optional.empty();
         CarEntity carEntity = carMapper.toCarEntity(carDto);
 
+        setBranchUsingId(carEntity, carDto);
+        setEquipment(carEntity, carDto);
+
+        CarEntity savedCarEntity = carRepository.save(carEntity);
+        return Optional.of(carMapper.toCarDto(savedCarEntity));
+    }
+
+    private void setBranchUsingId(CarEntity carEntity, CarDto carDto) {
         if (carEntity.getBranch().getId() != null) {
             Optional<BranchEntity> branchEntityInDb = branchRepository.findById(carDto.getBranchId());
             if (branchEntityInDb.isPresent()) {
@@ -55,7 +62,9 @@ public class CarService {
                 throw new IncorrectBranchException("Given branch ID is incorrect");
             }
         }
+    }
 
+    private void setEquipment(CarEntity carEntity, CarDto carDto) {
         if (carDto.getEquipment() != null) {
             List<EquipmentEntity> equipmentForSaving = new ArrayList<>();
             for (EquipmentEntity equipmentEntity : carDto.getEquipment()) {
@@ -63,10 +72,6 @@ public class CarService {
                 carEntity.setEquipment(equipmentForSaving);
             }
         }
-
-        CarEntity savedCarEntity = carRepository.save(carEntity);
-        result = Optional.of(carMapper.toCarDto(savedCarEntity));
-        return result;
     }
 
 }

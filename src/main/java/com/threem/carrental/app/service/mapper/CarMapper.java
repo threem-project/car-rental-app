@@ -25,7 +25,7 @@ public class CarMapper {
             dummyBranchEntity.setId(carDto.getBranchId());
         }
 
-        CarEntity carEntity = CarEntity.builder()
+        return CarEntity.builder()
                 .id(carDto.getCarId())
                 .vin(carDto.getVin())
                 .make(carDto.getMake())
@@ -46,12 +46,11 @@ public class CarMapper {
                 .equipment(carDto.getEquipment())
 //                .photoUrl(fromCarDto.getPhotoUrl()) - not sure how to store media, fix later
                 .build();
-        return carEntity;
     }
 
     public CarDto toCarDto(CarEntity carEntity) {
 
-        CarDto carDto = CarDto.builder()
+        return CarDto.builder()
                 .carId(carEntity.getId())
                 .vin(carEntity.getVin())
                 .make(carEntity.getMake())
@@ -71,7 +70,6 @@ public class CarMapper {
                 .branchId(carEntity.getBranch().getId())
                 .equipment(carEntity.getEquipment())
                 .build();
-        return carDto;
     }
 
     // TODO maper w pewnych warunkach nie działa poprawnie, brakuje przypadków testowych
