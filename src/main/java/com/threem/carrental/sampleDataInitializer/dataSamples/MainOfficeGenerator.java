@@ -14,7 +14,7 @@ public class MainOfficeGenerator {
     }
 
     public MainOfficeEntity generate() {
-        return new MainOfficeEntity().builder()
+        return MainOfficeEntity.builder()
                 .name("Wypożyczalnia Pieska Leszka")
                 .domain(domain)
                 .address("Warszawa, ul. Psia 100")

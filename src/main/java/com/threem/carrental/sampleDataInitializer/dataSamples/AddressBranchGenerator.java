@@ -15,7 +15,7 @@ public class AddressBranchGenerator {
     private Random random = new Random();
 
     public AddressBranchEntity generate() {
-        return new AddressBranchEntity().builder()
+        return AddressBranchEntity.builder()
                 .building(generateBuildingNumber())
                 .city(generateRandomCity())
                 .country("Poland")
@@ -35,8 +35,6 @@ public class AddressBranchGenerator {
         Integer buildingNumber = random.nextInt(300);
         if (buildingNumber == 0) {
             buildingNumber = +100;
-        } else if (buildingNumber < 0) {
-            buildingNumber = buildingNumber * (-1);
         }
         return buildingNumber.toString();
     }
@@ -45,8 +43,6 @@ public class AddressBranchGenerator {
         Integer streetSufix = random.nextInt(300);
         if (streetSufix == 0) {
             streetSufix = +100;
-        } else if (streetSufix < 0) {
-            streetSufix = streetSufix * (-1);
         }
         return "Ulica " + streetSufix + " testowa";
     }
@@ -55,9 +51,6 @@ public class AddressBranchGenerator {
         String phoneNumber = "";
         for (int i = 1; i < 10; i++) {
             Integer randomInt = random.nextInt(10);
-            if (randomInt < 0) {
-                randomInt *= (-1);
-            }
             if (i == 4 || i == 7) {
                 phoneNumber += "-";
             }
@@ -70,9 +63,6 @@ public class AddressBranchGenerator {
         String zipCode = "";
         for (int i = 1; i < 6; i++) {
             Integer randomInt = random.nextInt(10);
-            if (randomInt < 0) {
-                randomInt *= (-1);
-            }
             if (i == 3) {
                 zipCode += "-";
             }

@@ -6,4 +6,6 @@ package com.threem.carrental.app.model.entity.enumTypes;
  */
 
 public enum CarColourEnum {
+
+    WHITE, RED, BLUE
 }
