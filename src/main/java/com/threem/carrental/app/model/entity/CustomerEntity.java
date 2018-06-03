@@ -1,11 +1,9 @@
 package com.threem.carrental.app.model.entity;
 
-import com.threem.carrental.app.model.entity.enumTypes.CustomerAccountStatusEnum;
 import com.threem.carrental.app.model.entity.enumTypes.CustomerStatusEnum;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
  * @author misza_lemko on 11.05.2018
@@ -58,15 +56,7 @@ public class CustomerEntity {
     @Enumerated(EnumType.STRING)
     private CustomerStatusEnum status;
 
-    @Column(name = "account_status")
-    @Enumerated(EnumType.STRING)
-    private CustomerAccountStatusEnum accountStatus;
-
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")
     private AddressCustomerEntity address;
-
-    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "customer")
-    private List<BookingEntity> bookings;
-
 }
