@@ -2,7 +2,9 @@ package com.threem.carrental.app.controller;
 
 import com.threem.carrental.app.model.dto.AddressBranchDto;
 import com.threem.carrental.app.model.dto.BranchDto;
+import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.enumTypes.BranchStatusEnum;
+import com.threem.carrental.app.repository.BranchRepository;
 import com.threem.carrental.app.repository.MainOfficeRepository;
 import com.threem.carrental.app.service.BranchService;
 import com.threem.carrental.app.service.mapper.MainOfficeMapper;
@@ -10,14 +12,22 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
@@ -36,6 +46,9 @@ public class BranchControllerTest {
 
     @LocalServerPort
     private Integer port;
+
+    @Mock
+    private BranchService branchService;
 
     @Test
     public void shouldCreateAndReturnBranchWithStatusCreatedUsingBranchDto() throws Exception{
@@ -162,6 +175,45 @@ public class BranchControllerTest {
                 .log().all()
                 .assertThat()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
+        //@formatter:on
+    }
+
+    @Test
+    public void shouldGetStatus200WhileGettingAllBranchesPaginatedCorrectly() throws Exception{
+        Map<String, Integer> parameters = new HashMap<>();
+        parameters.put("currentPage",0);
+        parameters.put("resultsPerPage",5);
+
+        //@formatter:off
+        RequestSpecification getGiven = given()
+                .port(port)
+                .params(parameters)
+                .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+                .log().all();
+        Response getWhen = getGiven
+                .when()
+                .get("branch");
+        getWhen.then()
+                .log().all()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value());
+        //@formatter:on
+    }
+
+    @Test
+    public void shouldGetStatus200WhileGettingAllBranchesCorrectly() throws Exception{
+        //@formatter:off
+        RequestSpecification getGiven = given()
+                .port(port)
+                .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+                .log().all();
+        Response getWhen = getGiven
+                .when()
+                .get("branch/all");
+        getWhen.then()
+                .log().all()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value());
         //@formatter:on
     }
 }

@@ -66,13 +66,12 @@ public class BranchService {
         return branchDto;
     }
 
-    public BranchDtoPaginated findAllPegignated(Integer pageNumber, Integer elementsPerPage) {
+    public Page<BranchEntity> findAllPaginated(Integer pageNumber, Integer elementsPerPage) {
         PageRequest pageableRequest = PageRequest.of(pageNumber, elementsPerPage);
+        return branchRepository.findAll(pageableRequest);
+    }
 
-        Page<BranchEntity> branchPage = branchRepository.findAll(pageableRequest);
-        List<BranchEntity> branchEntities = branchPage.getContent();
-
-        List<BranchDto> branchDtos = new ArrayList<>();
-        return null;//todo implement
+    public List<BranchEntity> findAll() {
+        return branchRepository.findAll();
     }
 }
