@@ -17,5 +17,4 @@ public class FindEmployeeDto {
 
     EmployeeEntity employeeEntity;
 
-
 }

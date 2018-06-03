@@ -271,14 +271,14 @@ public class EmployeeServiceTest {
         }
         List<EmployeeEntity> listBeforeChange = employeeRepository.findAll();
         Integer sizeBeforeChange = listBeforeChange.size();
-        Page<EmployeeEntity> paginatedBefore = employeeService.findAllPaginated(1,sizeBeforeChange);
+        Page<EmployeeEntity> paginatedBefore = employeeService.findAllPaginated(0,sizeBeforeChange);
 
         //when
         for (Integer i=0;i<testEmployeesNumber;i++) {
             EmployeeEntity employeeEntity = new EmployeeEntity().builder().firstName("test " + i).build();
             employeeRepository.save(employeeEntity);
         }
-        Page<EmployeeEntity> paginatedAfter = employeeService.findAllPaginated(1,sizeBeforeChange);
+        Page<EmployeeEntity> paginatedAfter = employeeService.findAllPaginated(0,sizeBeforeChange);
 
         //then
         Assertions.assertThat(paginatedBefore.getTotalPages()).isLessThan(paginatedAfter.getTotalPages());
