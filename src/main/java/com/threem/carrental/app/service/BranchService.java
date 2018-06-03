@@ -1,20 +1,22 @@
 package com.threem.carrental.app.service;
 
-import com.threem.carrental.app.errorHandler.customExceptions.IncorrectBranchException;
-import com.threem.carrental.app.model.dto.AddressBranchDto;
+
 import com.threem.carrental.app.model.dto.BranchDto;
-import com.threem.carrental.app.model.dto.MainOfficeDto;
+
+import com.threem.carrental.app.model.dto.BranchDtoPaginated;
 import com.threem.carrental.app.model.entity.AddressBranchEntity;
 import com.threem.carrental.app.model.entity.BranchEntity;
-import com.threem.carrental.app.model.entity.MainOfficeEntity;
-import com.threem.carrental.app.repository.MainOfficeRepository;
 import com.threem.carrental.app.service.mapper.AddressBranchMapper;
 import com.threem.carrental.app.service.mapper.BranchMapper;
 import com.threem.carrental.app.repository.BranchRepository;
-import com.threem.carrental.app.service.mapper.MainOfficeMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,5 +64,14 @@ public class BranchService {
             branchDto.setAddress(addressBranchMapper.toAddressBranchDto(addressBranchEntity));
         }
         return branchDto;
+    }
+
+    public Page<BranchEntity> findAllPaginated(Integer pageNumber, Integer elementsPerPage) {
+        PageRequest pageableRequest = PageRequest.of(pageNumber, elementsPerPage);
+        return branchRepository.findAll(pageableRequest);
+    }
+
+    public List<BranchEntity> findAll() {
+        return branchRepository.findAll();
     }
 }
