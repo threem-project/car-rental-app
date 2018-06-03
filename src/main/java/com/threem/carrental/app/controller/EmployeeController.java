@@ -1,7 +1,6 @@
 package com.threem.carrental.app.controller;
 
 import com.threem.carrental.app.model.dto.EmployeeDto;
-import com.threem.carrental.app.model.dto.FindEmployeeDto;
 import com.threem.carrental.app.model.entity.EmployeeEntity;
 import com.threem.carrental.app.service.EmployeeService;
 import org.hibernate.cfg.NotYetImplementedException;
@@ -68,8 +67,12 @@ public class EmployeeController {
     }
 
     @PostMapping (value = "find", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<List<EmployeeEntity>> findEmployeeByEmployeeSearchDto(@RequestBody FindEmployeeDto findEmployeeDto) {
-        throw new NotYetImplementedException();
+    public ResponseEntity<List<EmployeeEntity>> findByEmployeeEntity(@RequestBody EmployeeEntity employeeEntity) {
+        List<EmployeeEntity> employeeEntityList = employeeService.findByEmployeeEntity(employeeEntity);
+        if (employeeEntityList.size()==0 || employeeEntityList==null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(employeeEntityList);
     }
 
 }

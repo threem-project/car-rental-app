@@ -1,11 +1,13 @@
 package com.threem.carrental.app.service;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.threem.carrental.app.errorHandler.customExceptions.EmployeeAlreadyExistException;
 import com.threem.carrental.app.errorHandler.customExceptions.EmployeeDoesNotExistException;
 import com.threem.carrental.app.errorHandler.customExceptions.IncorrectBranchException;
 import com.threem.carrental.app.model.dto.EmployeeDto;
 import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.EmployeeEntity;
+import com.threem.carrental.app.model.entity.QEmployeeEntity;
 import com.threem.carrental.app.repository.BranchRepository;
 import com.threem.carrental.app.repository.EmployeeRepository;
 import com.threem.carrental.app.service.mapper.EmployeeMapper;
@@ -13,8 +15,9 @@ import com.threem.carrental.app.utilities.PasswordEncoder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -71,6 +74,26 @@ public class EmployeeService {
         Page<EmployeeEntity> employeePage = employeeRepository.findAll(pageableRequest);
         employeePage.getContent().forEach(e -> e.setPassword(null));
         return employeePage;
+    }
+
+    public List<EmployeeEntity> findByEmployeeEntity(EmployeeEntity employeeEntity) {
+        BooleanExpression firstnameExpression = null;
+        BooleanExpression lastnameExpression = null;
+
+        if (employeeEntity.getFirstName()!=null) {
+            firstnameExpression = QEmployeeEntity.employeeEntity.firstName.like(employeeEntity.getFirstName());
+        }
+
+        if (employeeEntity.getLastName()!=null) {
+            lastnameExpression = QEmployeeEntity.employeeEntity.lastName.like(employeeEntity.getLastName());
+        }
+
+        BooleanExpression expression = firstnameExpression.and(lastnameExpression);
+        Iterable<EmployeeEntity> employeeEntities = employeeRepository.findAll(expression);
+        List<EmployeeEntity> employeesList = new ArrayList<>();
+        employeeEntities.forEach(e -> employeesList.add(e));
+
+        return employeesList;
     }
 
     private Optional<EmployeeDto> createOrUpdateEmployee(EmployeeDto employeeDto, EmployeeEntity employeeEntity) {
