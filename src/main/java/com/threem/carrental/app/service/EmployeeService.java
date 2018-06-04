@@ -1,5 +1,6 @@
 package com.threem.carrental.app.service;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.threem.carrental.app.errorHandler.customExceptions.EmployeeAlreadyExistException;
 import com.threem.carrental.app.errorHandler.customExceptions.EmployeeDoesNotExistException;
 import com.threem.carrental.app.errorHandler.customExceptions.IncorrectBranchException;
@@ -8,13 +9,15 @@ import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.EmployeeEntity;
 import com.threem.carrental.app.repository.BranchRepository;
 import com.threem.carrental.app.repository.EmployeeRepository;
+import com.threem.carrental.app.repository.expressionBuilder.QEmployeeExpressionBuilder;
 import com.threem.carrental.app.service.mapper.EmployeeMapper;
 import com.threem.carrental.app.utilities.PasswordEncoder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -71,6 +74,28 @@ public class EmployeeService {
         Page<EmployeeEntity> employeePage = employeeRepository.findAll(pageableRequest);
         employeePage.getContent().forEach(e -> e.setPassword(null));
         return employeePage;
+    }
+
+    public List<EmployeeEntity> findByEmployeeEntity(EmployeeEntity employeeEntity) {
+        List<EmployeeEntity> employeesList = new ArrayList<>();
+
+        QEmployeeExpressionBuilder builder = new QEmployeeExpressionBuilder.Builder()
+                .id(employeeEntity.getId())
+                .firstName(employeeEntity.getFirstName())
+                .lastName(employeeEntity.getLastName())
+                .email(employeeEntity.getEmail())
+                .role(employeeEntity.getRole())
+                .status(employeeEntity.getStatus())
+                .addressCity(employeeEntity.getBranch().getAddress())
+                .build();
+
+        if (builder.hasExpression()) {
+            BooleanExpression booleanExpression = builder.getExpression();
+            Iterable<EmployeeEntity> employeeEntities = employeeRepository.findAll(booleanExpression);
+            employeeEntities.forEach(e -> employeesList.add(e));
+        }
+
+        return employeesList;
     }
 
     private Optional<EmployeeDto> createOrUpdateEmployee(EmployeeDto employeeDto, EmployeeEntity employeeEntity) {
