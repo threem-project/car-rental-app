@@ -38,14 +38,16 @@ public class EmployeeService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Optional<EmployeeDto> createEmployee(EmployeeDto givenEmployeeDto) {
-        EmployeeEntity employeeEntity = employeeMapper.toEmployeeEntity(givenEmployeeDto);
-        EmployeeEntity employeeInDb = findEmployeeInDb(employeeEntity);
+    public Optional<EmployeeEntity> createEmployee(EmployeeEntity givenEntity) {
+        EmployeeEntity employeeInDb = findEmployeeInDb(givenEntity);
         if (employeeInDb != null) {
             throw new EmployeeAlreadyExistException("Given Employee ID is already in DB");
         }
-        Optional<EmployeeDto> resultEmployeeDto = createOrUpdateEmployee(givenEmployeeDto, employeeEntity);
-        return resultEmployeeDto;
+        String encodedPassword = passwordEncoder.encode(givenEntity.getPassword());
+        givenEntity.setPassword(encodedPassword);
+        employeeRepository.save(givenEntity);
+        givenEntity.setPassword(null);
+        return Optional.of(givenEntity);
     }
 
     public Optional<EmployeeDto> updateEmployee(EmployeeDto givenEmployeeDto) {
@@ -118,16 +120,16 @@ public class EmployeeService {
         return resultEmployeeDto;
     }
 
-    private EmployeeEntity findEmployeeInDb(EmployeeEntity givenEmployeeEntity) {
-        EmployeeEntity employeeEntity = null;
-        if (givenEmployeeEntity.getId() != null) {
-            Long employeeId = givenEmployeeEntity.getId();
+    private EmployeeEntity findEmployeeInDb(EmployeeEntity givenEntity) {
+        EmployeeEntity resultEntity = null;
+        if (givenEntity.getId() != null) {
+            Long employeeId = givenEntity.getId();
             Optional<EmployeeEntity> employeeEntityOptional = employeeRepository.findById(employeeId);
             if (employeeEntityOptional.isPresent()) {
-                employeeEntity = employeeEntityOptional.get();
+                resultEntity = employeeEntityOptional.get();
             }
         }
-        return employeeEntity;
+        return resultEntity;
     }
 
     private EmployeeEntity setBranchForEmployee(EmployeeEntity givenEmployee) {

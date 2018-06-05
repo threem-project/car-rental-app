@@ -44,83 +44,85 @@ public class EmployeeServiceTest {
 
     @Test
     public void shouldCreateEmployeeWhenReceiveProperEmployeeDtoWithoutBranch() throws InterruptedException {
-        EmployeeDto employeeDto = new EmployeeDto().builder()   //given
-                .employeeId(null)
+        //given
+        EmployeeEntity expectedEmployeeEntity = new EmployeeEntity().builder()
+                .id(null)
                 .firstName("John")
                 .lastName("Kowalski")
                 .password("testPassword")
                 .email("email@testdomain.com")
                 .status(EmployeeStatusEnum.NEW)
                 .role(EmployeeRoleEnum.REGULAR_EMPLOYEE)
-                .branchId(null)
+                .branch(null)
                 .build();
 
-        Optional<EmployeeDto> dtoAsSaveResult = employeeService.createEmployee(employeeDto); //when
+        //when
+        Optional<EmployeeEntity> actualEntityOptional = employeeService.createEmployee(expectedEmployeeEntity);
 
-        Assertions.assertThat(dtoAsSaveResult.get())  //then
+        //then
+        Assertions.assertThat(actualEntityOptional.get())
                 .hasFieldOrPropertyWithValue("firstName","John")
                 .hasFieldOrPropertyWithValue("lastName","Kowalski")
                 .hasFieldOrPropertyWithValue("password",null)
                 .hasFieldOrPropertyWithValue("email","email@testdomain.com")
                 .hasFieldOrPropertyWithValue("status",EmployeeStatusEnum.NEW)
-                .hasFieldOrPropertyWithValue("branchId",null)
+                .hasFieldOrPropertyWithValue("branch",null)
                 .hasFieldOrPropertyWithValue("role",EmployeeRoleEnum.REGULAR_EMPLOYEE);
-
-        Assertions.assertThat(dtoAsSaveResult.get().getEmployeeId())
-                .isNotNull();
+        Assertions.assertThat(actualEntityOptional.get().getId()).isNotNull();
     }
 
     @Test
     public void shouldCreateEmployeeWhenReceiveProperEmployeeDtoWithBranch() throws InterruptedException {
+        //given
         BranchEntity testBranch = new BranchEntity().builder().id(null).build();
         BranchEntity savedBranchEntity = branchRepository.save(testBranch);
-
-        EmployeeDto employeeDto = new EmployeeDto().builder()   //given
-                .employeeId(null)
+        EmployeeEntity expectedEmployeeEntity = new EmployeeEntity().builder()
+                .id(null)
                 .firstName("John")
                 .lastName("Kowalski")
                 .password("testPassword")
                 .email("email@testdomain.com")
                 .status(EmployeeStatusEnum.NEW)
                 .role(EmployeeRoleEnum.REGULAR_EMPLOYEE)
-                .branchId(savedBranchEntity.getId())
+                .branch(savedBranchEntity)
                 .build();
 
-        Optional<EmployeeDto> dtoAsSaveResult = employeeService.createEmployee(employeeDto); //when
+        //when
+        Optional<EmployeeEntity> actualEntityOptional = employeeService.createEmployee(expectedEmployeeEntity);
 
-        Assertions.assertThat(dtoAsSaveResult.get())  //then
+        //then
+        Assertions.assertThat(actualEntityOptional.get())  //then
                 .hasFieldOrPropertyWithValue("firstName","John")
                 .hasFieldOrPropertyWithValue("lastName","Kowalski")
                 .hasFieldOrPropertyWithValue("password",null)
                 .hasFieldOrPropertyWithValue("email","email@testdomain.com")
                 .hasFieldOrPropertyWithValue("status",EmployeeStatusEnum.NEW)
-                .hasFieldOrPropertyWithValue("branchId",savedBranchEntity.getId())
+                .hasFieldOrPropertyWithValue("branch",savedBranchEntity)
                 .hasFieldOrPropertyWithValue("role",EmployeeRoleEnum.REGULAR_EMPLOYEE);
-
-        Assertions.assertThat(dtoAsSaveResult.get().getEmployeeId())
-                .isNotNull();
+        Assertions.assertThat(actualEntityOptional.get().getId()).isNotNull();
     }
 
     @Test(expected = EmployeeAlreadyExistException.class)
     public void shouldNotCreateEmployeeWhenEmployeeExistsInDb() {
+        //given
         BranchEntity testBranch = new BranchEntity().builder().id(null).build(); //given
         BranchEntity savedBranchEntity = branchRepository.save(testBranch);
 
         EmployeeEntity testEmployee = new EmployeeEntity().builder().id(null).build();
         EmployeeEntity savedEmployeeEntity = employeeRepository.save(testEmployee);
 
-        EmployeeDto employeeDto = new EmployeeDto().builder()
-                .employeeId(savedEmployeeEntity.getId())
+        EmployeeEntity actualEntity = new EmployeeEntity().builder()
+                .id(savedEmployeeEntity.getId())
                 .firstName("John")
                 .lastName("Kowalski")
                 .password("testPassword")
                 .email("email@testdomain.com")
                 .status(EmployeeStatusEnum.NEW)
                 .role(EmployeeRoleEnum.REGULAR_EMPLOYEE)
-                .branchId(savedBranchEntity.getId())
+                .branch(savedBranchEntity)
                 .build();
-
-        employeeService.createEmployee(employeeDto);
+        //when
+        employeeService.createEmployee(actualEntity);
     }
 
     @Test

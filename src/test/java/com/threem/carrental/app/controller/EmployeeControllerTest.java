@@ -1,6 +1,7 @@
 package com.threem.carrental.app.controller;
 
 import com.threem.carrental.app.model.dto.EmployeeDto;
+import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.EmployeeEntity;
 import com.threem.carrental.app.model.entity.enumTypes.EmployeeRoleEnum;
 import com.threem.carrental.app.model.entity.enumTypes.EmployeeStatusEnum;
@@ -50,21 +51,21 @@ public class EmployeeControllerTest {
 
     @Test
     public void shouldGetStatusCreatedWhenReceiveProperEmployeeDtoForCreating() {
-        EmployeeDto employeeDto = new EmployeeDto().builder()   //given
-                .employeeId(null)
+        EmployeeEntity employeeEntity = new EmployeeEntity().builder()   //given
+                .id(null)
                 .firstName("John")
                 .lastName("Kowalski")
                 .password("testPassword")
                 .email("email@testdomain.com")
                 .status(EmployeeStatusEnum.NEW)
                 .role(EmployeeRoleEnum.REGULAR_EMPLOYEE)
-                .branchId(null)
+                .branch(null)
                 .build();
 
         //@formatter:off
         RequestSpecification given = given()
                 .port(port)
-                .body(employeeDto)
+                .body(employeeEntity)
                 .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                 .log().all();
         Response when = given
@@ -79,7 +80,8 @@ public class EmployeeControllerTest {
 
     @Test
     public void shouldGetStatusUnprocessableEntityWhenCreatingEmployeeWithTheSameIdAsInDb() {
-        EmployeeEntity employeeEntity = new EmployeeEntity().builder()  //given
+        //given
+        EmployeeEntity employeeEntity = new EmployeeEntity().builder()
                 .firstName("test")
                 .lastName("test")
                 .password("testTest")
@@ -91,21 +93,22 @@ public class EmployeeControllerTest {
 
         employeeEntity = employeeRepository.save(employeeEntity);
 
-        EmployeeDto employeeDtoWithDuplicatedId = new EmployeeDto().builder()
-                .employeeId(employeeEntity.getId())
+        EmployeeEntity entityWithDuplicatedId = new EmployeeEntity().builder()
+                .id(employeeEntity.getId())
                 .firstName("John")
                 .lastName("Kowalski")
                 .password("testPassword")
                 .email("email@testdomain.com")
                 .status(EmployeeStatusEnum.NEW)
                 .role(EmployeeRoleEnum.REGULAR_EMPLOYEE)
-                .branchId(null)
+                .branch(null)
                 .build();
 
+        //when
         //@formatter:off
-        RequestSpecification duplicatedGive = given()    //when
+        RequestSpecification duplicatedGive = given()
                 .port(port)
-                .body(employeeDtoWithDuplicatedId)
+                .body(entityWithDuplicatedId)
                 .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                 .log().all();
         Response duplicatedWhen = duplicatedGive
@@ -120,21 +123,22 @@ public class EmployeeControllerTest {
 
     @Test
     public void shouldGetStatusUnprocessableEntityWhenCreatingEmployeeWithWrongBranchId() {
-        EmployeeDto employeeDto = new EmployeeDto().builder()   //given
-                .employeeId(null)
+        //given
+        EmployeeEntity employeeEntity = new EmployeeEntity().builder()
+                .id(null)
                 .firstName("test")
                 .lastName("test")
                 .password("testTest")
                 .email("testtesttesttest")
                 .status(EmployeeStatusEnum.ACTIVE)
                 .role(EmployeeRoleEnum.OWNER)
-                .branchId(0L)
+                .branch(new BranchEntity().builder().id(0L).build())
                 .build();
 
         //@formatter:off
         RequestSpecification given = given()
                 .port(port)
-                .body(employeeDto)
+                .body(employeeEntity)
                 .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                 .log().all();
         Response when = given
