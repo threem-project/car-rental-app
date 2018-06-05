@@ -30,13 +30,11 @@ public class InstallService {
     private InstallRepository installRepository;
     private EmployeeRepository employeeRepository;
     private MainOfficeRepository mainOfficeRepository;
-    private PasswordEncoder passwordEncoder;
 
-    public InstallService(InstallRepository installRepository, EmployeeRepository employeeRepository, MainOfficeRepository mainOfficeRepository, PasswordEncoder passwordEncoder) {
+    public InstallService(InstallRepository installRepository, EmployeeRepository employeeRepository, MainOfficeRepository mainOfficeRepository) {
         this.installRepository = installRepository;
         this.employeeRepository = employeeRepository;
         this.mainOfficeRepository = mainOfficeRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     public InstallerViewDto createMainOffice(InstallDto command) {
@@ -56,7 +54,7 @@ public class InstallService {
                 .role(EmployeeRoleEnum.OWNER)
                 .branch(null)
                 .status(EmployeeStatusEnum.ACTIVE)
-                .password(passwordEncoder.encode(command.getPassword()))
+                .password(PasswordEncoder.encode(command.getPassword()))
                 .build();
 
         MainOfficeEntity mainOffice = MainOfficeEntity.builder()

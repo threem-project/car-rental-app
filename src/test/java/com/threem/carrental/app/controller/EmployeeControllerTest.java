@@ -152,7 +152,7 @@ public class EmployeeControllerTest {
     }
 
     @Test
-    public void shouldGetStatusAcceptedWhenReceiveProperEmployeeDtoForUpdate() {
+    public void shouldGetStatusAcceptedWhenReceiveProperEmployeeForUpdate() {
         EmployeeEntity employeeEntity = new EmployeeEntity().builder()
                 .firstName("test")
                 .lastName("test")
@@ -165,21 +165,21 @@ public class EmployeeControllerTest {
 
         employeeEntity = employeeRepository.save(employeeEntity);
 
-        EmployeeDto updatedEmployeeDto = new EmployeeDto().builder() //given
-                .employeeId(employeeEntity.getId())
+        EmployeeEntity entityForUpdate = new EmployeeEntity().builder() //given
+                .id(employeeEntity.getId())
                 .firstName("John")
                 .lastName("Kowalski")
                 .password("testPassword")
                 .email("email@testdomain.com")
                 .status(EmployeeStatusEnum.NEW)
                 .role(EmployeeRoleEnum.REGULAR_EMPLOYEE)
-                .branchId(null)
+                .branch(null)
                 .build();
 
         //@formatter:off
         RequestSpecification putGiven = given()    //when
                 .port(port)
-                .body(updatedEmployeeDto)
+                .body(entityForUpdate)
                 .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                 .log().all();
         Response putWhen = putGiven
@@ -194,21 +194,21 @@ public class EmployeeControllerTest {
 
     @Test
     public void shouldGetStatusUnprocessableEntityWhenUpdatingNonExistingEmployee() {
-        EmployeeDto updatedEmployeeDto = new EmployeeDto().builder() //given
-                .employeeId(0L)
+        EmployeeEntity entityForUpdate = new EmployeeEntity().builder() //given
+                .id(0L)
                 .firstName("John")
                 .lastName("Kowalski")
                 .password("testPassword")
                 .email("email@testdomain.com")
                 .status(EmployeeStatusEnum.NEW)
                 .role(EmployeeRoleEnum.REGULAR_EMPLOYEE)
-                .branchId(null)
+                .branch(null)
                 .build();
 
         //@formatter:off
         RequestSpecification putGiven = given()    //when
                 .port(port)
-                .body(updatedEmployeeDto)
+                .body(entityForUpdate)
                 .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                 .log().all();
         Response putWhen = putGiven
@@ -223,7 +223,8 @@ public class EmployeeControllerTest {
 
     @Test
     public void shouldGetStatusUnprocessableEntityWhenUpdatingEmployeeWithWrongBranchId() {
-        EmployeeEntity employeeEntity = new EmployeeEntity().builder()  //given
+        //given
+        EmployeeEntity employeeEntity = new EmployeeEntity().builder()
                 .firstName("test")
                 .lastName("test")
                 .password("testTest")
@@ -233,23 +234,24 @@ public class EmployeeControllerTest {
                 .branch(null)
                 .build();
 
-        employeeEntity = employeeRepository.save(employeeEntity);
+        employeeRepository.save(employeeEntity);
 
-        EmployeeDto updatedEmployeeDto = new EmployeeDto().builder()
-                .employeeId(employeeEntity.getId())
+        EmployeeEntity entityForUpdate = new EmployeeEntity().builder()
+                .id(employeeEntity.getId())
                 .firstName("John")
                 .lastName("Kowalski")
                 .password("testPassword")
                 .email("email@testdomain.com")
                 .status(EmployeeStatusEnum.NEW)
                 .role(EmployeeRoleEnum.REGULAR_EMPLOYEE)
-                .branchId(0L)
+                .branch(new BranchEntity().builder().id(0L).build())
                 .build();
 
+        //when
         //@formatter:off
-        RequestSpecification putGiven = given()    //when
+        RequestSpecification putGiven = given()
                 .port(port)
-                .body(updatedEmployeeDto)
+                .body(entityForUpdate)
                 .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                 .log().all();
         Response putWhen = putGiven
