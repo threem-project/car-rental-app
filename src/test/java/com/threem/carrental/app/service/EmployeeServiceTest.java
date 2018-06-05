@@ -58,7 +58,6 @@ public class EmployeeServiceTest {
 
         //when
         Optional<EmployeeEntity> actualEntityOptional = employeeService.createEmployee(expectedEmployeeEntity);
-        System.out.println();
         //then
         Assertions.assertThat(actualEntityOptional.get())
                 .hasFieldOrPropertyWithValue("firstName","John")
