@@ -1,14 +1,13 @@
 package com.threem.carrental.app.controller;
 
-import com.threem.carrental.app.model.dto.EmployeeDto;
 import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.EmployeeEntity;
 import com.threem.carrental.app.model.entity.enumTypes.EmployeeRoleEnum;
 import com.threem.carrental.app.model.entity.enumTypes.EmployeeStatusEnum;
 import com.threem.carrental.app.repository.EmployeeRepository;
-import com.threem.carrental.app.service.EmployeeService;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import static io.restassured.RestAssured.given;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
@@ -42,16 +39,14 @@ public class EmployeeControllerTest {
     private Integer port;
 
     @Autowired
-    private EmployeeService employeeService;
-
-    @Autowired
     private EmployeeRepository employeeRepository;
 
-    private Random random = new Random();   //todo zapytać Roberta, czemu tutaj nie działa rollback przy testach i muszę używać Random
+    private EmployeeEntity testEmployee;
+    private EmployeeEntity testEmployeeUpdated;
 
-    @Test
-    public void shouldGetStatusCreatedWhenReceiveProperEmployeeDtoForCreating() {
-        EmployeeEntity employeeEntity = new EmployeeEntity().builder()   //given
+    @Before
+    public void setup() {
+        testEmployee = new EmployeeEntity().builder()
                 .id(null)
                 .firstName("John")
                 .lastName("Kowalski")
@@ -62,10 +57,25 @@ public class EmployeeControllerTest {
                 .branch(null)
                 .build();
 
+        testEmployeeUpdated = new EmployeeEntity().builder()
+                .id(null)
+                .firstName("test")
+                .lastName("test")
+                .password("testtest")
+                .email("testTest")
+                .status(EmployeeStatusEnum.ACTIVE)
+                .role(EmployeeRoleEnum.OWNER)
+                .branch(null)
+                .build();
+    }
+
+    @Test
+    public void shouldGetStatusCreatedWhenReceiveProperEmployeeForCreating() {
+        //then
         //@formatter:off
         RequestSpecification given = given()
                 .port(port)
-                .body(employeeEntity)
+                .body(testEmployee)
                 .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                 .log().all();
         Response when = given
@@ -81,34 +91,14 @@ public class EmployeeControllerTest {
     @Test
     public void shouldGetStatusUnprocessableEntityWhenCreatingEmployeeWithTheSameIdAsInDb() {
         //given
-        EmployeeEntity employeeEntity = new EmployeeEntity().builder()
-                .firstName("test")
-                .lastName("test")
-                .password("testTest")
-                .email("testtesttesttest")
-                .status(EmployeeStatusEnum.ACTIVE)
-                .role(EmployeeRoleEnum.OWNER)
-                .branch(null)
-                .build();
-
-        employeeEntity = employeeRepository.save(employeeEntity);
-
-        EmployeeEntity entityWithDuplicatedId = new EmployeeEntity().builder()
-                .id(employeeEntity.getId())
-                .firstName("John")
-                .lastName("Kowalski")
-                .password("testPassword")
-                .email("email@testdomain.com")
-                .status(EmployeeStatusEnum.NEW)
-                .role(EmployeeRoleEnum.REGULAR_EMPLOYEE)
-                .branch(null)
-                .build();
-
+        employeeRepository.save(testEmployee);
         //when
+        testEmployeeUpdated.setId(testEmployee.getId());
+        //then
         //@formatter:off
         RequestSpecification duplicatedGive = given()
                 .port(port)
-                .body(entityWithDuplicatedId)
+                .body(testEmployeeUpdated)
                 .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                 .log().all();
         Response duplicatedWhen = duplicatedGive
@@ -124,21 +114,13 @@ public class EmployeeControllerTest {
     @Test
     public void shouldGetStatusUnprocessableEntityWhenCreatingEmployeeWithWrongBranchId() {
         //given
-        EmployeeEntity employeeEntity = new EmployeeEntity().builder()
-                .id(null)
-                .firstName("test")
-                .lastName("test")
-                .password("testTest")
-                .email("testtesttesttest")
-                .status(EmployeeStatusEnum.ACTIVE)
-                .role(EmployeeRoleEnum.OWNER)
-                .branch(new BranchEntity().builder().id(0L).build())
-                .build();
-
+        //when
+        testEmployee.setBranch(new BranchEntity().builder().id(0L).build());
+        //then
         //@formatter:off
         RequestSpecification given = given()
                 .port(port)
-                .body(employeeEntity)
+                .body(testEmployee)
                 .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                 .log().all();
         Response when = given
@@ -153,33 +135,15 @@ public class EmployeeControllerTest {
 
     @Test
     public void shouldGetStatusAcceptedWhenReceiveProperEmployeeForUpdate() {
-        EmployeeEntity employeeEntity = new EmployeeEntity().builder()
-                .firstName("test")
-                .lastName("test")
-                .password("testTest")
-                .email("testtesttesttest")
-                .status(EmployeeStatusEnum.ACTIVE)
-                .role(EmployeeRoleEnum.OWNER)
-                .branch(null)
-                .build();
-
-        employeeEntity = employeeRepository.save(employeeEntity);
-
-        EmployeeEntity entityForUpdate = new EmployeeEntity().builder() //given
-                .id(employeeEntity.getId())
-                .firstName("John")
-                .lastName("Kowalski")
-                .password("testPassword")
-                .email("email@testdomain.com")
-                .status(EmployeeStatusEnum.NEW)
-                .role(EmployeeRoleEnum.REGULAR_EMPLOYEE)
-                .branch(null)
-                .build();
-
+        //given
+        employeeRepository.save(testEmployee);
+        //when
+        testEmployeeUpdated.setId(testEmployee.getId());
+        //then
         //@formatter:off
         RequestSpecification putGiven = given()    //when
                 .port(port)
-                .body(entityForUpdate)
+                .body(testEmployeeUpdated)
                 .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                 .log().all();
         Response putWhen = putGiven
@@ -194,21 +158,14 @@ public class EmployeeControllerTest {
 
     @Test
     public void shouldGetStatusUnprocessableEntityWhenUpdatingNonExistingEmployee() {
-        EmployeeEntity entityForUpdate = new EmployeeEntity().builder() //given
-                .id(0L)
-                .firstName("John")
-                .lastName("Kowalski")
-                .password("testPassword")
-                .email("email@testdomain.com")
-                .status(EmployeeStatusEnum.NEW)
-                .role(EmployeeRoleEnum.REGULAR_EMPLOYEE)
-                .branch(null)
-                .build();
-
+        //given
+        //when
+        testEmployee.setId(0L);
+        //then
         //@formatter:off
         RequestSpecification putGiven = given()    //when
                 .port(port)
-                .body(entityForUpdate)
+                .body(testEmployee)
                 .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                 .log().all();
         Response putWhen = putGiven
@@ -224,34 +181,15 @@ public class EmployeeControllerTest {
     @Test
     public void shouldGetStatusUnprocessableEntityWhenUpdatingEmployeeWithWrongBranchId() {
         //given
-        EmployeeEntity employeeEntity = new EmployeeEntity().builder()
-                .firstName("test")
-                .lastName("test")
-                .password("testTest")
-                .email("testtesttesttest")
-                .status(EmployeeStatusEnum.ACTIVE)
-                .role(EmployeeRoleEnum.OWNER)
-                .branch(null)
-                .build();
-
-        employeeRepository.save(employeeEntity);
-
-        EmployeeEntity entityForUpdate = new EmployeeEntity().builder()
-                .id(employeeEntity.getId())
-                .firstName("John")
-                .lastName("Kowalski")
-                .password("testPassword")
-                .email("email@testdomain.com")
-                .status(EmployeeStatusEnum.NEW)
-                .role(EmployeeRoleEnum.REGULAR_EMPLOYEE)
-                .branch(new BranchEntity().builder().id(0L).build())
-                .build();
-
+        employeeRepository.save(testEmployee);
         //when
+        testEmployeeUpdated.setId(testEmployee.getId());
+        testEmployeeUpdated.setBranch(new BranchEntity().builder().id(0L).build());
+        //then
         //@formatter:off
         RequestSpecification putGiven = given()
                 .port(port)
-                .body(entityForUpdate)
+                .body(testEmployeeUpdated)
                 .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                 .log().all();
         Response putWhen = putGiven
@@ -266,8 +204,11 @@ public class EmployeeControllerTest {
 
     @Test
     public void shouldGetBadRequestForIncorrectIdFormat() {
+        //given
+        //when
+        //then
         //@formatter:off
-        RequestSpecification getGiven = given()    //when
+        RequestSpecification getGiven = given()
                 .port(port)
                 .pathParam("id","x")
                 .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
@@ -284,6 +225,9 @@ public class EmployeeControllerTest {
 
     @Test
     public void shouldGetNotFoundStatusWhenEmployeeNotExisting() {
+        //given
+        //when
+        //then
         //@formatter:off
         RequestSpecification getGiven = given()    //when
                 .port(port)
@@ -301,23 +245,15 @@ public class EmployeeControllerTest {
     }
 
     @Test
-    public void shouldGetProperEmployeeDtoWhenEmployeeExisting() {
-        EmployeeEntity employeeEntity = new EmployeeEntity().builder()  //given
-                .firstName("test")
-                .lastName("test")
-                .password("testTest")
-                .email("testtesttesttest")
-                .status(EmployeeStatusEnum.ACTIVE)
-                .role(EmployeeRoleEnum.OWNER)
-                .branch(null)
-                .build();
-
-        EmployeeEntity savedEmployeeEntity = employeeRepository.save(employeeEntity);
-
+    public void shouldGetProperEmployeeWhenEmployeeExisting() {
+        //given
+        //when
+        employeeRepository.save(testEmployee);
+        //then
         //@formatter:off
         RequestSpecification getGiven = given()    //when
                 .port(port)
-                .pathParam("id",savedEmployeeEntity.getId())
+                .pathParam("id",testEmployee.getId())
                 .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                 .log().all();
         Response getWhen = getGiven
@@ -332,10 +268,12 @@ public class EmployeeControllerTest {
 
     @Test
     public void shouldGetStatus200WhileGettingAllEmployeesPaginatedCorrectly() {
+        //given
+        //when
         Map<String, Integer> parameters = new HashMap<>();
         parameters.put("currentPage",0);
         parameters.put("resultsPerPage",5);
-
+        //then
         //@formatter:off
         RequestSpecification getGiven = given()    //when
                 .port(port)
