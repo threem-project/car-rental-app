@@ -71,11 +71,9 @@ public class InstallService {
                 .installationStatus(InstallationStatusEnum.COMPLETED)
                 .build();
 
-        //todo transaction start
         employeeRepository.save(employee);
         mainOfficeRepository.save(mainOffice);
         installRepository.save(installer);
-        //todo transaction end
 
         Long mainOfficeId = getMainOfficeIdFromDb(mainOfficeRepository.findAll());
         return new InstallerViewDto(mainOfficeId,command.getCompanyName());

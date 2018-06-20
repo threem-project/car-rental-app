@@ -1,6 +1,5 @@
 package com.threem.carrental.app.utilities;
 
-import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 

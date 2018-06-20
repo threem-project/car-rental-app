@@ -2,14 +2,12 @@ package com.threem.carrental.app.service;
 
 import com.threem.carrental.app.errorHandler.customExceptions.EmployeeAlreadyExistException;
 import com.threem.carrental.app.errorHandler.customExceptions.EmployeeDoesNotExistException;
-import com.threem.carrental.app.model.entity.AddressBranchEntity;
 import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.EmployeeEntity;
 import com.threem.carrental.app.model.entity.enumTypes.EmployeeRoleEnum;
 import com.threem.carrental.app.model.entity.enumTypes.EmployeeStatusEnum;
 import com.threem.carrental.app.repository.BranchRepository;
 import com.threem.carrental.app.repository.EmployeeRepository;
-import com.threem.carrental.factory.TestAddressBranchFactory;
 import com.threem.carrental.factory.TestBranchEntityFactory;
 import com.threem.carrental.factory.TestEmployeeEntityFactory;
 import org.assertj.core.api.Assertions;
@@ -32,19 +30,11 @@ import java.util.Optional;
  * @author marek_j on 2018-05-24
  */
 @RunWith(SpringRunner.class)
-//@RunWith(JUnitParamsRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Rollback
-//@DataJpaTest
-@Transactional
 @ActiveProfiles("test")
+@Transactional
 public class EmployeeServiceTest {
-
-//    @ClassRule
-//    public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
-//
-//    @Rule
-//    public final SpringMethodRule springMethodRule = new SpringMethodRule();
 
     @Autowired
     private EmployeeService employeeService;
@@ -55,20 +45,15 @@ public class EmployeeServiceTest {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-//    private TestContextManager testContextManager;
     private EmployeeEntity johnKowalskiNewRegularEmployee;
     private EmployeeEntity jebediaszJonesActiveOwner;
-    private EmployeeEntity tomNowakDeactivatedBranchManager;
     private BranchEntity testBranch;
-    private AddressBranchEntity testAddressBranch;
 
     @Before
     public void setup() {
         johnKowalskiNewRegularEmployee = TestEmployeeEntityFactory.getEntity("JOHN_KOWALSKI_NEW_REGULAR_EMPLOYEE");
         jebediaszJonesActiveOwner = TestEmployeeEntityFactory.getEntity("JEBEDIASZ_JONES_ACTIVE_OWNER");
-        tomNowakDeactivatedBranchManager = TestEmployeeEntityFactory.getEntity("TOM_NOWAK_DEACTIVATED_BRANCH_MANAGER");
         testBranch = TestBranchEntityFactory.getEntity("OPEN_BRANCH");
-        testAddressBranch = TestAddressBranchFactory.getEntity("MIASTO_TESTOWE");
     }
 
     @Test
@@ -206,21 +191,21 @@ public class EmployeeServiceTest {
     @Test
     public void shouldFindAllEmployeesPaginated() {
         //given
-        List<EmployeeEntity> firstPartOfEntities = createDummyEntities(10);
-        employeeRepository.saveAll(firstPartOfEntities);
-        Integer sizeBeforeChange = employeeRepository.findAll().size();
-        Page<EmployeeEntity> paginatedBefore = employeeService.findAllPaginated(0, sizeBeforeChange);
+        List<EmployeeEntity> entitiesCollection = createDummyEntitiesWithFirstNameTest(10);
+        employeeRepository.saveAll(entitiesCollection);
+        Integer numberOfEntitiesBefore = employeeRepository.findAll().size();
+        Page<EmployeeEntity> paginatedBefore = employeeService.findAllPaginated(0, numberOfEntitiesBefore);
 
         //when
-        List<EmployeeEntity> entitiesToMakeMorePagesInResult = createDummyEntities(10);
+        List<EmployeeEntity> entitiesToMakeMorePagesInResult = createDummyEntitiesWithFirstNameTest(10);
         employeeRepository.saveAll(entitiesToMakeMorePagesInResult);
-        Page<EmployeeEntity> paginatedAfter = employeeService.findAllPaginated(0, sizeBeforeChange);
+        Page<EmployeeEntity> paginatedAfter = employeeService.findAllPaginated(0, numberOfEntitiesBefore);
 
         //then
         Assertions.assertThat(paginatedBefore.getTotalPages()).isLessThan(paginatedAfter.getTotalPages());
     }
 
-    private List<EmployeeEntity> createDummyEntities(Integer numberOfEntities) {
+    private List<EmployeeEntity> createDummyEntitiesWithFirstNameTest(Integer numberOfEntities) {
         List<EmployeeEntity> resultList = new ArrayList<>();
         for (int i = 0; i < numberOfEntities; i++) {
             EmployeeEntity employeeEntity = TestEmployeeEntityFactory.getEntity("WITH_ALL_FIELDS_NULL");
@@ -229,4 +214,5 @@ public class EmployeeServiceTest {
         }
         return resultList;
     }
+
 }

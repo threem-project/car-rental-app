@@ -1,3 +1,4 @@
+id,imieTestowe,nazwiskoTestowe,EmployeeRoleEnum.OWNER,EmployeeStatusEnum.ACTIVE,email@testowy.pl,miastoTestowe,1
 id,,,,,,,1
 ,imieTestowe,,,,,,1
 ,,nazwiskoTestowe,,,,,1

@@ -2,9 +2,8 @@ package com.threem.carrental.app.controller;
 
 import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.EmployeeEntity;
-import com.threem.carrental.app.model.entity.enumTypes.EmployeeRoleEnum;
-import com.threem.carrental.app.model.entity.enumTypes.EmployeeStatusEnum;
 import com.threem.carrental.app.repository.EmployeeRepository;
+import com.threem.carrental.factory.TestEmployeeEntityFactory;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.Before;
@@ -41,32 +40,13 @@ public class EmployeeControllerTest {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    private EmployeeEntity testEmployee;
-    private EmployeeEntity testEmployeeUpdated;
+    private EmployeeEntity johnKowalskiNewRegularEmployee;
+    private EmployeeEntity jebediaszJonesActiveOwner;
 
     @Before
     public void setup() {
-        testEmployee = new EmployeeEntity().builder()
-                .id(null)
-                .firstName("John")
-                .lastName("Kowalski")
-                .password("testPassword")
-                .email("email@testdomain.com")
-                .status(EmployeeStatusEnum.NEW)
-                .role(EmployeeRoleEnum.REGULAR_EMPLOYEE)
-                .branch(null)
-                .build();
-
-        testEmployeeUpdated = new EmployeeEntity().builder()
-                .id(null)
-                .firstName("test")
-                .lastName("test")
-                .password("testtest")
-                .email("testTest")
-                .status(EmployeeStatusEnum.ACTIVE)
-                .role(EmployeeRoleEnum.OWNER)
-                .branch(null)
-                .build();
+        johnKowalskiNewRegularEmployee = TestEmployeeEntityFactory.getEntity("JOHN_KOWALSKI_NEW_REGULAR_EMPLOYEE");
+        jebediaszJonesActiveOwner = TestEmployeeEntityFactory.getEntity("JEBEDIASZ_JONES_ACTIVE_OWNER");
     }
 
     @Test
@@ -75,7 +55,7 @@ public class EmployeeControllerTest {
         //@formatter:off
         RequestSpecification given = given()
                 .port(port)
-                .body(testEmployee)
+                .body(johnKowalskiNewRegularEmployee)
                 .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                 .log().all();
         Response when = given
@@ -91,14 +71,14 @@ public class EmployeeControllerTest {
     @Test
     public void shouldGetStatusUnprocessableEntityWhenCreatingEmployeeWithTheSameIdAsInDb() {
         //given
-        employeeRepository.save(testEmployee);
+        employeeRepository.save(johnKowalskiNewRegularEmployee);
         //when
-        testEmployeeUpdated.setId(testEmployee.getId());
+        jebediaszJonesActiveOwner.setId(johnKowalskiNewRegularEmployee.getId());
         //then
         //@formatter:off
         RequestSpecification duplicatedGive = given()
                 .port(port)
-                .body(testEmployeeUpdated)
+                .body(jebediaszJonesActiveOwner)
                 .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                 .log().all();
         Response duplicatedWhen = duplicatedGive
@@ -115,12 +95,12 @@ public class EmployeeControllerTest {
     public void shouldGetStatusUnprocessableEntityWhenCreatingEmployeeWithWrongBranchId() {
         //given
         //when
-        testEmployee.setBranch(new BranchEntity().builder().id(0L).build());
+        johnKowalskiNewRegularEmployee.setBranch(new BranchEntity().builder().id(0L).build());
         //then
         //@formatter:off
         RequestSpecification given = given()
                 .port(port)
-                .body(testEmployee)
+                .body(johnKowalskiNewRegularEmployee)
                 .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                 .log().all();
         Response when = given
@@ -136,14 +116,14 @@ public class EmployeeControllerTest {
     @Test
     public void shouldGetStatusAcceptedWhenReceiveProperEmployeeForUpdate() {
         //given
-        employeeRepository.save(testEmployee);
+        employeeRepository.save(johnKowalskiNewRegularEmployee);
         //when
-        testEmployeeUpdated.setId(testEmployee.getId());
+        jebediaszJonesActiveOwner.setId(johnKowalskiNewRegularEmployee.getId());
         //then
         //@formatter:off
         RequestSpecification putGiven = given()    //when
                 .port(port)
-                .body(testEmployeeUpdated)
+                .body(jebediaszJonesActiveOwner)
                 .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                 .log().all();
         Response putWhen = putGiven
@@ -160,12 +140,12 @@ public class EmployeeControllerTest {
     public void shouldGetStatusUnprocessableEntityWhenUpdatingNonExistingEmployee() {
         //given
         //when
-        testEmployee.setId(0L);
+        johnKowalskiNewRegularEmployee.setId(0L);
         //then
         //@formatter:off
         RequestSpecification putGiven = given()    //when
                 .port(port)
-                .body(testEmployee)
+                .body(johnKowalskiNewRegularEmployee)
                 .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                 .log().all();
         Response putWhen = putGiven
@@ -181,15 +161,15 @@ public class EmployeeControllerTest {
     @Test
     public void shouldGetStatusUnprocessableEntityWhenUpdatingEmployeeWithWrongBranchId() {
         //given
-        employeeRepository.save(testEmployee);
+        employeeRepository.save(johnKowalskiNewRegularEmployee);
         //when
-        testEmployeeUpdated.setId(testEmployee.getId());
-        testEmployeeUpdated.setBranch(new BranchEntity().builder().id(0L).build());
+        jebediaszJonesActiveOwner.setId(johnKowalskiNewRegularEmployee.getId());
+        jebediaszJonesActiveOwner.setBranch(new BranchEntity().builder().id(0L).build());
         //then
         //@formatter:off
         RequestSpecification putGiven = given()
                 .port(port)
-                .body(testEmployeeUpdated)
+                .body(jebediaszJonesActiveOwner)
                 .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                 .log().all();
         Response putWhen = putGiven
@@ -248,12 +228,12 @@ public class EmployeeControllerTest {
     public void shouldGetProperEmployeeWhenEmployeeExisting() {
         //given
         //when
-        employeeRepository.save(testEmployee);
+        employeeRepository.save(johnKowalskiNewRegularEmployee);
         //then
         //@formatter:off
         RequestSpecification getGiven = given()    //when
                 .port(port)
-                .pathParam("id",testEmployee.getId())
+                .pathParam("id", johnKowalskiNewRegularEmployee.getId())
                 .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                 .log().all();
         Response getWhen = getGiven
