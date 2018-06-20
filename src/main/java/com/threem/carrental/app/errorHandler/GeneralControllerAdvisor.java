@@ -4,6 +4,7 @@ import com.threem.carrental.app.errorHandler.customExceptions.CarAlreadyExistsEx
 import com.threem.carrental.app.errorHandler.customExceptions.EmployeeAlreadyExistException;
 import com.threem.carrental.app.errorHandler.customExceptions.EmployeeDoesNotExistException;
 import com.threem.carrental.app.errorHandler.customExceptions.IncorrectBranchException;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -31,6 +32,12 @@ public class GeneralControllerAdvisor {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handle(InvalidDataAccessResourceUsageException e, ServletWebRequest request) {
         return ErrorResponse.of(HttpStatus.NOT_FOUND, "General error with application", request.getRequest().getRequestURI());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErrorResponse handle(ConstraintViolationException e, ServletWebRequest request) {
+        return ErrorResponse.of(HttpStatus.UNPROCESSABLE_ENTITY, "Fails due to breaking DB data integrity or constraints", request.getRequest().getRequestURI());
     }
 
     @ExceptionHandler

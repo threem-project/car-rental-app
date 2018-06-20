@@ -3,7 +3,6 @@ package com.threem.carrental.app.controller;
 import com.threem.carrental.app.model.dto.EmployeeDto;
 import com.threem.carrental.app.model.entity.EmployeeEntity;
 import com.threem.carrental.app.service.EmployeeService;
-import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -30,30 +29,30 @@ public class EmployeeController {
     }
 
     @PostMapping (produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<EmployeeDto> createEmployee(@Validated @RequestBody EmployeeDto employeeDto) {
-        Optional<EmployeeDto> employeeDtoFromService = employeeService.createEmployee(employeeDto);
-        if (employeeDtoFromService.isPresent()) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(employeeDtoFromService.get());
+    public ResponseEntity<EmployeeEntity> createEmployee(@Validated @RequestBody EmployeeEntity employeeEntity) {
+        Optional<EmployeeEntity> employeeEntityFromService = employeeService.createEmployee(employeeEntity);
+        if (employeeEntityFromService.isPresent()) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(employeeEntityFromService.get());
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
     @PutMapping (produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<EmployeeDto> editEmployee(@Validated @RequestBody EmployeeDto employeeDto) {
-        Optional<EmployeeDto> employeeDtoFromService = employeeService.updateEmployee(employeeDto);
-        if (employeeDtoFromService.isPresent()) {
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(employeeDtoFromService.get());
+    public ResponseEntity<EmployeeEntity> editEmployee(@Validated @RequestBody EmployeeEntity employeeEntity) {
+        Optional<EmployeeEntity> employeeEntityFromService = employeeService.updateEmployee(employeeEntity);
+        if (employeeEntityFromService.isPresent()) {
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(employeeEntityFromService.get());
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
     @GetMapping (value = "{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<EmployeeDto> findById(@PathVariable Long id) {
-        Optional<EmployeeDto> employeeDtoFromService = employeeService.findById(id);
-        if (employeeDtoFromService.isPresent()) {
-            return ResponseEntity.status(HttpStatus.OK).body(employeeDtoFromService.get());
+    public ResponseEntity<EmployeeEntity> findById(@PathVariable Long id) {
+        Optional<EmployeeEntity> employeeEntityFromService = employeeService.findById(id);
+        if (employeeEntityFromService.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK).body(employeeEntityFromService.get());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
