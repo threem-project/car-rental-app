@@ -12,7 +12,4 @@ public class CarAlreadyExistsException extends DataIntegrityViolationException {
         super(msg);
     }
 
-    public CarAlreadyExistsException(String msg, Throwable cause) {
-        super(msg, cause);
-    }
 }

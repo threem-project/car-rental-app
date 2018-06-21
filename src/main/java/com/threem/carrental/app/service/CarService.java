@@ -1,83 +1,78 @@
 package com.threem.carrental.app.service;
 
 import com.threem.carrental.app.errorHandler.customExceptions.CarAlreadyExistsException;
-import com.threem.carrental.app.errorHandler.customExceptions.IncorrectBranchException;
-import com.threem.carrental.app.model.dto.CarDto;
-import com.threem.carrental.app.model.entity.BranchEntity;
+import com.threem.carrental.app.errorHandler.customExceptions.CarIdAndVinDoNotMatch;
 import com.threem.carrental.app.model.entity.CarEntity;
-import com.threem.carrental.app.model.entity.EquipmentEntity;
-import com.threem.carrental.app.repository.BranchRepository;
 import com.threem.carrental.app.repository.CarRepository;
-import com.threem.carrental.app.repository.EquipmentRepository;
-import com.threem.carrental.app.service.mapper.CarMapper;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
- * @author Marika Grzebieniowska on 27.05.2018
- * @project car-rental-app
+ * @author marek_j on 2018-06-20 based on original code by Marika Grzebieniowska on 27.05.2018
  */
-
 @Service
 public class CarService {
 
     private CarRepository carRepository;
-    private BranchRepository branchRepository;
-    private CarMapper carMapper;
-    private EquipmentRepository equipmentRepository;
 
-    public CarService(CarRepository carRepository, BranchRepository branchRepository, CarMapper carMapper, EquipmentRepository equipmentRepository) {
+    public CarService(CarRepository carRepository) {
         this.carRepository = carRepository;
-        this.branchRepository = branchRepository;
-        this.carMapper = carMapper;
-        this.equipmentRepository = equipmentRepository;
     }
 
-    public Optional<CarDto> createCar(CarDto carDto) {
+    @Transactional
+    public Optional<CarEntity> createCar(CarEntity givenEntity) {
 
-        if (carRepository.findByVin(carDto.getVin()) != null) {
-            throw new CarAlreadyExistsException("Car with this vin number is already in DB");
+        if (entityExistInDb(givenEntity)) {
+            throw new CarAlreadyExistsException("Car with this VIN number or ID is already in DB");
+        }
+        carRepository.save(givenEntity);
+
+        return Optional.of(givenEntity);
+    }
+
+    private Boolean entityExistInDb(CarEntity carEntity) {
+        if (idExistInDb(carEntity) || vinExistInDb(carEntity)) {
+            return true;
+        }
+        return false;
+    }
+
+    private Boolean idExistInDb(CarEntity givenEntity) {
+        Boolean result = false;
+        if (givenEntity.getId()!=null) {
+            Optional<CarEntity> carInDb = carRepository.findById(givenEntity.getId());
+            if (carInDb.isPresent()) {
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    private Boolean vinExistInDb(CarEntity carEntity) {
+        return carRepository.findByVin(carEntity.getVin())!=null;
+    }
+
+    @Transactional
+    public Optional<CarEntity> updateCar(CarEntity givenEntity) {
+        if (!vinAndIdMatchTheSameEntity(givenEntity)) {
+            throw new CarIdAndVinDoNotMatch("This ID and VIN are assigned to different entities");
         }
 
-        CarEntity carEntity = carMapper.toCarEntity(carDto);
-
-        setBranchUsingId(carEntity, carDto);
-        setEquipment(carEntity, carDto);
-
-        CarEntity savedCarEntity = carRepository.save(carEntity);
-        return Optional.of(carMapper.toCarDto(savedCarEntity));
+        carRepository.save(givenEntity);
+        return Optional.of(givenEntity);
     }
 
-    private void setBranchUsingId(CarEntity carEntity, CarDto carDto) {
-        if (carEntity.getBranch().getId() != null) {
-            Optional<BranchEntity> branchEntityInDb = branchRepository.findById(carDto.getBranchId());
-            branchEntityInDb.orElseThrow(() -> new IncorrectBranchException("Given branch ID is incorrect"));
-        }
+    private Boolean vinAndIdMatchTheSameEntity(CarEntity carEntity) {
+        Long id = carEntity.getId();
+        String vin = carEntity.getVin();
+        CarEntity entityInDb = carRepository.findByIdAndVin(id,vin);
+        return (entityInDb!=null);
     }
 
-    private void setEquipment(CarEntity carEntity, CarDto carDto) {
-        if (carDto.getEquipment() != null) {
-            carEntity.setEquipment(mapToEntitiesFromDb(carDto));
-        }
+    public Optional<CarEntity> findById(Long id) {
+        Optional<CarEntity> resultEntity = carRepository.findById(id);
+        return resultEntity;
     }
-
-    private List<EquipmentEntity> mapToEntitiesFromDb(CarDto carDto) {
-        return carDto.getEquipment()
-                .stream()
-                .map(e -> equipmentRepository.findById(e.getId()).get())
-                .collect(Collectors.toList()
-                );
-    }
-
 }
-
-
-
-
-
-

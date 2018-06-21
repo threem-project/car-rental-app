@@ -15,4 +15,6 @@ public interface CarRepository extends JpaRepository<CarEntity,Long> {
 
     CarEntity findByVin(String vin);
 
+    CarEntity findByIdAndVin(Long id, String vin);
+
 }

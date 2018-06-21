@@ -7,6 +7,7 @@ import com.threem.carrental.app.repository.BranchRepository;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +29,13 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
  * @project car-rental-app
  */
 
+@Ignore
+@Deprecated
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Rollback
 @ActiveProfiles("test")
-public class CarControllerTest {
+public class CarControllerByMarikaTest {
 
     @LocalServerPort
     private Integer port;
@@ -40,12 +43,14 @@ public class CarControllerTest {
     @Autowired
     private BranchRepository branchRepository;
 
+    @Ignore
     @Test
     public void shouldCreateNewCarUponReceivingProperCarDtoWithProperBranchSet() {
         CarDto carDto = buildCarDto("2C3CCAPT7CH236207");
         givenWhenThen(carDto, HttpStatus.CREATED);
     }
 
+    @Ignore
     @Test
     public void shouldThrowValidationExceptionWhenReceivedVinTooShort() {
         CarDto carDto = buildCarDto("1GNCS13W1Y404");

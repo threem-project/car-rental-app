@@ -33,7 +33,7 @@ public class EmployeeService {
         }
         givenEntity.setPassword(PasswordEncoder.encode(givenEntity.getPassword()));
         employeeRepository.save(givenEntity);
-        return Optional.of(entityWithNullPassowrd(givenEntity));
+        return Optional.of(entityWithNullPassword(givenEntity));
     }
 
     public Optional<EmployeeEntity> updateEmployee(EmployeeEntity givenEntity) {
@@ -42,7 +42,7 @@ public class EmployeeService {
         }
         givenEntity.setPassword(PasswordEncoder.encode(givenEntity.getPassword()));
         employeeRepository.save(givenEntity);
-        return Optional.of(entityWithNullPassowrd(givenEntity));
+        return Optional.of(entityWithNullPassword(givenEntity));
     }
 
     public Optional<EmployeeEntity> findById(Long id) {
@@ -82,7 +82,7 @@ public class EmployeeService {
         return employeesList;
     }
 
-    private EmployeeEntity entityWithNullPassowrd(EmployeeEntity employeeEntity) {
+    private EmployeeEntity entityWithNullPassword(EmployeeEntity employeeEntity) {
         EmployeeEntity entity = employeeEntity;
         entity.setPassword(null);
         return entity;

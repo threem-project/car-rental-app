@@ -7,5 +7,5 @@ package com.threem.carrental.app.model.entity.enumTypes;
 
 public enum CarStatusEnum {
 
-    AVAILABLE, IN_USE, IN_REPAIR, RETIRED
+    AVAILABLE, IN_USE, IN_REPAIR, DECOMISSIONED;
 }

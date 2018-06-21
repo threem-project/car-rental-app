@@ -1,5 +1,6 @@
 package com.threem.carrental.app.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.threem.carrental.app.model.entity.enumTypes.*;
 import lombok.*;
 
@@ -40,7 +41,7 @@ public class CarEntity {
     private CarBodyTypeEnum bodyType;
 
     @Column(name = "year")
-    private String year;
+    private Integer year;
 
     @Column(name = "colour")
     @Enumerated(EnumType.STRING)
@@ -77,15 +78,23 @@ public class CarEntity {
     @Column(name = "doors")
     private Integer doors;
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "branch_id")
     private BranchEntity branch;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "car_equipment",
-            joinColumns = {@JoinColumn(name = "car_id")},
-            inverseJoinColumns = {@JoinColumn(name = "equipment_id")}
-    )
-    private List<EquipmentEntity> equipment;
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(
+//            name = "car_equipment",
+//            joinColumns = {@JoinColumn(name = "car_id")},
+//            inverseJoinColumns = {@JoinColumn(name = "equipment_id")}
+//    )
+//    private List<EquipmentEntity> equipment;
+
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ElementCollection(targetClass=CarEquipmentEnum.class)
+    @CollectionTable(name = "car_equipment")
+    @Column(name = "description")
+    @Enumerated(EnumType.STRING)
+    private List<CarEquipmentEnum> equipment;
 }
