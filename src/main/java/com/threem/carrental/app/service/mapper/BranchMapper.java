@@ -14,7 +14,7 @@ import java.util.List;
  * @author misza_lemko on 22.05.2018
  * @project car-rental-app
  */
-
+@Deprecated
 @Service
 public class BranchMapper {
 

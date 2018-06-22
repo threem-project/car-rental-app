@@ -1,13 +1,16 @@
 package com.threem.carrental.app.controller;
 
+import com.threem.carrental.app.model.dto.CarSearchDto;
 import com.threem.carrental.app.model.entity.CarEntity;
 import com.threem.carrental.app.service.CarService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -51,6 +54,23 @@ public class CarController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+
+
+    @GetMapping (produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Page<CarEntity>> findAllPaginated(@RequestParam(defaultValue = "0") Integer currentPage,
+                                                            @RequestParam(defaultValue = "20") Integer resultsPerPage) {
+        Page<CarEntity> carEntityPage = carService.findAllPaginated(currentPage,resultsPerPage);
+        return ResponseEntity.status(HttpStatus.OK).body(carEntityPage);
+    }
+
+    @PostMapping (value = "find", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<List<CarEntity>> findByCarSearchDto(@RequestBody CarSearchDto carSearchDto) {
+        List<CarEntity> carEntityList = carService.findByCarSearchDto(carSearchDto);
+        if (carEntityList.size()==0 || carEntityList==null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(carEntityList);
     }
 
 }

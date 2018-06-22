@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
  * @author misza_lemko on 22.05.2018
  * @project car-rental-app
  */
-
+@Deprecated
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

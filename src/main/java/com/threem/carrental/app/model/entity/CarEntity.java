@@ -83,14 +83,6 @@ public class CarEntity {
     @JoinColumn(name = "branch_id")
     private BranchEntity branch;
 
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(
-//            name = "car_equipment",
-//            joinColumns = {@JoinColumn(name = "car_id")},
-//            inverseJoinColumns = {@JoinColumn(name = "equipment_id")}
-//    )
-//    private List<EquipmentEntity> equipment;
-
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ElementCollection(targetClass=CarEquipmentEnum.class)
     @CollectionTable(name = "car_equipment")

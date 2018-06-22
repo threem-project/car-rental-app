@@ -1,12 +1,20 @@
 package com.threem.carrental.app.service;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.threem.carrental.app.errorHandler.customExceptions.CarAlreadyExistsException;
 import com.threem.carrental.app.errorHandler.customExceptions.CarIdAndVinDoNotMatch;
+import com.threem.carrental.app.model.dto.CarSearchDto;
 import com.threem.carrental.app.model.entity.CarEntity;
 import com.threem.carrental.app.repository.CarRepository;
+import com.threem.carrental.app.repository.expressionBuilder.QCarExpressionBuilder;
+import org.hibernate.cfg.NotYetImplementedException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -74,5 +82,47 @@ public class CarService {
     public Optional<CarEntity> findById(Long id) {
         Optional<CarEntity> resultEntity = carRepository.findById(id);
         return resultEntity;
+    }
+
+    public Page<CarEntity> findAllPaginated(Integer pageNumber, Integer elementsPerPage) {
+        PageRequest pageableRequest = PageRequest.of(pageNumber, elementsPerPage);
+        Page<CarEntity> employeePage = carRepository.findAll(pageableRequest);
+        return employeePage;
+    }
+
+    public List<CarEntity> findByCarSearchDto(CarSearchDto carSearchDto) {
+        CarEntity carSearchEntity = carSearchDto.getCarEntity();
+//        QCarExpressionBuilder builder = new QCarExpressionBuilder.Builder().carSearchDto(carSearchDto).build();
+        QCarExpressionBuilder builder = new QCarExpressionBuilder.Builder() //todo refactor builder to have constructor with dto
+                .id(carSearchEntity.getId())
+                .vin(carSearchEntity.getVin())
+                .make(carSearchEntity.getMake())
+                .model(carSearchEntity.getModel())
+                .bodyType(carSearchEntity.getBodyType())
+                .yearExact(carSearchEntity.getYear())
+                .yearBetween(carSearchDto.getYearFrom(),carSearchDto.getYearTo())
+                .capacityExact(carSearchEntity.getEngineCapacity())
+                .capacityBetween(carSearchDto.getCapacityFrom(),carSearchDto.getCapacityTo())
+                .seatsExact(carSearchEntity.getSeats())
+                .seatsBetween(carSearchDto.getSeatsFrom(),carSearchDto.getSeatsTo())
+                .doorsExact(carSearchEntity.getDoors())
+                .doorsBetween(carSearchDto.getDoorsFrom(),carSearchDto.getDoorsTo())
+                .dailyRateExact(carSearchEntity.getDailyRate())
+                .dailyRateBetween(carSearchDto.getDailyRateFrom(),carSearchDto.getDailyRateTo())
+                .colour(carSearchEntity.getColour())
+                .status(carSearchEntity.getStatus())
+                .engineType(carSearchEntity.getEngineType())
+                .segment(carSearchEntity.getSegment())
+                .equipment(carSearchEntity.getEquipment())
+                .addressCity(carSearchEntity.getBranch().getAddress())
+                .build();
+
+        List<CarEntity> carsList = new ArrayList<>();
+        if (builder.hasExpression()) {
+            BooleanExpression booleanExpression = builder.getExpression();
+            Iterable<CarEntity> carEntities = carRepository.findAll(booleanExpression);
+            carEntities.forEach(e -> carsList.add(e));
+        }
+        return carsList;
     }
 }

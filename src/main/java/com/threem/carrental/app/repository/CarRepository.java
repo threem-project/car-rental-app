@@ -1,8 +1,8 @@
 package com.threem.carrental.app.repository;
 
 import com.threem.carrental.app.model.entity.CarEntity;
-import com.threem.carrental.app.model.entity.enumTypes.CarTransmissionTypeEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public interface CarRepository extends JpaRepository<CarEntity,Long> {
+public interface CarRepository extends JpaRepository<CarEntity,Long>, QuerydslPredicateExecutor<CarEntity> {
 
     CarEntity findByVin(String vin);
 
