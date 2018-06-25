@@ -92,7 +92,6 @@ public class CarService {
 
     public List<CarEntity> findByCarSearchDto(CarSearchDto carSearchDto) {
         CarEntity carSearchEntity = carSearchDto.getCarEntity();
-//        QCarExpressionBuilder builder = new QCarExpressionBuilder.Builder().carSearchDto(carSearchDto).build();
         QCarExpressionBuilder builder = new QCarExpressionBuilder.Builder() //todo refactor builder to have constructor with dto
                 .id(carSearchEntity.getId())
                 .vin(carSearchEntity.getVin())

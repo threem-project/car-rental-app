@@ -1,7 +1,5 @@
 package com.threem.carrental.sampleDataInitializer;
 
-import com.threem.carrental.app.model.entity.AddressBranchEntity;
-import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.MainOfficeEntity;
 import com.threem.carrental.app.repository.*;
 import com.threem.carrental.sampleDataInitializer.dataSamples.BranchGenerator;
@@ -12,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
 
 /**
  * @author misza_lemko on 28.05.2018
@@ -31,14 +28,16 @@ public class SampleDataInitializer {
     private final EmployeeRepository employeeRepository;
     private final BranchRepository branchRepository;
     private final CarRepository carRepository;
+    private final EquipmentRepository equipmentRepository;
 
     @Autowired
-    public SampleDataInitializer(MainOfficeRepository mainOfficeRepository, AddressBranchRepository addressBranchRepository, EmployeeRepository employeeRepository, BranchRepository branchRepository, CarRepository carRepository) {
+    public SampleDataInitializer(MainOfficeRepository mainOfficeRepository, AddressBranchRepository addressBranchRepository, EmployeeRepository employeeRepository, BranchRepository branchRepository, CarRepository carRepository, EquipmentRepository equipmentRepository) {
         this.mainOfficeRepository = mainOfficeRepository;
         this.addressBranchRepository = addressBranchRepository;
         this.employeeRepository = employeeRepository;
         this.branchRepository = branchRepository;
         this.carRepository = carRepository;
+        this.equipmentRepository = equipmentRepository;
     }
 
     @PostConstruct
@@ -56,19 +55,18 @@ public class SampleDataInitializer {
     }
 
     private void generateAndSaveBranch() {
-        List<AddressBranchEntity> addressBranchList = addressBranchRepository.findAll();
         BranchGenerator branchGenerator = new BranchGenerator(branchRepository, addressBranchRepository);
         branchGenerator.generateAndSaveBranchAndAddress(BRANCH_QTY);
     }
 
     private void generateAndSaveEmployees() {
-        List<BranchEntity> branchEntityList = branchRepository.findAll();
         EmployeeGenerator employeeGenerator = new EmployeeGenerator(DOMAIN_NAME, employeeRepository, branchRepository);
         employeeGenerator.generateAndSaveEmployees(EMPLOYEES_QTY);
     }
 
     private void generateAndSaveCars() {
-        CarGenerator carGenerator = new CarGenerator(branchRepository,carRepository);
+        CarGenerator carGenerator = new CarGenerator(branchRepository,carRepository,equipmentRepository);
+        carGenerator.generateAndSaveEquipmentBeforeCars();
         carGenerator.generateAndSaveCars(CAR_QTY);
     }
 }

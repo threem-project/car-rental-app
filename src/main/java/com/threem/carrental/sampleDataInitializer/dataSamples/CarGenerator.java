@@ -2,9 +2,11 @@ package com.threem.carrental.sampleDataInitializer.dataSamples;
 
 import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.CarEntity;
+import com.threem.carrental.app.model.entity.EquipmentEntity;
 import com.threem.carrental.app.model.entity.enumTypes.*;
 import com.threem.carrental.app.repository.BranchRepository;
 import com.threem.carrental.app.repository.CarRepository;
+import com.threem.carrental.app.repository.EquipmentRepository;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -16,11 +18,19 @@ public class CarGenerator {
 
     BranchRepository branchRepository;
     CarRepository carRepository;
+    EquipmentRepository equipmentRepository;
     Random random = new Random();
 
-    public CarGenerator(BranchRepository branchRepository, CarRepository carRepository) {
+    public CarGenerator(BranchRepository branchRepository, CarRepository carRepository, EquipmentRepository equipmentRepository) {
+        this.equipmentRepository = equipmentRepository;
         this.branchRepository = branchRepository;
         this.carRepository = carRepository;
+    }
+
+    public List<EquipmentEntity> generateAndSaveEquipmentBeforeCars() {
+        List<EquipmentEntity> equipmentEntities = new EquipmentGenerator().generateEquipment();
+        equipmentRepository.saveAll(equipmentEntities);
+        return equipmentEntities;
     }
 
     public List<CarEntity> generateAndSaveCars(Integer numberOfSamples) {
@@ -249,5 +259,16 @@ public class CarGenerator {
         List<String> models = Arrays.asList("Focus","Mondeo");
         cars.put("Ford",models);
         return cars;
+    }
+
+    private class EquipmentGenerator {
+
+        private List<EquipmentEntity> generateEquipment() {
+            List<EquipmentEntity> equipment = new ArrayList<>();
+            equipment.add(new EquipmentEntity(null,"Air Conditioning"));
+            equipment.add(new EquipmentEntity(null,"Navigation"));
+            equipment.add(new EquipmentEntity(null,"Internet Connection"));
+            return equipment;
+        }
     }
 }
