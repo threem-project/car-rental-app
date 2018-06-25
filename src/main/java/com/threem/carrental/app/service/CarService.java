@@ -2,7 +2,6 @@ package com.threem.carrental.app.service;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.threem.carrental.app.errorHandler.customExceptions.CarAlreadyExistsException;
-import com.threem.carrental.app.errorHandler.customExceptions.CarIdAndVinDoNotMatch;
 import com.threem.carrental.app.model.dto.CarSearchDto;
 import com.threem.carrental.app.model.entity.CarEntity;
 import com.threem.carrental.app.repository.CarRepository;
@@ -66,19 +65,9 @@ public class CarService {
 
     @Transactional
     public Optional<CarEntity> updateCar(CarEntity givenEntity) {
-        if (!vinAndIdMatchTheSameEntity(givenEntity)) {
-            throw new CarIdAndVinDoNotMatch("This ID and VIN are assigned to different entities");
-        }
         nullEquipmentOfEntityInDb(givenEntity);
         carRepository.save(givenEntity);
         return Optional.of(givenEntity);
-    }
-
-    private Boolean vinAndIdMatchTheSameEntity(CarEntity carEntity) {
-        Long id = carEntity.getId();
-        String vin = carEntity.getVin();
-        CarEntity entityInDb = carRepository.findByIdAndVin(id,vin);
-        return (entityInDb!=null);
     }
 
     private void nullEquipmentOfEntityInDb(CarEntity givenEntity) {

@@ -13,7 +13,8 @@ import java.util.Random;
  */
 public class TestCarEntityFactory {
 
-    private static List<String> allowedParameters = Arrays.asList("FORD_RANDOM_VIN_4_SEATS_4_DOORS_4000_CCM_NO_EQUIPMENT_AUTOMATIC",
+    private static List<String> allowedParameters = Arrays.asList("WITH_ALL_FIELDS_NULL_EXCEPT_VIN",
+                                                                    "FORD_RANDOM_VIN_4_SEATS_4_DOORS_4000_CCM_NO_EQUIPMENT_AUTOMATIC",
                                                                     "SKODA_RANDOM_VIN_3_SEATS_3_DOORS_3000_CCM_NO_EQUIPMENT_MANUAL");
 
 
@@ -22,6 +23,28 @@ public class TestCarEntityFactory {
         String switchParameter = carType.toUpperCase();
 
         switch (switchParameter) {
+            case "WITH_ALL_FIELDS_NULL_EXCEPT_VIN":
+                return CarEntity.builder()
+                        .id(null)
+                        .vin(DummyVinGenerator.generateVin())
+                        .make(null)
+                        .model(null)
+                        .segment(null)
+                        .seats(null)
+                        .doors(null)
+                        .bodyType(null)
+                        .colour(null)
+                        .engineType(null)
+                        .engineCapacity(null)
+                        .transmission(null)
+                        .year(null)
+                        .dailyRate(null)
+                        .equipment(null)
+                        .mileage(null)
+                        .status(null)
+                        .branch(null)
+                        .build();
+
             case "FORD_RANDOM_VIN_4_SEATS_4_DOORS_4000_CCM_NO_EQUIPMENT_AUTOMATIC":
                 return CarEntity.builder()
                     .id(null)

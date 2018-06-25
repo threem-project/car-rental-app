@@ -1,12 +1,14 @@
 package com.threem.carrental.app.service;
 
 import com.threem.carrental.app.errorHandler.customExceptions.CarAlreadyExistsException;
+import com.threem.carrental.app.errorHandler.customExceptions.CarIdAndVinDoNotMatch;
 import com.threem.carrental.app.model.entity.CarEntity;
 import com.threem.carrental.app.model.entity.EquipmentEntity;
 import com.threem.carrental.app.model.entity.enumTypes.CarEquipmentEnum;
 import com.threem.carrental.app.repository.CarRepository;
 import com.threem.carrental.factory.TestCarEquipmentFactory;
 import com.threem.carrental.factory.TestCarEntityFactory;
+import lombok.ToString;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Before;
@@ -14,11 +16,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -121,4 +125,53 @@ public class CarServiceTest {
         Assertions.assertThat(carEntityFromService).isEqualToComparingFieldByField(skodaManualDiesel);
     }
 
+    @Test
+    public void shouldFindCarByIdWhenCarExists() {
+        //given
+        carRepository.save(fordAutomaticPetrol);
+        //when
+        Long idToCheck = fordAutomaticPetrol.getId();
+        Optional<CarEntity> entityOptionalFromDb = carService.findById(idToCheck);
+        CarEntity entityFromDb = entityOptionalFromDb.get();
+        //then
+        Assertions.assertThat(entityFromDb).isEqualToComparingFieldByField(fordAutomaticPetrol);
+    }
+
+    @Test
+    public void shouldGiveOptionalEmptyWhenFindByIdForNonExistingCar() {
+        //given
+        Long idToCheck = -1L;
+        //when
+        Optional<CarEntity> entityOptionalFromDb = carService.findById(idToCheck);
+        //then
+        Assertions.assertThat(entityOptionalFromDb).isEmpty();
+    }
+
+    @Test
+    public void shouldFindAllCarsPaginated() {
+        //given
+        List<CarEntity> entitiesCollection = createDummyEntitiesWithMakeAndModelTest(10);
+        carRepository.saveAll(entitiesCollection);
+        Integer numberOfEntitiesBefore = carRepository.findAll().size();
+        Page<CarEntity> paginatedBefore = carService.findAllPaginated(0, numberOfEntitiesBefore);
+
+        //when
+        List<CarEntity> entitiesToMakeMorePagesInResult = createDummyEntitiesWithMakeAndModelTest(10);
+        carRepository.saveAll(entitiesToMakeMorePagesInResult);
+        Page<CarEntity> paginatedAfter = carService.findAllPaginated(0, numberOfEntitiesBefore);
+
+        //then
+        Assertions.assertThat(paginatedBefore.getTotalPages()).isLessThan(paginatedAfter.getTotalPages());
+    }
+
+    private List<CarEntity> createDummyEntitiesWithMakeAndModelTest(Integer numberOfEntities) {
+        List<CarEntity> resultList = new ArrayList<>();
+        for (int i = 0; i < numberOfEntities; i++) {
+            CarEntity carEntity = TestCarEntityFactory.getEntity("WITH_ALL_FIELDS_NULL_EXCEPT_VIN");
+            carEntity.setMake("testMake " + i);
+            carEntity.setModel("testModel " + i);
+            resultList.add(carEntity);
+        }
+        return resultList;
+    }
 }
