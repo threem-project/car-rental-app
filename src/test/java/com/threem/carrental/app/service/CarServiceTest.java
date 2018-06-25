@@ -2,6 +2,7 @@ package com.threem.carrental.app.service;
 
 import com.threem.carrental.app.errorHandler.customExceptions.CarAlreadyExistsException;
 import com.threem.carrental.app.model.entity.CarEntity;
+import com.threem.carrental.app.model.entity.EquipmentEntity;
 import com.threem.carrental.app.model.entity.enumTypes.CarEquipmentEnum;
 import com.threem.carrental.app.repository.CarRepository;
 import com.threem.carrental.factory.TestCarEquipmentFactory;
@@ -41,8 +42,8 @@ public class CarServiceTest {
     private CarEntity fordAutomaticPetrol;
     private CarEntity skodaManualDiesel;
     private TestCarEquipmentFactory equipmentFactory;
-    private List<CarEquipmentEnum> airConditioning;
-    private List<CarEquipmentEnum> airConditioningAndGps;
+    private List<EquipmentEntity> airConditioning;
+    private List<EquipmentEntity> airConditioningAndGps;
 
     @Before
     public void setup() {
@@ -50,8 +51,8 @@ public class CarServiceTest {
         this.fordAutomaticPetrol = carFactory.getEntity("FORD_RANDOM_VIN_4_SEATS_4_DOORS_4000_CCM_NO_EQUIPMENT_AUTOMATIC");
         this.skodaManualDiesel = carFactory.getEntity("SKODA_RANDOM_VIN_3_SEATS_3_DOORS_3000_CCM_NO_EQUIPMENT_MANUAL");
         this.equipmentFactory = new TestCarEquipmentFactory();
-        this.airConditioning = equipmentFactory.getEquipment("AIR_CONDITIONING");
-        this.airConditioningAndGps = equipmentFactory.getEquipment("AIR_CONDITIONING_GPS");
+        this.airConditioning = equipmentFactory.getEquipment("TEST_AIR_CONDITIONING");
+        this.airConditioningAndGps = equipmentFactory.getEquipment("TEST_AIR_CONDITIONING_GPS");
     }
 
     @Test
@@ -113,11 +114,11 @@ public class CarServiceTest {
         //when
         skodaManualDiesel.setId(duplicatedId);
         skodaManualDiesel.setVin(duplicatedVin);
-//        skodaManualDiesel.setEquipment(airConditioningAndGps);
-//        Optional<CarEntity> carOptionalFromService = carService.updateCar(skodaManualDiesel);
-//        CarEntity carEntityFromService = carOptionalFromService.get();
+        skodaManualDiesel.setEquipment(airConditioningAndGps);
+        Optional<CarEntity> carOptionalFromService = carService.updateCar(skodaManualDiesel);
+        CarEntity carEntityFromService = carOptionalFromService.get();
         //then
-//        Assertions.assertThat(carEntityFromService).isEqualToComparingFieldByField(skodaManualDiesel);
+        Assertions.assertThat(carEntityFromService).isEqualToComparingFieldByField(skodaManualDiesel);
     }
 
 }

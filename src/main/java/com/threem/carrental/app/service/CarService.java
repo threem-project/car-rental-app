@@ -6,8 +6,8 @@ import com.threem.carrental.app.errorHandler.customExceptions.CarIdAndVinDoNotMa
 import com.threem.carrental.app.model.dto.CarSearchDto;
 import com.threem.carrental.app.model.entity.CarEntity;
 import com.threem.carrental.app.repository.CarRepository;
+import com.threem.carrental.app.repository.EquipmentRepository;
 import com.threem.carrental.app.repository.expressionBuilder.QCarExpressionBuilder;
-import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -24,9 +24,11 @@ import java.util.Optional;
 public class CarService {
 
     private CarRepository carRepository;
+    private EquipmentRepository equipmentRepository;
 
-    public CarService(CarRepository carRepository) {
+    public CarService(CarRepository carRepository, EquipmentRepository equipmentRepository) {
         this.carRepository = carRepository;
+        this.equipmentRepository = equipmentRepository;
     }
 
     @Transactional
@@ -67,7 +69,7 @@ public class CarService {
         if (!vinAndIdMatchTheSameEntity(givenEntity)) {
             throw new CarIdAndVinDoNotMatch("This ID and VIN are assigned to different entities");
         }
-
+        nullEquipmentOfEntityInDb(givenEntity);
         carRepository.save(givenEntity);
         return Optional.of(givenEntity);
     }
@@ -77,6 +79,13 @@ public class CarService {
         String vin = carEntity.getVin();
         CarEntity entityInDb = carRepository.findByIdAndVin(id,vin);
         return (entityInDb!=null);
+    }
+
+    private void nullEquipmentOfEntityInDb(CarEntity givenEntity) {
+        Long idOfEntityToClear = givenEntity.getId();
+        String vinOfEntityToClear = givenEntity.getVin();
+        CarEntity entityInDb = carRepository.findByIdAndVin(idOfEntityToClear,vinOfEntityToClear);
+        entityInDb.setEquipment(null);
     }
 
     public Optional<CarEntity> findById(Long id) {

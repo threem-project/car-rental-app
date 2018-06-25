@@ -2,6 +2,7 @@ package com.threem.carrental.app.repository.expressionBuilder;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.threem.carrental.app.model.entity.AddressBranchEntity;
+import com.threem.carrental.app.model.entity.EquipmentEntity;
 import com.threem.carrental.app.model.entity.QCarEntity;
 import com.threem.carrental.app.model.entity.enumTypes.*;
 import org.springframework.util.StringUtils;
@@ -204,9 +205,9 @@ public class QCarExpressionBuilder {
             return this;
         }
 
-        public Builder equipment(List<CarEquipmentEnum> equipment) {
+        public Builder equipment(List<EquipmentEntity> equipment) {
             if (equipment!=null && equipment.size()>0) {
-                for (CarEquipmentEnum currentEquipment : equipment) { //todo refactor to lambda
+                for (EquipmentEntity currentEquipment : equipment) { //todo refactor to lambda
                     BooleanExpression newExpr = QCarEntity.carEntity.equipment.contains(currentEquipment);
                     this.booleanExpression = initOrUpdateExpression(booleanExpression,newExpr);
                     this.hasExpression = true;

@@ -1,5 +1,6 @@
 package com.threem.carrental.factory;
 
+import com.threem.carrental.app.model.entity.EquipmentEntity;
 import com.threem.carrental.app.model.entity.enumTypes.CarEquipmentEnum;
 
 import java.util.Arrays;
@@ -11,10 +12,10 @@ import java.util.List;
 public class TestCarEquipmentFactory {
 
     private static List<String> allowedParameters = Arrays.asList("EMPTY_LIST",
-                                                                  "AIR_CONDITIONING",
-                                                                  "AIR_CONDITIONING_GPS");
+                                                                  "TEST_AIR_CONDITIONING",
+                                                                  "TEST_AIR_CONDITIONING_GPS");
 
-    public static List<CarEquipmentEnum> getEquipment(String equipmentBundle) {
+    public static List<EquipmentEntity> getEquipment(String equipmentBundle) {
 
         String switchParameter = equipmentBundle.toUpperCase();
 
@@ -22,12 +23,12 @@ public class TestCarEquipmentFactory {
             case "EMPTY_LIST":
                 return Arrays.asList();
 
-            case "AIR_CONDITIONING":
-                return Arrays.asList(CarEquipmentEnum.AIR_CONDITIONING);
+            case "TEST_AIR_CONDITIONING":
+                return Arrays.asList(new EquipmentEntity(null,"TEST_AIR_CONDITIONING"));
 
-            case "AIR_CONDITIONING_GPS":
-                return Arrays.asList(CarEquipmentEnum.AIR_CONDITIONING,
-                                     CarEquipmentEnum.NAVIGATION);
+            case "TEST_AIR_CONDITIONING_GPS":
+                return Arrays.asList(new EquipmentEntity(null,"TEST_AIR_CONDITIONING"),
+                                     new EquipmentEntity(null,"TEST_GPS"));
 
             default:
                 throw new IllegalArgumentException("Parameters allowed for " + TestCarEquipmentFactory.class.getName() + " are: " + allowedParameters);

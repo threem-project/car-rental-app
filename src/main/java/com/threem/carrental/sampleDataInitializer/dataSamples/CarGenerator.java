@@ -73,18 +73,16 @@ public class CarGenerator {
         return carEntity;
     }
 
-    private List<CarEquipmentEnum> assignEquipment() {
-        List<CarEquipmentEnum> emptyBundle = null;
-        List<CarEquipmentEnum> bundleLow = Arrays.asList(CarEquipmentEnum.AIR_CONDITIONING);
-        List<CarEquipmentEnum> bundleMedium = Arrays.asList(CarEquipmentEnum.AIR_CONDITIONING,
-                                                            CarEquipmentEnum.NAVIGATION);
-        List<CarEquipmentEnum> bundleHigh = Arrays.asList(CarEquipmentEnum.AIR_CONDITIONING,
-                                                          CarEquipmentEnum.NAVIGATION,
-                                                          CarEquipmentEnum.INTERNET_CONNECTION);
-        List<List<CarEquipmentEnum>> equipment = Arrays.asList(null,emptyBundle,bundleLow,bundleMedium,bundleHigh);
-        Integer randomIndex = random.nextInt(equipment.size());
-        return equipment.get(randomIndex);
+    private List<EquipmentEntity> assignEquipment() {
+        List<EquipmentEntity> possibleEquipment = equipmentRepository.findAll();
+        Integer equipmentElementsToAssign = random.nextInt(possibleEquipment.size());
 
+        List<EquipmentEntity> equipmentResultList = new ArrayList<>();
+        for (int i=0;i<equipmentElementsToAssign;i++) {
+            equipmentResultList.add(possibleEquipment.get(i));
+        }
+
+        return equipmentResultList;
     }
 
     private String generateVin() {
