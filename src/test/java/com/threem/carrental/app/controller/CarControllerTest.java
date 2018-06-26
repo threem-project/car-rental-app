@@ -196,4 +196,8 @@ public class CarControllerTest {
         //@formatter:on
     }
 
+    @Test
+    public void shouldReturnPageObjectForCarEntities() {
+        //todo
+    }
 }
