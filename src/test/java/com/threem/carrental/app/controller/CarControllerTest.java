@@ -16,6 +16,9 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
@@ -198,6 +201,26 @@ public class CarControllerTest {
 
     @Test
     public void shouldReturnPageObjectForCarEntities() {
-        //todo
+        //given
+        //when
+        Map<String, Integer> parameters = new HashMap<>();
+        parameters.put("currentPage",0);
+        parameters.put("resultsPerPage",5);
+        //then
+        //@formatter:off
+        given()    //when
+                .port(port)
+                .params(parameters)
+                .header(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+                .log().all()
+        .when()
+                .get("car")
+        .then()
+                .log().all()
+        .assertThat()
+                .statusCode(HttpStatus.OK.value());
+        //@formatter:on
     }
+
+    //todo addQueryDslTesting
 }
