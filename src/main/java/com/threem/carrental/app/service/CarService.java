@@ -2,6 +2,7 @@ package com.threem.carrental.app.service;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.threem.carrental.app.errorHandler.customExceptions.CarAlreadyExistsException;
+import com.threem.carrental.app.errorHandler.customExceptions.CarDoesNotExistsException;
 import com.threem.carrental.app.model.dto.CarSearchDto;
 import com.threem.carrental.app.model.entity.CarEntity;
 import com.threem.carrental.app.repository.CarRepository;
@@ -65,6 +66,11 @@ public class CarService {
 
     @Transactional
     public Optional<CarEntity> updateCar(CarEntity givenEntity) {
+
+        if (!idExistInDb(givenEntity)) {
+            throw new CarDoesNotExistsException("Car with this ID does not exist in DB");
+        }
+
         nullEquipmentOfEntityInDb(givenEntity);
         carRepository.save(givenEntity);
         return Optional.of(givenEntity);
@@ -74,7 +80,10 @@ public class CarService {
         Long idOfEntityToClear = givenEntity.getId();
         String vinOfEntityToClear = givenEntity.getVin();
         CarEntity entityInDb = carRepository.findByIdAndVin(idOfEntityToClear,vinOfEntityToClear);
-        entityInDb.setEquipment(null);
+
+        if (entityInDb!=null) {
+            entityInDb.setEquipment(null);
+        }
     }
 
     public Optional<CarEntity> findById(Long id) {
