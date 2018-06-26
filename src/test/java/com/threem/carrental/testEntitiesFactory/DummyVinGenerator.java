@@ -1,4 +1,4 @@
-package com.threem.carrental.factory;
+package com.threem.carrental.testEntitiesFactory;
 
 import java.util.Arrays;
 import java.util.List;

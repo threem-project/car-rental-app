@@ -1,4 +1,4 @@
-package com.threem.carrental.factory;
+package com.threem.carrental.testEntitiesFactory;
 
 import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.enumTypes.BranchStatusEnum;

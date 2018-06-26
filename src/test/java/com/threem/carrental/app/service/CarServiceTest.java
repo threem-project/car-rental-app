@@ -1,16 +1,12 @@
 package com.threem.carrental.app.service;
 
 import com.threem.carrental.app.errorHandler.customExceptions.CarAlreadyExistsException;
-import com.threem.carrental.app.errorHandler.customExceptions.CarIdAndVinDoNotMatch;
 import com.threem.carrental.app.model.entity.CarEntity;
 import com.threem.carrental.app.model.entity.EquipmentEntity;
-import com.threem.carrental.app.model.entity.enumTypes.CarEquipmentEnum;
 import com.threem.carrental.app.repository.CarRepository;
-import com.threem.carrental.factory.TestCarEquipmentFactory;
-import com.threem.carrental.factory.TestCarEntityFactory;
-import lombok.ToString;
+import com.threem.carrental.testEntitiesFactory.TestCarEquipmentFactory;
+import com.threem.carrental.testEntitiesFactory.TestCarEntityFactory;
 import org.assertj.core.api.Assertions;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

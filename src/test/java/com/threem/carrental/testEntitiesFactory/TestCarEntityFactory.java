@@ -1,4 +1,4 @@
-package com.threem.carrental.factory;
+package com.threem.carrental.testEntitiesFactory;
 
 import com.threem.carrental.app.model.entity.CarEntity;
 import com.threem.carrental.app.model.entity.enumTypes.*;
@@ -6,7 +6,6 @@ import com.threem.carrental.app.model.entity.enumTypes.*;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 /**
  * @author marek_j on 2018-06-24
