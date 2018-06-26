@@ -1,6 +1,5 @@
 package com.threem.carrental.app.controller;
 
-import com.threem.carrental.app.model.dto.EmployeeDto;
 import com.threem.carrental.app.model.entity.EmployeeEntity;
 import com.threem.carrental.app.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;

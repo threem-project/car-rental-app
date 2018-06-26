@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 /**
  * @author marek_j on 2018-05-08
  */
+@Deprecated
 @NoArgsConstructor
 @Getter
 @Setter(AccessLevel.PRIVATE)

@@ -9,7 +9,4 @@ public class IncorrectBranchException extends RuntimeException {
         super(message);
     }
 
-    public IncorrectBranchException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

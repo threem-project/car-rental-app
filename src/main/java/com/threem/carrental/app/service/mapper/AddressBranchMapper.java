@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
  * @author misza_lemko on 25.05.2018
  * @project car-rental-app
  */
-
+@Deprecated
 @Service
 public class AddressBranchMapper {
 

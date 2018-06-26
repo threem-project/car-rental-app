@@ -9,7 +9,4 @@ public class EmployeeDoesNotExistException extends RuntimeException {
         super(message);
     }
 
-    public EmployeeDoesNotExistException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

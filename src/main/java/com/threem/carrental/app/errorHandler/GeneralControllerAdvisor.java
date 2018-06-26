@@ -1,9 +1,6 @@
 package com.threem.carrental.app.errorHandler;
 
-import com.threem.carrental.app.errorHandler.customExceptions.CarAlreadyExistsException;
-import com.threem.carrental.app.errorHandler.customExceptions.EmployeeAlreadyExistException;
-import com.threem.carrental.app.errorHandler.customExceptions.EmployeeDoesNotExistException;
-import com.threem.carrental.app.errorHandler.customExceptions.IncorrectBranchException;
+import com.threem.carrental.app.errorHandler.customExceptions.*;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.HttpStatus;
@@ -82,7 +79,13 @@ public class GeneralControllerAdvisor {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ErrorResponse handle(CarAlreadyExistsException e, ServletWebRequest request) {
-        return ErrorResponse.of(HttpStatus.UNPROCESSABLE_ENTITY, "Car with this vin number is already in DB", request.getRequest().getRequestURI());
+        return ErrorResponse.of(HttpStatus.UNPROCESSABLE_ENTITY, "Car with this vin or ID number is already in DB", request.getRequest().getRequestURI());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErrorResponse handle(CarDoesNotExistsException e, ServletWebRequest request) {
+        return ErrorResponse.of(HttpStatus.UNPROCESSABLE_ENTITY, "Car with this ID does not exist in DB", request.getRequest().getRequestURI());
     }
 
     @ExceptionHandler

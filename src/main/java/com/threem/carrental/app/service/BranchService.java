@@ -2,21 +2,16 @@ package com.threem.carrental.app.service;
 
 
 import com.threem.carrental.app.model.dto.BranchDto;
-
-import com.threem.carrental.app.model.dto.BranchDtoPaginated;
 import com.threem.carrental.app.model.entity.AddressBranchEntity;
 import com.threem.carrental.app.model.entity.BranchEntity;
+import com.threem.carrental.app.repository.BranchRepository;
 import com.threem.carrental.app.service.mapper.AddressBranchMapper;
 import com.threem.carrental.app.service.mapper.BranchMapper;
-import com.threem.carrental.app.repository.BranchRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

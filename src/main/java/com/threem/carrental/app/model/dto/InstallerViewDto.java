@@ -6,7 +6,7 @@ import lombok.*;
 /**
  * @author marek_j on 2018-05-10
  */
-
+@Deprecated
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
