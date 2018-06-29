@@ -1,7 +1,7 @@
 package com.threem.carrental.app.model.entity;
 
 import com.threem.carrental.app.model.entity.enumTypes.CustomerAccountStatusEnum;
-import com.threem.carrental.app.model.entity.enumTypes.CustomerStatusEnum;
+import com.threem.carrental.app.model.entity.enumTypes.CustomerTypeEnum;
 import lombok.*;
 
 import javax.persistence.*;
@@ -56,7 +56,7 @@ public class CustomerEntity {
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private CustomerStatusEnum status;
+    private CustomerTypeEnum status;
 
     @Column(name = "account_status")
     @Enumerated(EnumType.STRING)

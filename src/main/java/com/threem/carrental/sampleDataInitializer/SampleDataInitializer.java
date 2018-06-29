@@ -2,10 +2,7 @@ package com.threem.carrental.sampleDataInitializer;
 
 import com.threem.carrental.app.model.entity.MainOfficeEntity;
 import com.threem.carrental.app.repository.*;
-import com.threem.carrental.sampleDataInitializer.dataSamples.BranchGenerator;
-import com.threem.carrental.sampleDataInitializer.dataSamples.CarGenerator;
-import com.threem.carrental.sampleDataInitializer.dataSamples.EmployeeGenerator;
-import com.threem.carrental.sampleDataInitializer.dataSamples.MainOfficeGenerator;
+import com.threem.carrental.sampleDataInitializer.dataSamples.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,6 +18,7 @@ public class SampleDataInitializer {
     private final Integer BRANCH_QTY = 50;
     private final Integer EMPLOYEES_QTY = 150;
     private final Integer CAR_QTY = 30;
+    private final Integer CUSTOMERS_QTY = 100;
     private final String DOMAIN_NAME = "car-rental-app.com";
 
     private final MainOfficeRepository mainOfficeRepository;
@@ -29,15 +27,17 @@ public class SampleDataInitializer {
     private final BranchRepository branchRepository;
     private final CarRepository carRepository;
     private final EquipmentRepository equipmentRepository;
+    private final CustomerRepository customerRepository;
 
     @Autowired
-    public SampleDataInitializer(MainOfficeRepository mainOfficeRepository, AddressBranchRepository addressBranchRepository, EmployeeRepository employeeRepository, BranchRepository branchRepository, CarRepository carRepository, EquipmentRepository equipmentRepository) {
+    public SampleDataInitializer(MainOfficeRepository mainOfficeRepository, AddressBranchRepository addressBranchRepository, EmployeeRepository employeeRepository, BranchRepository branchRepository, CarRepository carRepository, EquipmentRepository equipmentRepository, CustomerRepository customerRepository) {
         this.mainOfficeRepository = mainOfficeRepository;
         this.addressBranchRepository = addressBranchRepository;
         this.employeeRepository = employeeRepository;
         this.branchRepository = branchRepository;
         this.carRepository = carRepository;
         this.equipmentRepository = equipmentRepository;
+        this.customerRepository = customerRepository;
     }
 
     @PostConstruct
@@ -46,6 +46,7 @@ public class SampleDataInitializer {
         generateAndSaveBranch();
         generateAndSaveEmployees();
         generateAndSaveCars();
+        generateAndSaveCustomers();
     }
 
     private void generateAndSaveMainOffice() {
@@ -68,5 +69,10 @@ public class SampleDataInitializer {
         CarGenerator carGenerator = new CarGenerator(branchRepository,carRepository,equipmentRepository);
         carGenerator.generateAndSaveEquipmentBeforeCars();
         carGenerator.generateAndSaveCars(CAR_QTY);
+    }
+
+    private void generateAndSaveCustomers() {
+        CustomerGenerator customerGenerator = new CustomerGenerator(customerRepository);
+        customerGenerator.generateAndSaveCustomers(CUSTOMERS_QTY);
     }
 }
