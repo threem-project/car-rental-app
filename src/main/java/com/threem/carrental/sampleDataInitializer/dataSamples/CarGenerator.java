@@ -67,7 +67,7 @@ public class CarGenerator {
                 .dailyRate(generateDailyRate())
                 .equipment(assignEquipment())
                 .mileage(generateMileage())
-                .status(assignStatus())
+                .status(assignCarStatus())
                 .branch(null)
                 .build();
         return carEntity;
@@ -100,7 +100,7 @@ public class CarGenerator {
         return vin;
     }
 
-    private CarStatusEnum assignStatus() {
+    public CarStatusEnum assignCarStatus() {
         List<CarStatusEnum> statusEnums = Arrays.asList(CarStatusEnum.AVAILABLE,
                 CarStatusEnum.IN_REPAIR,
                 CarStatusEnum.IN_USE,

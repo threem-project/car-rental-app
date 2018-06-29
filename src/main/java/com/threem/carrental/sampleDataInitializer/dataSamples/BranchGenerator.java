@@ -5,6 +5,7 @@ import com.threem.carrental.app.model.entity.BranchEntity;
 import com.threem.carrental.app.model.entity.enumTypes.BranchStatusEnum;
 import com.threem.carrental.app.repository.AddressBranchRepository;
 import com.threem.carrental.app.repository.BranchRepository;
+import com.threem.carrental.sampleDataInitializer.dataSamples.genericGenerators.RandomEnumsAssigner;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +21,7 @@ import java.util.Random;
 public class BranchGenerator {
 
     private Random random = new Random();
-//    private List<AddressBranchEntity> addressList;
+    private RandomEnumsAssigner enumsAssigner = new RandomEnumsAssigner();
     private AddressBranchRepository addressBranchRepository;
     private BranchRepository branchRepository;
 
@@ -46,13 +47,9 @@ public class BranchGenerator {
 
     private BranchEntity generate() {
         return BranchEntity.builder()
-                .status(generateBranchStatus())
+                .status(enumsAssigner.assignBranchStatus())
                 .build();
     }
 
-    private BranchStatusEnum generateBranchStatus() {
-        List<BranchStatusEnum> statusList = Arrays.asList(BranchStatusEnum.OPEN,BranchStatusEnum.CLOSED,BranchStatusEnum.TEMPORARILY_UNAVAILABLE);
-        Integer index = random.nextInt(statusList.size());
-        return statusList.get(index);
-    }
+
 }

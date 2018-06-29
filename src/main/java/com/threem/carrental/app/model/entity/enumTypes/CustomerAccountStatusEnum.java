@@ -5,4 +5,5 @@ package com.threem.carrental.app.model.entity.enumTypes;
  * @project car-rental-app
  */
 public enum CustomerAccountStatusEnum {
+    NEW,ACTIVE,DEACTIVATED,LOCKED;
 }
